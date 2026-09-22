@@ -1,0 +1,27 @@
+/* =========================================================
+   TABLE — 行のあいだに、手で罫を引く。
+     一枚の紙 : 罫は行ごとの部品ではなく、表全体でひとつの SVG に引く
+     見出し   : 見出しの下の罫だけ、筆圧を強くする
+   ========================================================= */
+.tz-table-wrap{position:relative;width:100%;overflow-x:auto}
+.tz-table__rules{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
+.tz-table__rules path{fill:none;stroke:var(--tz-ink);stroke-width:1px;stroke-linecap:round;opacity:.2}
+.tz-table__rules path.is-head{stroke-width:1.5px;opacity:.55}
+.tz-table__rules path.is-foot{opacity:.4}
+.tz-table{width:100%;border-collapse:collapse;caption-side:bottom;font-size:13.5px;letter-spacing:.04em;color:var(--tz-ink)}
+.tz-table__th{height:40px;padding:0 12px;text-align:left;vertical-align:middle;white-space:nowrap;
+  font-size:11.5px;font-weight:500;letter-spacing:.16em;color:var(--tz-ink-2)}
+.tz-table__td{padding:12px;vertical-align:middle;line-height:1.6}
+.tz-table__th:first-child,.tz-table__td:first-child{padding-left:4px}
+.tz-table__th:last-child,.tz-table__td:last-child{padding-right:4px}
+.tz-table__foot .tz-table__td{font-weight:600}
+.tz-table__caption{margin-top:14px;font-size:11.5px;letter-spacing:.12em;color:var(--tz-ink-3)}
+/* 見ている行 : 面を塗らず、行頭に墨の縦線を立てる（メニューの項目と同じ作法） */
+.tz-table__body .tz-table__row > :first-child{position:relative}
+.tz-table__body .tz-table__row > :first-child::before{content:"";position:absolute;left:-10px;top:50%;
+  width:2px;height:15px;margin-top:-7.5px;border-radius:1.2px;background:var(--tz-ink);opacity:0;rotate:-7deg;
+  transition:opacity 180ms ease}
+@media (hover:hover){.tz-table__body .tz-table__row:hover > :first-child::before{opacity:.5}}
+.tz-table__row[data-state=selected] > td{background:color-mix(in srgb,var(--tz-ink) 4%,transparent)}
+.tz-table__row[data-state=selected] > :first-child::before{opacity:.9}
+.tz-table .tz-check{vertical-align:-3px}

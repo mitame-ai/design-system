@@ -1,0 +1,30 @@
+/* =========================================================
+   PROGRESS — 進み。一本の罫に、進んだ分だけ墨が染みる。
+     記入 : 入力欄の染みと同じ層（tz-soak）を使う
+     待ち : 値が決まらないあいだは、針目が罫の上を進む
+   ========================================================= */
+.tz-progress{
+  --tz-form:rule;
+  --tz-pad:8; --tz-amp:.7; --tz-grit:2; --tz-fiber:.8; --tz-radius:4;
+  --tz-grain-freq:0.8; --tz-grain-oct:2; --tz-ring-off:4; --tz-stack:0;
+  --tz-dent:0; --tz-sigma:1; --tz-sigma-min:10;
+  --tz-curl:0; --tz-tilt:0; --tz-reach:0; --tz-arrive:0;
+  --tz-pw:0; --tz-pv:0;
+  position:relative;display:block;width:100%;height:6px;overflow:visible;
+}
+.tz-progress > .tz-shell .tz-fill,.tz-progress > .tz-shell .tz-press,
+.tz-progress > .tz-shell .tz-grain,.tz-progress > .tz-shell .tz-shade,
+.tz-progress > .tz-shell .tz-fringe,.tz-progress > .tz-shell .tz-ring,
+.tz-progress > .tz-shell .tz-hook,.tz-progress > .tz-shell .tz-correct{display:none}
+.tz-progress > .tz-shell .tz-edge{stroke-width:1.1px;opacity:.3}
+.tz-progress > .tz-shell .tz-edge2{opacity:.1;stroke-width:2px}
+.tz-progress > .tz-shell .tz-soak{display:block;stroke-width:3.2px;opacity:.88;
+  stroke-dasharray:calc(var(--tz-pw) * var(--tz-pv)) 99999;stroke-dashoffset:-4;
+  transition:stroke-dasharray 640ms cubic-bezier(.22,1.1,.36,1)}
+.tz-progress__value{display:none}
+.tz-progress.is-waiting > .tz-shell .tz-soak{stroke-width:2.4px;opacity:.6;
+  stroke-dasharray:9 8;animation:tz-stitch 1.45s linear infinite;transition:none}
+@media (prefers-reduced-motion:reduce){
+  .tz-progress > .tz-shell .tz-soak{transition:none}
+  .tz-progress.is-waiting > .tz-shell .tz-soak{animation-duration:3.2s}
+}

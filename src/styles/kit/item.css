@@ -1,0 +1,63 @@
+/* =========================================================
+   ITEM — 一覧の一行。図、言葉、操作を横に並べる。
+     素     : 面を持たない。行を区切るのは罫
+     輪郭   : 薄い紙の枠
+     象嵌   : 紙に沈めた面
+     節度   : リンクの項目だけが、触れるとしなる
+   ========================================================= */
+.tz-item{
+  --tz-sc:1; --tz-ty:0px; --tz-lay:0px; --tz-rx:0deg; --tz-ry:0deg;
+  --tz-nx:0deg; --tz-ny:0deg; --tz-nz:0px; --tz-lift:0; --tz-wear:0;
+  --tz-pad:12; --tz-amp:1.1; --tz-grit:2; --tz-fiber:1.2; --tz-radius:8;
+  --tz-grain-freq:0.75; --tz-grain-oct:2; --tz-ring-off:6; --tz-form:box; --tz-stack:0; --tz-persp:1200px;
+  --tz-dent:1.6; --tz-sigma:1.5; --tz-sigma-min:70;
+  --tz-curl:0; --tz-tilt:0; --tz-reach:0; --tz-arrive:0;
+  --tz-release-dur:640ms; --tz-release-curve:cubic-bezier(.24,1.16,.36,1);
+  position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:16px;
+  padding:16px 18px;color:var(--tz-ink);text-decoration:none;outline:none;
+  transform:perspective(var(--tz-persp)) translateY(var(--tz-ty)) rotateX(var(--tz-rx)) rotateY(var(--tz-ry)) scale(var(--tz-sc));
+  transition:--tz-sc var(--tz-release-dur) var(--tz-release-curve),--tz-ty var(--tz-release-dur) var(--tz-release-curve),
+    --tz-rx var(--tz-release-dur) var(--tz-release-curve),--tz-ry var(--tz-release-dur) var(--tz-release-curve);
+}
+.tz-item.is-press{transition-duration:var(--tz-press-dur);transition-timing-function:var(--tz-press-curve)}
+.tz-item > *:not(.tz-shell){position:relative}
+.tz-item--sm{gap:12px;padding:11px 16px}
+.tz-item > .tz-shell .tz-fill{fill:var(--tz-paper);fill-opacity:.5}
+.tz-item > .tz-shell .tz-grain{opacity:.1}
+.tz-item > .tz-shell .tz-edge{opacity:.32;stroke-width:1px;transition:opacity 260ms ease,stroke-width 260ms ease}
+.tz-item > .tz-shell .tz-edge2{opacity:.1;stroke-width:2px}
+.tz-item > .tz-shell .tz-s0{stop-color:rgba(0,0,0,.08)}
+.tz-item > .tz-shell .tz-s1{stop-color:rgba(0,0,0,0)}
+.tz-item--muted > .tz-shell .tz-fill{fill:var(--tz-ink);fill-opacity:.035}
+.tz-item--muted > .tz-shell .tz-edge{opacity:.16}
+.tz-item--muted > .tz-shell .tz-edge2{display:none}
+a.tz-item,button.tz-item{cursor:pointer;border:0;background:none;font:inherit;text-align:left;width:100%}
+a.tz-item:focus-visible > .tz-shell .tz-ring,button.tz-item:focus-visible > .tz-shell .tz-ring{opacity:.95}
+@media (hover:hover){
+  a.tz-item:hover > .tz-shell .tz-edge,button.tz-item:hover > .tz-shell .tz-edge{opacity:.62;stroke-width:1.2px}
+  a.tz-item.tz-item--plain:hover .tz-item__title,a.tz-item:not(.tz-item--outline):not(.tz-item--muted):hover .tz-item__title{
+    text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px;text-decoration-color:var(--tz-ink-3)}
+}
+.tz-items{display:flex;flex-direction:column;gap:10px}
+.tz-item__sep.tz-rule{margin:0}
+.tz-items:has(> .tz-item__sep){gap:0}
+.tz-item__media{display:flex;flex:none;align-items:center;justify-content:center;gap:8px;align-self:flex-start;color:var(--tz-ink-2)}
+.tz-item__media > svg{width:18px;height:18px}
+.tz-item__media--icon{
+  --tz-pad:6; --tz-amp:.6; --tz-grit:1; --tz-fiber:.8; --tz-radius:6;
+  --tz-grain-freq:0.85; --tz-grain-oct:2; --tz-ring-off:4; --tz-form:box; --tz-stack:0;
+  --tz-dent:0; --tz-reach:0; --tz-tilt:0; --tz-curl:0; --tz-arrive:0;
+  position:relative;width:34px;height:34px}
+.tz-item__media--icon > .tz-shell .tz-fill{fill:var(--tz-ink);fill-opacity:.05}
+.tz-item__media--icon > .tz-shell .tz-edge{opacity:.35;stroke-width:1px}
+.tz-item__media--icon > .tz-shell .tz-edge2{display:none}
+.tz-item__media--icon > svg{position:relative}
+.tz-item__media--image{width:44px;height:44px;overflow:hidden;border-radius:6px 7px 5px 8px}
+.tz-item__media--image img{width:100%;height:100%;object-fit:cover;filter:saturate(.82) sepia(.08)}
+.tz-item__content{display:flex;flex:1 1 0;min-width:0;flex-direction:column;gap:3px}
+.tz-item__title{display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight:600;letter-spacing:.06em;line-height:1.5}
+.tz-item__text{margin:0;font-size:13px;line-height:1.75;letter-spacing:.04em;color:var(--tz-ink-2);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tz-item__actions{display:flex;align-items:center;gap:8px}
+.tz-item__header,.tz-item__footer{display:flex;flex-basis:100%;align-items:center;justify-content:space-between;gap:8px}
+@media (prefers-reduced-motion:reduce){.tz-item{transition:none}}

@@ -1,0 +1,35 @@
+/* =========================================================
+   AVATAR — 顔。手で描いた円の中に、写真か頭文字を置く。
+     線は写真の上に引く : 写真の縁を機械的な円で切らない
+   ========================================================= */
+.tz-avatar{
+  --tz-pad:6; --tz-amp:.75; --tz-grit:1; --tz-fiber:.9; --tz-radius:999;
+  --tz-grain-freq:0.85; --tz-grain-oct:2; --tz-ring-off:4; --tz-form:box; --tz-stack:0;
+  --tz-dent:0; --tz-sigma:1; --tz-sigma-min:10;
+  --tz-curl:0; --tz-tilt:0; --tz-reach:0; --tz-arrive:0;
+  --tz-size:40px;
+  position:relative;display:inline-flex;flex:none;
+  width:var(--tz-size);height:var(--tz-size);vertical-align:middle;
+}
+.tz-avatar--sm{--tz-size:28px}
+.tz-avatar--lg{--tz-size:56px}
+.tz-avatar > .tz-shell{z-index:1}
+.tz-avatar > .tz-shell .tz-fill{display:none}
+.tz-avatar > .tz-shell .tz-grain{opacity:.14}
+.tz-avatar > .tz-shell .tz-edge{opacity:.62;stroke-width:1.15px}
+.tz-avatar > .tz-shell .tz-edge2{opacity:.18;stroke-width:2.2px}
+.tz-avatar__face{position:absolute;inset:.5px;overflow:hidden;border-radius:50%;
+  background:color-mix(in srgb,var(--tz-ink) 6%,var(--tz-paper-up))}
+.tz-avatar__img{display:block;width:100%;height:100%;object-fit:cover;filter:saturate(.82) sepia(.08)}
+.tz-avatar__initial{display:flex;width:100%;height:100%;align-items:center;justify-content:center;
+  font-size:calc(var(--tz-size) * .36);font-weight:500;letter-spacing:.04em;color:var(--tz-ink-2)}
+.tz-avatar--count .tz-avatar__initial{font-size:calc(var(--tz-size) * .3);letter-spacing:0}
+.tz-avatar__badge{position:absolute;right:-3px;bottom:-3px;z-index:2;display:flex;
+  width:14px;height:14px;border-radius:50%;background:var(--tz-paper);color:var(--tz-ink)}
+.tz-avatar__badge .tz-mark{width:100%;height:100%}
+.tz-avatar--sm .tz-avatar__badge{width:11px;height:11px}
+
+/* 重ねる : 後ろの顔との間に紙の余白を残す。余白も個体の輪郭に沿う */
+.tz-avatar-group{display:inline-flex;align-items:center}
+.tz-avatar-group > .tz-avatar + .tz-avatar{margin-left:calc(var(--tz-size) * -.28)}
+.tz-avatar-group > .tz-avatar > .tz-shell .tz-edge2{stroke:var(--tz-paper);opacity:1;stroke-width:5px;stroke-dasharray:none}

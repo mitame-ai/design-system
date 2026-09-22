@@ -1,0 +1,151 @@
+/* =========================================================
+   KIT — 基本の四部品（ボタン・カード・入力欄・パネル）から広げた部品群の共通の地。
+   新しい部品も同じ塗師 (paint) が描く。違いはトークンだけ、という約束は変えない。
+   ========================================================= */
+
+:where([class^="tz-"],[class*=" tz-"]),
+:where([class^="tz-"],[class*=" tz-"]) *{box-sizing:border-box}
+
+/* 選んだ文字 : 蛍光の青や桃色ではなく、薄い墨を刷く */
+:where(.tz-stage,.tz-leaf,.tz-sheet,.tz-well) ::selection{background:color-mix(in srgb,var(--tz-ink) 16%,transparent);color:inherit}
+
+/* ---------- つまみ : 押せる小さな部品（チェック、ラジオ、スイッチ、スライダーの玉）
+     ボタンと同じ変形の仕組みを持つ。小さい物は速く戻り、傾きも浅い ---------- */
+.tz-knob{
+  --tz-sc:1; --tz-ty:0px; --tz-lay:0px; --tz-rx:0deg; --tz-ry:0deg;
+  --tz-nx:0deg; --tz-ny:0deg; --tz-nz:0px; --tz-lift:0; --tz-wear:0;
+  --tz-pad:7; --tz-amp:.55; --tz-grit:1; --tz-fiber:.8; --tz-radius:5;
+  --tz-grain-freq:0.9; --tz-grain-oct:2; --tz-ring-off:4; --tz-persp:400px;
+  --tz-form:box; --tz-stack:0;
+  --tz-dent:1.6; --tz-sigma:.8; --tz-sigma-min:10;
+  --tz-curl:0; --tz-tilt:1.4; --tz-reach:90; --tz-arrive:12;
+  --tz-release-dur:420ms; --tz-release-curve:cubic-bezier(.2,1.42,.34,1);
+  position:relative;
+  transform:
+    perspective(var(--tz-persp))
+    translateY(calc(var(--tz-ty) + var(--tz-nz) * .5))
+    rotateX(calc(var(--tz-rx) + var(--tz-ny)))
+    rotateY(calc(var(--tz-ry) + var(--tz-nx)))
+    scale(var(--tz-sc));
+  transition:
+    --tz-sc var(--tz-release-dur) var(--tz-release-curve),
+    --tz-ty var(--tz-release-dur) var(--tz-release-curve),
+    --tz-rx var(--tz-release-dur) var(--tz-release-curve),
+    --tz-ry var(--tz-release-dur) var(--tz-release-curve),
+    --tz-nx 90ms linear, --tz-ny 90ms linear,
+    --tz-nz 140ms ease-out, --tz-lift 140ms ease-out,
+    --tz-wear 1400ms cubic-bezier(.2,.7,.3,1);
+  -webkit-tap-highlight-color:transparent;
+}
+.tz-knob.is-press{transition-duration:var(--tz-press-dur);transition-timing-function:var(--tz-press-curve)}
+.tz-knob:focus-visible{outline:none}
+.tz-knob:focus-visible > .tz-shell .tz-ring{opacity:.95}
+.tz-knob > .tz-shell .tz-s0{stop-color:rgba(0,0,0,.16)}
+.tz-knob > .tz-shell .tz-s1{stop-color:rgba(0,0,0,0)}
+.tz-knob:disabled,.tz-knob[data-disabled]{cursor:not-allowed}
+.tz-knob:disabled .tz-shell,.tz-knob[data-disabled] .tz-shell{animation:none}
+.tz-knob:disabled > .tz-shell .tz-edge,
+.tz-knob[data-disabled] > .tz-shell .tz-edge{stroke:var(--tz-ink-3);stroke-dasharray:2 4;opacity:.8;stroke-width:1px}
+.tz-knob:disabled > .tz-shell .tz-edge2,
+.tz-knob[data-disabled] > .tz-shell .tz-edge2{display:none}
+
+/* ---------- 印 : 書きこまれる記号。pathLength=1 なので CSS だけで「書かれる」 ---------- */
+.tz-mark{display:block;width:19px;height:19px;overflow:visible;flex:none}
+.tz-mark path{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:1;stroke-dashoffset:0}
+.tz-mark--dot path,.tz-mark--pip path{fill:currentColor;stroke:none}
+.tz-mark--circle path{stroke-width:1.4}
+.tz-mark--ring path,.tz-mark--frame path{stroke-width:1.2}
+.tz-mark--stroke{overflow:visible}
+.tz-mark.is-writing path{animation:tz-write 300ms cubic-bezier(.45,.05,.2,1) backwards}
+.tz-mark--dot.is-writing path,.tz-mark--pip.is-writing path{animation:tz-blot 260ms cubic-bezier(.2,1.3,.4,1) backwards}
+@keyframes tz-write{from{stroke-dashoffset:1}}
+@keyframes tz-blot{from{transform:scale(.2);opacity:0}}
+.tz-mark--dot path,.tz-mark--pip path{transform-origin:50% 50%;transform-box:fill-box}
+
+/* ---------- 字形 : 部品に組み込まれた小さな記号 ---------- */
+.tz-glyph{display:block;width:16px;height:16px;overflow:visible;flex:none}
+.tz-glyph path{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- 浮いた紙 : ポップオーバー、メニュー、ダイアログ、ツールチップの面
+     机の上のカードより光を多く受ける。影はその個体の輪郭から落ちる ---------- */
+.tz-leaf{
+  --tz-pad:18; --tz-amp:1.45; --tz-grit:2; --tz-fiber:1.5; --tz-radius:8;
+  --tz-grain-freq:0.72; --tz-grain-oct:2; --tz-ring-off:7; --tz-persp:1200px;
+  --tz-form:box; --tz-stack:0;
+  --tz-dent:0; --tz-sigma:1; --tz-sigma-min:80;
+  --tz-curl:0; --tz-tilt:0; --tz-reach:0; --tz-arrive:0;
+  --tz-release-dur:600ms;
+  --tz-lift:0; --tz-lay:0px; --tz-wear:0;
+  --tz-from-x:0px; --tz-from-y:-5px;
+  position:relative;z-index:50;
+  color:var(--tz-ink);font-family:var(--tz-font);-webkit-font-smoothing:antialiased;
+  outline:none;
+}
+.tz-leaf > *:not(.tz-shell){position:relative}
+.tz-leaf > .tz-shell .tz-shade{display:block;opacity:.9;transform:translateY(8px)}
+.tz-leaf > .tz-shell .tz-fill{fill:var(--tz-paper-up)}
+.tz-leaf > .tz-shell .tz-grain{opacity:.13}
+.tz-leaf > .tz-shell .tz-edge{opacity:.36;stroke-width:1px}
+.tz-leaf > .tz-shell .tz-edge2{opacity:.13;stroke-width:2px}
+.tz-leaf > .tz-shell .tz-fringe{display:block;opacity:.09}
+/* 置かれる : 紙はその側から滑りこみ、わずかに傾いて着地する */
+.tz-leaf[data-side=top]   {--tz-from-y:5px}
+.tz-leaf[data-side=left]  {--tz-from-x:5px; --tz-from-y:0px}
+.tz-leaf[data-side=right] {--tz-from-x:-5px;--tz-from-y:0px}
+.tz-leaf[data-state=open],.tz-leaf[data-state=delayed-open],.tz-leaf[data-state=instant-open]{
+  animation:tz-leaf-in 280ms cubic-bezier(.16,.84,.26,1)}
+.tz-leaf[data-state=closed]{animation:tz-leaf-out 150ms cubic-bezier(.4,0,1,1) forwards}
+@keyframes tz-leaf-in{from{opacity:0;transform:translate(var(--tz-from-x),var(--tz-from-y)) rotate(-.5deg) scale(.985)}}
+@keyframes tz-leaf-out{to{opacity:0;transform:translate(calc(var(--tz-from-x) * .5),calc(var(--tz-from-y) * .5)) scale(.99)}}
+
+/* ---------- 覆い : モーダルの背後。黒い幕ではなく、薄い紙を一枚かぶせる ---------- */
+.tz-veil{position:fixed;inset:0;z-index:50;
+  background:color-mix(in srgb,var(--tz-paper) 62%,transparent);
+  backdrop-filter:blur(1.5px) saturate(.85);-webkit-backdrop-filter:blur(1.5px) saturate(.85)}
+.tz-veil[data-state=open]{animation:tz-fade 260ms ease-out}
+.tz-veil[data-state=closed]{animation:tz-veil-out 180ms ease-in forwards}
+@keyframes tz-veil-out{to{opacity:0}}
+
+/* ---------- 項目 : メニュー、コマンド、コンボボックスの一行
+     セレクトの選択肢と同じ作法。見ている項目は押し出され、左に墨の縦線が入る ---------- */
+.tz-mi{
+  position:relative;display:flex;align-items:center;gap:9px;
+  padding:7px 12px 7px 8px;margin:0;
+  font-size:14px;letter-spacing:.05em;line-height:1.5;color:var(--tz-ink-2);
+  cursor:pointer;outline:none;user-select:none;-webkit-user-select:none;
+  transform:translateX(var(--tz-sx,0px)) rotate(var(--tz-sr,0deg));
+  transition:transform 260ms cubic-bezier(.2,1.1,.3,1),color 200ms ease;
+}
+.tz-mi::before{content:"";position:absolute;left:-3px;top:50%;
+  width:2px;height:15px;margin-top:-7.5px;border-radius:1.2px;
+  background:var(--tz-ink);opacity:0;rotate:-7deg;transition:opacity 180ms ease}
+.tz-mi[data-highlighted],.tz-mi[data-selected=true],.tz-mi[data-state=open]{color:var(--tz-ink);
+  transform:translateX(calc(var(--tz-sx,0px) + 5px)) rotate(var(--tz-sr,0deg))}
+.tz-mi[data-highlighted]::before,.tz-mi[data-selected=true]::before,.tz-mi[data-state=open]::before{opacity:.85}
+/* cmdk は使える項目にも data-disabled="false" を付ける。値が false のものは除く */
+.tz-mi[data-disabled]:not([data-disabled=false]),.tz-mi[aria-disabled=true]{color:var(--tz-ink-3);cursor:not-allowed}
+.tz-mi[data-disabled]:not([data-disabled=false])::before{opacity:0}
+.tz-mi--inset{padding-left:30px}
+.tz-mi--shu{color:var(--tz-shu)}
+.tz-mi--shu[data-highlighted]{color:var(--tz-shu)}
+.tz-mi--shu::before{background:var(--tz-shu)}
+.tz-mi .tz-glyph,.tz-mi .tz-ico{color:var(--tz-ink-3);transition:color 200ms ease}
+.tz-mi[data-highlighted] .tz-glyph,.tz-mi[data-highlighted] .tz-ico,
+.tz-mi[data-selected=true] .tz-glyph,.tz-mi[data-selected=true] .tz-ico{color:var(--tz-ink-2)}
+.tz-mi__ind{position:absolute;left:7px;top:50%;margin-top:-9.5px;display:flex;width:19px;height:19px}
+.tz-mi__short{margin-left:auto;padding-left:18px;font-size:11px;letter-spacing:.14em;color:var(--tz-ink-3)}
+.tz-mi__sub{margin-left:auto;color:var(--tz-ink-3)}
+.tz-mi-label{padding:8px 8px 4px;font-size:10.5px;letter-spacing:.2em;color:var(--tz-ink-3);margin:0}
+.tz-mi-label--inset{padding-left:30px}
+.tz-menu{min-width:188px;padding:8px 7px}
+.tz-menu .tz-rule{margin:5px 6px 5px 8px;height:7px}
+.tz-menu__scroll{max-height:var(--radix-dropdown-menu-content-available-height,70vh);overflow:auto;
+  scrollbar-width:thin;margin:0 -4px;padding:0 4px}
+
+@media (prefers-reduced-motion:reduce){
+  .tz-knob{transition:none}
+  .tz-leaf[data-state],.tz-veil[data-state]{animation:none}
+  .tz-mark.is-writing path{animation:none}
+  .tz-mi{transition:color 200ms ease}
+}

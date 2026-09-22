@@ -1,0 +1,42 @@
+/* =========================================================
+   BADGE — 札。小さな紙片に書いた短い言葉。
+     節度 : 置かれているだけの札は応えない。リンクの札だけが気配を持つ
+   ========================================================= */
+.tz-badge{
+  --tz-pad:6; --tz-amp:.6; --tz-grit:1; --tz-fiber:.8; --tz-radius:9;
+  --tz-grain-freq:0.9; --tz-grain-oct:2; --tz-ring-off:4;
+  --tz-dent:1.4; --tz-sigma:.7; --tz-sigma-min:12;
+  --tz-tilt:1; --tz-reach:80; --tz-arrive:14;
+  display:inline-flex;align-items:center;gap:.4em;
+  padding:3px 10px 4px;margin:0;border:0;background:none;
+  font:inherit;font-size:11.5px;font-weight:500;letter-spacing:.08em;line-height:1.45;
+  color:var(--tz-ink);white-space:nowrap;text-decoration:none;vertical-align:middle;
+}
+.tz-badge__label{position:relative;display:inline-flex;align-items:center;gap:.4em;
+  transform:translateY(var(--tz-baseline,0px))}
+.tz-badge .tz-glyph,.tz-badge .tz-ico{width:12px;height:12px}
+.tz-badge > .tz-shell .tz-edge{stroke-width:1.1px;opacity:.75}
+.tz-badge > .tz-shell .tz-edge2{stroke-width:2px;opacity:.2}
+.tz-badge > .tz-shell .tz-grain{opacity:.16}
+
+.tz-badge--ink{color:var(--tz-on-ink)}
+.tz-badge--ink > .tz-shell .tz-fill{fill:var(--tz-ink)}
+.tz-badge--ink > .tz-shell .tz-edge{opacity:1}
+.tz-badge--ink > .tz-shell .tz-grain{opacity:.3}
+
+.tz-badge--contour > .tz-shell .tz-fill{fill:var(--tz-paper);fill-opacity:.55}
+
+.tz-badge--inlay{color:var(--tz-ink-2)}
+.tz-badge--inlay > .tz-shell .tz-fill{fill:var(--tz-ink);fill-opacity:.06}
+.tz-badge--inlay > .tz-shell .tz-edge{opacity:.22}
+.tz-badge--inlay > .tz-shell .tz-edge2{display:none}
+
+/* 朱の札 : 注意だけに使う。面は塗らず、線と文字を朱にする */
+.tz-badge--shu{color:var(--tz-shu)}
+.tz-badge--shu > .tz-shell .tz-fill{fill:var(--tz-shu);fill-opacity:.06}
+.tz-badge--shu > .tz-shell .tz-edge,.tz-badge--shu > .tz-shell .tz-edge2{stroke:var(--tz-shu)}
+
+@media (hover:hover){
+  a.tz-badge:hover > .tz-shell .tz-edge{opacity:1;stroke-width:1.35px}
+  a.tz-badge--contour:hover > .tz-shell .tz-fill{fill-opacity:1}
+}

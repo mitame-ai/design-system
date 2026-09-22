@@ -1,0 +1,32 @@
+/* =========================================================
+   SWITCH — 溝の中を、墨の玉が転がる。
+     満ちる : 入れると溝に墨が満ち、玉は紙の色に抜ける
+     行き過ぎ : 玉は止まる位置をわずかに越えてから戻る
+   ========================================================= */
+.tz-switch{
+  --tz-radius:999; --tz-amp:.6; --tz-dent:1.2; --tz-sigma:.9; --tz-tilt:1.1;
+  --tz-w:40px; --tz-h:22px; --tz-dot:16px;
+  display:inline-flex;align-items:center;flex:none;
+  width:var(--tz-w);height:var(--tz-h);padding:0 3px;margin:0;
+  border:0;background:none;color:var(--tz-ink);cursor:pointer;vertical-align:middle;
+}
+.tz-switch--sm{--tz-w:32px;--tz-h:18px;--tz-dot:12px}
+.tz-switch > .tz-shell .tz-fill{fill:var(--tz-ink);fill-opacity:.05;transition:fill-opacity 320ms ease}
+.tz-switch > .tz-shell .tz-edge{stroke-width:1.15px;opacity:.6}
+.tz-switch > .tz-shell .tz-edge2{stroke-width:2px;opacity:.16}
+.tz-switch > .tz-shell .tz-grain{opacity:.16}
+.tz-switch[data-state=checked] > .tz-shell .tz-fill{fill-opacity:1}
+.tz-switch[data-state=checked] > .tz-shell .tz-edge{opacity:1}
+.tz-switch[data-state=checked] > .tz-shell .tz-grain{opacity:.32}
+@media (hover:hover){.tz-switch:hover:not(:disabled) > .tz-shell .tz-edge{opacity:.95}}
+.tz-switch__thumb{position:relative;display:flex;width:var(--tz-dot);height:var(--tz-dot);
+  color:var(--tz-ink);pointer-events:none;
+  transition:translate 460ms cubic-bezier(.2,1.5,.34,1),color 240ms ease}
+.tz-switch__thumb .tz-mark{width:100%;height:100%;transform:scale(1.9)}
+.tz-switch[data-state=checked] .tz-switch__thumb{color:var(--tz-on-ink);
+  translate:calc(var(--tz-w) - var(--tz-dot) - 6px) 0}
+.tz-switch:disabled{color:var(--tz-ink-3)}
+.tz-switch:disabled .tz-switch__thumb{color:var(--tz-ink-3)}
+.tz-switch:disabled[data-state=checked] > .tz-shell .tz-fill{fill:var(--tz-ink-3);fill-opacity:.35}
+[dir=rtl] .tz-switch[data-state=checked] .tz-switch__thumb{translate:calc((var(--tz-w) - var(--tz-dot) - 6px) * -1) 0}
+@media (prefers-reduced-motion:reduce){.tz-switch__thumb{transition:none}}

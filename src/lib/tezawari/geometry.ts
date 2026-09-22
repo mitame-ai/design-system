@@ -105,3 +105,57 @@ export function circleMark(rand: Rand): string {
   }
   return toPath(pts, false)
 }
+
+/* ---------- 小さな印 : 描画エンジンを通さない、19×19 の手描きの記号 ---------- */
+
+const f2 = (v: number) => v.toFixed(2)
+
+/** チェックの印：短い払いから長い払いへ。筆は一度だけ折り返す */
+export function tickMark(rand: Rand): string {
+  const j = (s: number) => (rand() - 0.5) * s
+  const a: Point = [3.6 + j(1), 9.8 + j(1)]
+  const b: Point = [7.6 + j(0.8), 14 + j(0.6)]
+  const c: Point = [15.6 + j(1), 4 + j(1.2)]
+  const bow = 0.9 + rand() * 0.8
+  return (
+    `M${f2(a[0])},${f2(a[1])}` +
+    `Q${f2((a[0] + b[0]) / 2 - bow * 0.4)},${f2((a[1] + b[1]) / 2 + bow * 0.5)} ${f2(b[0])},${f2(b[1])}` +
+    `Q${f2((b[0] + c[0]) / 2 - bow)},${f2((b[1] + c[1]) / 2 - bow * 0.2)} ${f2(c[0])},${f2(c[1])}`
+  )
+}
+
+/** 墨の点：閉じたいびつな円。半径 r を中心 (9.5, 9.5) に置く */
+export function dotMark(rand: Rand, r = 4.2): string {
+  const n = 14
+  const wob = wobbler(rand, 1)
+  const pts: Point[] = []
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * Math.PI * 2
+    const k = r * (1 + wob(i / n) * 0.16)
+    pts.push([9.5 + Math.cos(a) * k, 9.5 + Math.sin(a) * k * 0.94])
+  }
+  return toPath(pts)
+}
+
+/** 横の一画：不確定（indeterminate）の印。入りと抜きで高さがわずかに違う */
+export function dashMark(rand: Rand): string {
+  const y0 = 9.8 + (rand() - 0.5) * 1.2
+  const y1 = 9.4 + (rand() - 0.5) * 1.2
+  const bow = (rand() - 0.5) * 1.4
+  return `M${f2(4.4 + rand())},${f2(y0)}Q9.5,${f2((y0 + y1) / 2 + bow)} ${f2(14.6 - rand())},${f2(y1)}`
+}
+
+/** 閉じた手描きの枠：チェックボックスやキーの外形に使う、角の丸い四角 */
+export function frameMark(rand: Rand, w = 19, h = 19, r = 4.5, amp = 0.55): string {
+  const raw = basePoints(1.2, 1.2, w - 2.4, h - 2.4, r, 2.4)
+  return toPath(organic(raw, normals(raw), wobbler(rand, 1), amp))
+}
+
+/** 横に引いた一筆：タブの下線などに使う。preserveAspectRatio="none" で幅いっぱいに伸ばす前提 */
+export function strokeMark(rand: Rand): string {
+  const n = 8
+  const wob = wobbler(rand, 1)
+  const pts: Point[] = []
+  for (let i = 0; i <= n; i++) pts.push([0.6 + (17.8 * i) / n, 9.5 + wob(i / n / 2) * 2.2])
+  return toPath(pts, false)
+}

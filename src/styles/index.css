@@ -5,3 +5,4 @@
 @import './theme.css';
 @import './properties.css';
 @import './components.css' layer(components);
+@import './kit.css' layer(components);

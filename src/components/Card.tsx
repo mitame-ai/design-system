@@ -63,6 +63,21 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(function Card(
   )
 })
 
+/** 見出しの行。右肩に CardAction を置くと、見出しと並べて配置する */
+export function CardHeader({ className, ...props }: ComponentPropsWithoutRef<'div'>) {
+  return <div className={cn('tz-card__head', className)} {...props} />
+}
+
+/** 見出しの右肩に置く操作 */
+export function CardAction({ className, ...props }: ComponentPropsWithoutRef<'div'>) {
+  return <div className={cn('tz-card__action', className)} {...props} />
+}
+
+/** 本文の領域 */
+export function CardContent({ className, ...props }: ComponentPropsWithoutRef<'div'>) {
+  return <div className={cn('tz-card__content', className)} {...props} />
+}
+
 export function CardTitle({ className, ...props }: ComponentPropsWithoutRef<'h3'>) {
   return <h3 className={cn('tz-card__title', className)} {...props} />
 }
@@ -70,6 +85,9 @@ export function CardTitle({ className, ...props }: ComponentPropsWithoutRef<'h3'
 export function CardText({ className, ...props }: ComponentPropsWithoutRef<'p'>) {
   return <p className={cn('tz-card__text', className)} {...props} />
 }
+
+/** 見出しの下の説明（CardText の別名。shadcn の API に合わせたもの） */
+export const CardDescription = CardText
 
 export function CardMeta({ className, ...props }: ComponentPropsWithoutRef<'span'>) {
   return <span className={cn('tz-card__meta', className)} {...props} />

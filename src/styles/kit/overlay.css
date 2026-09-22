@@ -1,0 +1,127 @@
+/* =========================================================
+   POPOVER / HOVER CARD — 浮き紙。そばに一枚、そっと置かれる
+   ========================================================= */
+.tz-popover{width:288px;max-width:calc(100vw - 32px);padding:18px 20px}
+.tz-popover__head{display:flex;flex-direction:column;gap:4px;margin-bottom:14px}
+.tz-popover__title{margin:0;font-size:14.5px;font-weight:600;letter-spacing:.07em}
+.tz-popover__text{margin:0;font-size:12.5px;line-height:1.8;letter-spacing:.04em;color:var(--tz-ink-2)}
+.tz-hovercard{width:300px;max-width:calc(100vw - 32px);padding:18px 20px;font-size:13px;line-height:1.8}
+
+/* =========================================================
+   TOOLTIP — 添え書き。墨で塗った小さな札に白抜きの一言
+   ========================================================= */
+.tz-tip{
+  --tz-pad:8; --tz-amp:.6; --tz-grit:1; --tz-fiber:.8; --tz-radius:6; --tz-ring-off:3;
+  --tz-from-y:-3px;
+  padding:6px 11px 7px;max-width:260px;
+  font-size:12px;letter-spacing:.07em;line-height:1.6;color:var(--tz-on-ink);
+}
+.tz-tip[data-side=top]{--tz-from-y:3px}
+.tz-tip > .tz-shell .tz-fill{fill:var(--tz-ink)}
+.tz-tip > .tz-shell .tz-edge{opacity:1;stroke-width:1.2px}
+.tz-tip > .tz-shell .tz-edge2{opacity:.4}
+.tz-tip > .tz-shell .tz-grain{opacity:.3}
+.tz-tip > .tz-shell .tz-fringe{display:none}
+.tz-tip > .tz-shell .tz-shade{opacity:.45;transform:translateY(3px)}
+.tz-tip__label{display:inline-flex;align-items:center;gap:6px}
+.tz-tip[data-state=delayed-open],.tz-tip[data-state=instant-open]{animation-duration:200ms}
+
+/* =========================================================
+   DIALOG / ALERT DIALOG — 差し出す紙。画面の中央に、一枚
+   ========================================================= */
+.tz-dialog{
+  --tz-pad:26; --tz-amp:2; --tz-grit:3; --tz-fiber:2; --tz-radius:8;
+  --tz-grain-freq:0.7; --tz-grain-oct:3; --tz-ring-off:9;
+  position:fixed;inset:0;margin:auto;z-index:51;
+  width:min(520px,calc(100vw - 32px));height:fit-content;max-height:calc(100dvh - 48px);
+  display:flex;flex-direction:column;
+}
+.tz-dialog--sm{width:min(400px,calc(100vw - 32px))}
+.tz-dialog > .tz-shell .tz-shade{transform:translateY(12px);opacity:.8}
+.tz-dialog > .tz-shell .tz-fringe{opacity:.16}
+.tz-dialog__inner{display:flex;flex-direction:column;gap:18px;min-height:0;overflow:auto;padding:28px 30px 26px;
+  scrollbar-width:thin}
+/* 置かれる : 紙は少し上から落ちて、机に着く。去るときは持ち上げられる */
+.tz-dialog[data-state=open]{animation:tz-hand 420ms cubic-bezier(.16,.84,.26,1)}
+.tz-dialog[data-state=closed]{animation:tz-lift-away 200ms cubic-bezier(.4,0,1,1) forwards}
+@keyframes tz-hand{from{opacity:0;transform:translateY(-12px) rotate(-.6deg) scale(1.012)}}
+@keyframes tz-lift-away{to{opacity:0;transform:translateY(-6px) rotate(.3deg) scale(1.008)}}
+.tz-dialog[data-state=open] .tz-dialog__inner > *{animation:tz-settle 380ms cubic-bezier(.2,.9,.3,1) 180ms backwards}
+.tz-dialog > .tz-dialog__close{position:absolute;top:12px;right:12px;color:var(--tz-ink-2)}
+.tz-dialog__head{display:flex;flex-direction:column;gap:6px;padding-right:22px}
+.tz-dialog--alert .tz-dialog__head{padding-right:0}
+.tz-dialog__title{margin:0;font-size:17px;font-weight:600;letter-spacing:.08em;line-height:1.5;color:var(--tz-ink)}
+.tz-dialog__text{margin:0;font-size:13.5px;line-height:1.9;letter-spacing:.04em;color:var(--tz-ink-2)}
+.tz-dialog__foot{display:flex;flex-wrap:wrap-reverse;justify-content:flex-end;gap:10px;margin-top:6px}
+.tz-dialog__media{position:relative;display:flex;align-items:center;justify-content:center;
+  width:48px;height:48px;margin-bottom:6px;color:var(--tz-ink-2)}
+.tz-dialog__media > svg:not(.tz-dialog__ring){width:20px;height:20px}
+.tz-dialog__ring{position:absolute;left:-2px;top:-2px;width:calc(100% + 4px);height:calc(100% + 4px)}
+.tz-dialog__ring path{stroke-width:1.2}
+
+/* =========================================================
+   SHEET / DRAWER — 差し込み紙。見えるのは、耳の残った一辺だけ
+     画面の外 : 残りの三辺は画面の外へ逃がし、耳を持つ一辺だけを見せる
+   ========================================================= */
+.tz-sheet{
+  --tz-pad:28; --tz-amp:2.4; --tz-grit:3; --tz-fiber:2.2; --tz-radius:4;
+  --tz-grain-freq:0.7; --tz-grain-oct:3; --tz-ring-off:9; --tz-persp:1500px;
+  --tz-form:box; --tz-stack:0;
+  --tz-dent:0; --tz-sigma:1; --tz-sigma-min:80;
+  --tz-curl:0; --tz-tilt:0; --tz-reach:0; --tz-arrive:0;
+  --tz-lift:0; --tz-lay:0px; --tz-wear:0;
+  --tz-hide:40px; --tz-size:min(400px,88vw);
+  position:fixed;z-index:51;display:flex;flex-direction:column;
+  color:var(--tz-ink);font-family:var(--tz-font);-webkit-font-smoothing:antialiased;outline:none;
+}
+.tz-sheet > .tz-shell .tz-shade{display:block;opacity:.75}
+.tz-sheet > .tz-shell .tz-fill{fill:var(--tz-paper-up)}
+.tz-sheet > .tz-shell .tz-grain{opacity:.13}
+.tz-sheet > .tz-shell .tz-edge{opacity:.34;stroke-width:1px}
+.tz-sheet > .tz-shell .tz-edge2{opacity:.12;stroke-width:2px}
+.tz-sheet > .tz-shell .tz-fringe{display:block;opacity:.2}
+.tz-sheet--right{top:calc(var(--tz-hide) * -1);bottom:calc(var(--tz-hide) * -1);right:calc(var(--tz-hide) * -1);
+  width:calc(var(--tz-size) + var(--tz-hide));padding:var(--tz-hide) var(--tz-hide) var(--tz-hide) 0;
+  --tz-out:translateX(104%)}
+.tz-sheet--right > .tz-shell .tz-shade{transform:translateX(-10px)}
+.tz-sheet--left{top:calc(var(--tz-hide) * -1);bottom:calc(var(--tz-hide) * -1);left:calc(var(--tz-hide) * -1);
+  width:calc(var(--tz-size) + var(--tz-hide));padding:var(--tz-hide) 0 var(--tz-hide) var(--tz-hide);
+  --tz-out:translateX(-104%)}
+.tz-sheet--left > .tz-shell .tz-shade{transform:translateX(10px)}
+.tz-sheet--top,.tz-sheet--bottom{left:calc(var(--tz-hide) * -1);right:calc(var(--tz-hide) * -1);
+  --tz-size:auto;max-height:calc(88dvh + var(--tz-hide))}
+.tz-sheet--top{top:calc(var(--tz-hide) * -1);padding:var(--tz-hide) var(--tz-hide) 0;--tz-out:translateY(-104%)}
+.tz-sheet--top > .tz-shell .tz-shade{transform:translateY(10px)}
+.tz-sheet--bottom{bottom:calc(var(--tz-hide) * -1);padding:0 var(--tz-hide) var(--tz-hide);--tz-out:translateY(104%)}
+.tz-sheet--bottom > .tz-shell .tz-shade{transform:translateY(-10px)}
+.tz-sheet > *:not(.tz-shell){position:relative}
+.tz-sheet__inner{display:flex;flex-direction:column;gap:18px;flex:1;min-height:0;overflow:auto;padding:30px 28px 26px;
+  scrollbar-width:thin}
+.tz-sheet__head{display:flex;flex-direction:column;gap:6px;padding-right:28px}
+.tz-sheet__foot{display:flex;flex-direction:column;gap:10px;margin-top:auto}
+.tz-sheet > .tz-sheet__close{position:absolute;top:calc(var(--tz-hide) + 14px);right:calc(var(--tz-hide) + 14px);color:var(--tz-ink-2)}
+.tz-sheet--left .tz-sheet__close,.tz-sheet--bottom .tz-sheet__close{top:14px}
+.tz-sheet--left .tz-sheet__close{right:14px}
+.tz-sheet--bottom .tz-sheet__close{top:14px}
+/* 差し込み : 端から滑りこみ、わずかに行き過ぎて止まる */
+.tz-sheet[data-state=open]{animation:tz-slide-in 520ms cubic-bezier(.2,1.12,.3,1)}
+.tz-sheet[data-state=closed]{animation:tz-slide-out 260ms cubic-bezier(.5,0,.9,.4) forwards}
+@keyframes tz-slide-in{from{transform:var(--tz-out)}}
+@keyframes tz-slide-out{to{transform:var(--tz-out)}}
+.tz-sheet[data-state=open] .tz-sheet__inner > *{animation:tz-settle 380ms cubic-bezier(.2,.9,.3,1) 200ms backwards}
+
+/* 引き出し : 下辺から。短い一筆のつまみ */
+.tz-drawer{touch-action:none}
+.tz-drawer.is-dragging{cursor:grabbing;user-select:none}
+.tz-drawer.tz-sheet--bottom .tz-sheet__inner{padding-top:14px}
+.tz-drawer__grip{align-self:center;width:52px;height:10px;color:var(--tz-ink-3);flex:none;margin-bottom:4px}
+.tz-drawer__grip path{stroke-width:5.7}
+.tz-drawer:not(.tz-sheet--bottom) .tz-drawer__grip{display:none}
+.tz-drawer__head{text-align:center;padding-right:0;align-items:center}
+.tz-drawer.tz-sheet--bottom .tz-sheet__inner,.tz-drawer.tz-sheet--top .tz-sheet__inner{max-width:560px;width:100%;margin:0 auto}
+/* 払って閉じるときは、指を離した位置（translate）を残したまま画面の外へ出る */
+
+@media (prefers-reduced-motion:reduce){
+  .tz-dialog[data-state],.tz-sheet[data-state],
+  .tz-dialog[data-state=open] .tz-dialog__inner > *,.tz-sheet[data-state=open] .tz-sheet__inner > *{animation:none}
+}

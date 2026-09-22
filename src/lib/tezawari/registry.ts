@@ -19,6 +19,12 @@ let salt = 0
 let uid = 0
 /** 登場アニメーションの実行順序カウンター。要素がすべて破棄されたら 0 にリセット */
 let births = 0
+/** 直近の登録時刻。間を置いて現れた要素（ポップオーバーの中身など）は新しい波として 0 番から数え直す */
+let lastBirth = 0
+const WAVE_GAP = 400
+
+/** 形状の再生成を購読するリスナー。描画エンジンを通さない小さな印（チェックや丸印）が形を引き直すために使う */
+const saltListeners = new Set<() => void>()
 
 /** 同一プロパティの要素群に DOM インデックスを割り当てる（インデックスが一致すれば形状も一致する再現性を担保） */
 const seats = new Map<string, Set<number>>()
@@ -197,6 +203,10 @@ export function register(el: HTMLElement, opts: TezawariOptions = {}): SkinHandl
   const baseKey = opts.seed ?? `${el.className}${(el.textContent ?? '').trim().slice(0, 24)}`
   const seat = claimSeat(baseKey)
 
+  const now = performance.now()
+  if (now - lastBirth > WAVE_GAP) births = 0
+  lastBirth = now
+
   const st: Skin = {
     el,
     shell,
@@ -235,7 +245,7 @@ export function register(el: HTMLElement, opts: TezawariOptions = {}): SkinHandl
     drawJit: 0,
     settleTO: null,
     scribeTO: null,
-    ctl: el.querySelector('input, textarea'),
+    ctl: el.querySelector('input, textarea, select'),
     pick: el.classList.contains('tz-well--pick'),
   }
 
@@ -289,11 +299,11 @@ export function register(el: HTMLElement, opts: TezawariOptions = {}): SkinHandl
     skin: st,
     repaint(force = false) {
       if (force) st.w = 0
-      st.ctl = el.querySelector('input, textarea')
+      st.ctl = el.querySelector('input, textarea, select')
       if (paint(st, salt)) reInk(st)
     },
     ink() {
-      st.ctl ||= el.querySelector('input, textarea')
+      st.ctl ||= el.querySelector('input, textarea, select')
       reInk(st)
     },
     dispose() {
@@ -314,7 +324,8 @@ export function register(el: HTMLElement, opts: TezawariOptions = {}): SkinHandl
 /** 手描き風の水平罫線（Rule）を登録する */
 export function registerRule(el: HTMLElement): () => void {
   wire()
-  const i = rules.size
+  /* 空いている最小の番号を使う : 開閉のたびに現れる罫（メニューの区切りなど）が同じ形に揃わないように */
+  const i = claimSeat('\u0000rule')
   rules.set(el, i)
   paintRule(el, i, salt)
   const observer = new ResizeObserver(() => paintRule(el, i, salt))
@@ -322,6 +333,7 @@ export function registerRule(el: HTMLElement): () => void {
   return () => {
     observer.disconnect()
     rules.delete(el)
+    releaseSeat('\u0000rule', i)
     if (!skins.size && !rules.size) unwire()
   }
 }
@@ -337,6 +349,15 @@ export function reseed() {
   }
   for (const [el, i] of rules) paintRule(el, i, salt)
   for (const st of skins.values()) reInk(st)
+  for (const f of saltListeners) f()
+}
+
+/** 形状の再生成を購読する。戻り値は購読の解除関数 */
+export function onReseed(listener: () => void) {
+  saltListeners.add(listener)
+  return () => {
+    saltListeners.delete(listener)
+  }
 }
 
 /** レイアウト変更時などに、すべての登録要素を一括で再計測・再描画する */

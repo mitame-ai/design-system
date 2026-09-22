@@ -1,0 +1,29 @@
+/* =========================================================
+   TOGGLE — 押すと、沈んだまま残る。
+     へこみ : 入っている状態は色ではなく、面が一段沈むことで示す
+   ========================================================= */
+.tz--icon-sm{width:36px;height:36px}
+.tz-toggle{padding:10px 16px;font-size:14px}
+.tz-toggle.tz--sm{padding:7px 12px;font-size:13px}
+.tz-toggle.tz--icon,.tz-toggle.tz--icon-sm{padding:0}
+.tz-toggle[data-state=on]{--tz-sc:.982;--tz-ty:.6px}
+.tz-toggle[data-state=on] > .tz-shell .tz-fill{fill:var(--tz-ink);fill-opacity:.1}
+.tz-toggle[data-state=on] > .tz-shell .tz-edge{opacity:1;stroke-width:1.5px}
+.tz-toggle[data-state=on] > .tz-shell .tz-edge2{opacity:.4}
+.tz-toggle[data-state=on] > .tz-shell .tz-grain{opacity:.22}
+.tz-toggle.tz--bare[data-state=on] > .tz-shell .tz-edge{opacity:.7}
+.tz-toggle.tz--bare[data-state=on] > .tz-shell .tz-edge2{opacity:.16}
+.tz-toggle[data-state=off]{color:var(--tz-ink-2)}
+.tz-toggles{display:inline-flex;flex-wrap:wrap;align-items:center;gap:4px}
+.tz-toggles[data-orientation=vertical]{flex-direction:column;align-items:stretch}
+
+/* =========================================================
+   BUTTON GROUP — 器を寄せて並べる。継ぎ目は溶接しない
+   ========================================================= */
+.tz-bgroup{display:inline-flex;align-items:center;gap:3px}
+.tz-bgroup--v{flex-direction:column;align-items:stretch}
+.tz-bgroup > .tz-well{flex:1 1 auto}
+.tz-bgroup__text{display:inline-flex;align-items:center;gap:.4em;padding:0 10px;
+  font-size:13px;letter-spacing:.08em;color:var(--tz-ink-2)}
+.tz-bgroup__sep.tz-rule--v{margin:6px 4px;height:auto;align-self:stretch}
+.tz-bgroup--v .tz-bgroup__sep{margin:2px 10px}

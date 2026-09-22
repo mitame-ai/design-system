@@ -1,0 +1,218 @@
+/* =========================================================
+   BUBBLE — 吹き出し。会話の一言を、一枚の紙片に書く
+   ========================================================= */
+.tz-bubbles{display:flex;min-width:0;flex-direction:column;gap:8px}
+.tz-bubble{position:relative;display:flex;width:fit-content;max-width:80%;min-width:0;flex-direction:column;gap:4px}
+.tz-bubble.is-end,.tz-message.is-end .tz-bubble{align-self:flex-end}
+.tz-bubble--ghost{max-width:100%}
+.tz-bubble__content{
+  --tz-sc:1; --tz-ty:0px; --tz-rx:0deg; --tz-ry:0deg; --tz-nx:0deg; --tz-ny:0deg; --tz-nz:0px; --tz-lift:0; --tz-wear:0;
+  --tz-pad:10; --tz-amp:1; --tz-grit:2; --tz-fiber:1.1; --tz-radius:12;
+  --tz-grain-freq:0.8; --tz-grain-oct:2; --tz-ring-off:5; --tz-form:box; --tz-stack:0; --tz-persp:900px;
+  --tz-dent:1.8; --tz-sigma:1.2; --tz-sigma-min:40;
+  --tz-curl:0; --tz-tilt:0; --tz-reach:0; --tz-arrive:0;
+  --tz-release-dur:560ms; --tz-release-curve:cubic-bezier(.2,1.3,.34,1);
+  position:relative;display:block;width:fit-content;max-width:100%;min-width:0;padding:9px 14px 10px;margin:0;border:0;background:none;
+  font:inherit;font-size:14px;line-height:1.8;letter-spacing:.04em;text-align:left;color:var(--tz-ink);overflow-wrap:anywhere;
+  transform:perspective(var(--tz-persp)) translateY(var(--tz-ty)) rotateX(var(--tz-rx)) rotateY(var(--tz-ry)) scale(var(--tz-sc));
+  transition:--tz-sc var(--tz-release-dur) var(--tz-release-curve),--tz-rx var(--tz-release-dur) var(--tz-release-curve),
+    --tz-ry var(--tz-release-dur) var(--tz-release-curve),--tz-ty var(--tz-release-dur) var(--tz-release-curve);
+}
+.tz-bubble__content.is-press{transition-duration:var(--tz-press-dur);transition-timing-function:var(--tz-press-curve)}
+button.tz-bubble__content,a.tz-bubble__content{cursor:pointer;text-decoration:none}
+.tz-bubble.is-end .tz-bubble__content{align-self:flex-end}
+.tz-bubble__text{position:relative}
+.tz-bubble__text > p{margin:0}.tz-bubble__text > p + p{margin-top:.6em}
+.tz-bubble__content > .tz-shell .tz-edge{stroke-width:1.1px;opacity:.5}
+.tz-bubble__content > .tz-shell .tz-edge2{stroke-width:2px;opacity:.14}
+.tz-bubble__content > .tz-shell .tz-grain{opacity:.14}
+.tz-bubble__content > .tz-shell .tz-s0{stop-color:rgba(0,0,0,.12)}
+.tz-bubble__content > .tz-shell .tz-s1{stop-color:rgba(0,0,0,0)}
+.tz-bubble--ink .tz-bubble__content{color:var(--tz-on-ink)}
+.tz-bubble--ink .tz-bubble__content > .tz-shell .tz-fill{fill:var(--tz-ink)}
+.tz-bubble--ink .tz-bubble__content > .tz-shell .tz-edge{opacity:1}
+.tz-bubble--ink .tz-bubble__content > .tz-shell .tz-grain{opacity:.3}
+.tz-bubble--ink .tz-bubble__content a{color:inherit}
+.tz-bubble--paper .tz-bubble__content > .tz-shell .tz-fill{fill:var(--tz-paper-up)}
+.tz-bubble--paper .tz-bubble__content > .tz-shell .tz-shade{display:block;opacity:.3;transform:translateY(3px)}
+.tz-bubble--paper .tz-bubble__content > .tz-shell .tz-edge{opacity:.3}
+.tz-bubble--muted .tz-bubble__content > .tz-shell .tz-fill{fill:var(--tz-ink);fill-opacity:.05}
+.tz-bubble--muted .tz-bubble__content > .tz-shell .tz-edge{opacity:.14}
+.tz-bubble--muted .tz-bubble__content > .tz-shell .tz-edge2{display:none}
+.tz-bubble--contour .tz-bubble__content > .tz-shell .tz-fill{fill:var(--tz-paper);fill-opacity:.55}
+.tz-bubble--contour .tz-bubble__content > .tz-shell .tz-edge{opacity:.62}
+.tz-bubble--ghost .tz-bubble__content{padding:0}
+.tz-bubble--shu .tz-bubble__content{color:var(--tz-shu)}
+.tz-bubble--shu .tz-bubble__content > .tz-shell .tz-fill{fill:var(--tz-shu);fill-opacity:.06}
+.tz-bubble--shu .tz-bubble__content > .tz-shell .tz-edge,.tz-bubble--shu .tz-bubble__content > .tz-shell .tz-edge2{stroke:var(--tz-shu)}
+@media (hover:hover){
+  button.tz-bubble__content:hover > .tz-shell .tz-edge,a.tz-bubble__content:hover > .tz-shell .tz-edge{opacity:.85}
+}
+.tz-bubble__content:focus-visible{outline:none}
+.tz-bubble__content:focus-visible > .tz-shell .tz-ring{opacity:.95}
+.tz-bubble__reactions{
+  --tz-pad:6; --tz-amp:.55; --tz-grit:1; --tz-fiber:.8; --tz-radius:999;
+  --tz-grain-freq:0.9; --tz-grain-oct:2; --tz-ring-off:3; --tz-form:box; --tz-stack:0;
+  --tz-dent:0; --tz-reach:0; --tz-tilt:0; --tz-curl:0; --tz-arrive:0;
+  position:absolute;z-index:1;display:flex;align-items:center;gap:3px;padding:1px 7px;font-size:13px;line-height:1.6}
+.tz-bubble__reactions > *:not(.tz-shell){position:relative}
+.tz-bubble__reactions > .tz-shell .tz-fill{fill:var(--tz-paper-up)}
+.tz-bubble__reactions > .tz-shell .tz-edge{opacity:.4;stroke-width:1px}
+.tz-bubble__reactions > .tz-shell .tz-edge2{display:none}
+.tz-bubble__reactions.is-bottom{bottom:0;translate:0 70%}
+.tz-bubble__reactions.is-top{top:0;translate:0 -70%}
+.tz-bubble__reactions.is-end{right:10px}
+.tz-bubble__reactions.is-start{left:10px}
+.tz-bubble:has(.tz-bubble__reactions.is-bottom){margin-bottom:14px}
+
+/* =========================================================
+   MESSAGE — 発言。顔と吹き出しを並べる枠組み
+   ========================================================= */
+.tz-messages{display:flex;min-width:0;flex-direction:column;gap:10px}
+.tz-message{position:relative;display:flex;width:100%;min-width:0;gap:10px;font-size:14px}
+.tz-message.is-end{flex-direction:row-reverse}
+.tz-message__avatar{display:flex;flex:none;align-self:flex-end}
+.tz-message:has(.tz-message__footer) .tz-message__avatar{margin-bottom:24px}
+.tz-message__content{display:flex;width:100%;min-width:0;flex-direction:column;gap:6px;overflow-wrap:anywhere}
+.tz-message.is-end .tz-message__content{align-items:flex-end}
+.tz-message__header,.tz-message__footer{display:flex;align-items:center;gap:8px;padding:0 6px;
+  font-size:11px;letter-spacing:.1em;color:var(--tz-ink-3)}
+.tz-message.is-end .tz-message__footer,.tz-message.is-end .tz-message__header{justify-content:flex-end}
+
+/* =========================================================
+   MESSAGE SCROLLER — 会話の巻物
+   ========================================================= */
+.tz-scroller{position:relative;display:flex;min-height:0;flex-direction:column;overflow:hidden;height:100%}
+.tz-scroller__viewport{height:100%;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;
+  scrollbar-color:color-mix(in srgb,var(--tz-ink) 26%,transparent) transparent;
+  /* 巻物の端は、紙の余白へ溶かす */
+  mask-image:linear-gradient(to bottom,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%)}
+.tz-scroller__content{display:flex;min-height:100%;flex-direction:column;gap:22px;padding:22px 18px}
+.tz-scroller__item{min-width:0;flex:none}
+.tz-scroller__item:last-child{animation:tz-settle 420ms cubic-bezier(.2,.9,.3,1)}
+.tz-scroller__button{position:absolute;left:50%;margin-left:-18px;
+  transition:opacity 260ms ease,translate 360ms cubic-bezier(.2,1.25,.35,1)}
+.tz-scroller__button.is-end{bottom:14px}
+.tz-scroller__button.is-start{top:14px}
+.tz-scroller__button[data-active=false]{opacity:0;pointer-events:none}
+.tz-scroller__button.is-end[data-active=false]{translate:0 12px}
+.tz-scroller__button.is-start[data-active=false]{translate:0 -12px}
+.tz-scroller__button .tz-glyph{width:15px;height:15px}
+
+/* =========================================================
+   ATTACHMENT — 添え物の札
+   ========================================================= */
+.tz-attaches{display:flex;min-width:0;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;
+  padding:10px 8px 12px;margin:-10px -8px -12px;scrollbar-width:none}
+.tz-attaches::-webkit-scrollbar{display:none}
+.tz-attaches > .tz-attach{flex:none;scroll-snap-align:start}
+.tz-attach{
+  --tz-pad:10; --tz-amp:.9; --tz-grit:2; --tz-fiber:1; --tz-radius:9;
+  --tz-grain-freq:0.8; --tz-grain-oct:2; --tz-ring-off:5; --tz-form:box; --tz-stack:0;
+  --tz-dent:0; --tz-sigma:1; --tz-sigma-min:30;
+  --tz-curl:0; --tz-tilt:0; --tz-reach:0; --tz-arrive:0;
+  position:relative;display:flex;align-items:center;gap:10px;width:fit-content;min-width:170px;max-width:100%;
+  padding:8px 10px;font-size:13px;color:var(--tz-ink)}
+.tz-attach > *:not(.tz-shell){position:relative}
+.tz-attach > .tz-shell .tz-fill{fill:var(--tz-paper-up)}
+.tz-attach > .tz-shell .tz-edge{opacity:.4;stroke-width:1px;transition:opacity 220ms ease}
+.tz-attach > .tz-shell .tz-edge2{opacity:.12}
+.tz-attach > .tz-shell .tz-grain{opacity:.12}
+.tz-attach:has(.tz-attach__trigger:hover) > .tz-shell .tz-edge{opacity:.75}
+.tz-attach:has(.tz-attach__trigger:focus-visible) > .tz-shell .tz-ring{opacity:.95}
+.tz-attach--sm{gap:8px;padding:6px 8px;font-size:12px;min-width:150px}
+.tz-attach--xs{gap:6px;padding:4px 6px;font-size:12px;min-width:120px}
+.tz-attach--v{flex-direction:column;align-items:stretch;width:112px;min-width:0;padding:8px}
+.tz-attach__media{position:relative;display:flex;flex:none;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:7px 8px 6px 8px;overflow:hidden;
+  background:color-mix(in srgb,var(--tz-ink) 6%,transparent);color:var(--tz-ink-2)}
+.tz-attach__media > svg{width:17px;height:17px}
+.tz-attach--sm .tz-attach__media{width:30px;height:30px}
+.tz-attach--xs .tz-attach__media{width:24px;height:24px}
+.tz-attach--v .tz-attach__media{width:100%;height:auto;aspect-ratio:1}
+.tz-attach--v .tz-attach__media > svg{width:24px;height:24px}
+.tz-attach__media--image img{width:100%;height:100%;object-fit:cover;filter:saturate(.82) sepia(.08)}
+.tz-attach__content{display:flex;min-width:0;flex:1;flex-direction:column;line-height:1.35}
+.tz-attach--v .tz-attach__content{padding:0 2px}
+.tz-attach__title{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500;letter-spacing:.04em}
+.tz-attach__desc{display:block;margin-top:2px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-size:11px;letter-spacing:.06em;color:var(--tz-ink-3)}
+.tz-attach__actions{position:relative;z-index:2;display:flex;flex:none;align-items:center}
+.tz-attach--v > .tz-attach__actions{position:absolute;top:10px;right:10px}
+.tz-attach__action.tz--icon-sm{width:28px;height:28px}
+.tz-attach__action .tz-glyph{width:13px;height:13px}
+.tz-attach > .tz-attach__trigger{position:absolute;inset:0;z-index:1;margin:0;padding:0;border:0;background:none;cursor:pointer;outline:none}
+/* 下書き : 点線の当たり線 */
+.tz-attach.is-idle > .tz-shell .tz-edge{stroke:var(--tz-ink-3);stroke-dasharray:2.5 6;opacity:.8}
+.tz-attach.is-idle > .tz-shell .tz-edge2,.tz-attach.is-idle > .tz-shell .tz-fill{display:none}
+/* 縫い : 送っているあいだ、針目が縁を進む */
+.tz-attach.is-uploading > .tz-shell .tz-edge{stroke-dasharray:9 8;stroke-width:1.4px;opacity:.7;animation:tz-stitch 1.45s linear infinite}
+.tz-attach.is-uploading > .tz-shell .tz-edge2{display:none}
+/* 乾き : 墨が乾くのを待つように、文字が満ち引きする */
+.tz-attach.is-uploading .tz-attach__title,.tz-attach.is-processing .tz-attach__title{animation:tz-dry 1.8s ease-in-out infinite}
+.tz-attach.is-uploading .tz-attach__media,.tz-attach.is-processing .tz-attach__media{opacity:.6}
+@keyframes tz-dry{50%{opacity:.42}}
+/* 朱 : 失敗は左の傍線と朱の注記で */
+.tz-attach.is-error::before{content:"";position:absolute;left:4px;top:9px;bottom:9px;width:2.2px;border-radius:2px;
+  background:var(--tz-shu);opacity:.9;rotate:.6deg;filter:url(#tz-fiber-g)}
+.tz-attach.is-error .tz-attach__desc,.tz-attach.is-error .tz-attach__media{color:var(--tz-shu)}
+@media (prefers-reduced-motion:reduce){
+  .tz-attach.is-uploading > .tz-shell .tz-edge{animation-duration:3.2s}
+  .tz-attach.is-uploading .tz-attach__title,.tz-attach.is-processing .tz-attach__title,.tz-scroller__item:last-child{animation:none}
+}
+
+/* =========================================================
+   QUESTIONNAIRE — 問いの帳面。一問ずつ頁をめくる
+   ========================================================= */
+.tz-quest{display:flex;width:100%;min-width:0;flex-direction:column;gap:22px;color:var(--tz-ink)}
+.tz-quest__progress{display:flex;align-items:center;gap:14px}
+.tz-quest__count{flex:none;min-width:3.4em;font-size:11.5px;letter-spacing:.16em;color:var(--tz-ink-3);font-variant-numeric:tabular-nums}
+.tz-quest__progress .tz-progress{flex:1}
+.tz-quest__item{display:flex;min-width:0;flex-direction:column;gap:12px;margin:0;padding:0;border:0;
+  animation:tz-settle 420ms cubic-bezier(.2,.9,.3,1)}
+.tz-quest__title{font-size:17px;font-weight:600;letter-spacing:.07em;line-height:1.6}
+.tz-quest__desc{margin:-6px 0 4px;font-size:13px;line-height:1.85;letter-spacing:.04em;color:var(--tz-ink-2)}
+.tz-quest__choices{display:grid;min-width:0;gap:10px}
+.tz-quest__choice{
+  --tz-sc:1; --tz-ty:0px; --tz-rx:0deg; --tz-ry:0deg; --tz-nx:0deg; --tz-ny:0deg; --tz-nz:0px; --tz-lift:0; --tz-wear:0;
+  --tz-pad:10; --tz-amp:1; --tz-grit:2; --tz-fiber:1.1; --tz-radius:9;
+  --tz-grain-freq:0.8; --tz-grain-oct:2; --tz-ring-off:5; --tz-form:box; --tz-stack:0; --tz-persp:1000px;
+  --tz-dent:2; --tz-sigma:1.2; --tz-sigma-min:50;
+  --tz-curl:0; --tz-tilt:0; --tz-reach:0; --tz-arrive:0;
+  --tz-release-dur:600ms; --tz-release-curve:cubic-bezier(.2,1.3,.34,1);
+  position:relative;display:flex;align-items:flex-start;gap:12px;min-height:46px;padding:12px 14px;
+  font-size:14px;letter-spacing:.05em;line-height:1.55;cursor:pointer;user-select:none;-webkit-user-select:none;
+  transform:perspective(var(--tz-persp)) translateY(var(--tz-ty)) rotateX(var(--tz-rx)) rotateY(var(--tz-ry)) scale(var(--tz-sc));
+  transition:--tz-sc var(--tz-release-dur) var(--tz-release-curve),--tz-rx var(--tz-release-dur) var(--tz-release-curve),
+    --tz-ry var(--tz-release-dur) var(--tz-release-curve),--tz-ty var(--tz-release-dur) var(--tz-release-curve)}
+.tz-quest__choice.is-press{transition-duration:var(--tz-press-dur);transition-timing-function:var(--tz-press-curve)}
+.tz-quest__choice > *:not(.tz-shell):not(.tz-quest__native){position:relative}
+.tz-quest__choice > .tz-shell .tz-fill{fill:var(--tz-paper);fill-opacity:.5;transition:fill-opacity 240ms ease}
+.tz-quest__choice > .tz-shell .tz-edge{opacity:.34;stroke-width:1px;transition:opacity 220ms ease,stroke-width 220ms ease}
+.tz-quest__choice > .tz-shell .tz-edge2{opacity:.1}
+.tz-quest__choice > .tz-shell .tz-grain{opacity:.1}
+.tz-quest__choice > .tz-shell .tz-s0{stop-color:rgba(0,0,0,.1)}
+.tz-quest__choice > .tz-shell .tz-s1{stop-color:rgba(0,0,0,0)}
+@media (hover:hover){.tz-quest__choice:hover > .tz-shell .tz-edge{opacity:.62}}
+.tz-quest__choice[data-checked] > .tz-shell .tz-edge{opacity:.95;stroke-width:1.35px}
+.tz-quest__choice[data-checked] > .tz-shell .tz-edge2{opacity:.3}
+.tz-quest__choice[data-checked] > .tz-shell .tz-fill{fill:var(--tz-paper-up);fill-opacity:1}
+.tz-quest__choice:has(.tz-quest__native:focus-visible) > .tz-shell .tz-ring{opacity:.95}
+.tz-quest__choice[data-disabled]{color:var(--tz-ink-3);cursor:not-allowed}
+.tz-quest__native{position:absolute;inset:0;z-index:1;width:100%;height:100%;margin:0;opacity:0;cursor:inherit}
+.tz-quest__ind{position:relative;display:flex;flex:none;width:18px;height:18px;margin-top:1px}
+.tz-quest__ind .tz-mark{position:absolute;inset:0;width:100%;height:100%}
+.tz-quest__well{color:var(--tz-ink-2);opacity:.75}
+.tz-quest__choice[data-checked] .tz-quest__well{color:var(--tz-ink);opacity:1}
+/* チェックの印は枡から少しはみ出す（Checkbox と同じ） */
+.tz-quest__ind.is-box .tz-quest__mark{left:-1px;top:-4px;width:calc(100% + 6px);height:calc(100% + 5px)}
+.tz-quest__label{display:flex;min-width:0;flex:1;flex-direction:column;gap:2px}
+.tz-quest__choice-desc{font-size:12.5px;letter-spacing:.04em;color:var(--tz-ink-2)}
+.tz-quest__key{margin-left:auto;flex:none}
+.tz-quest__item.is-error .tz-quest__choice > .tz-shell .tz-edge{opacity:.5}
+.tz-quest__actions{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:10px}
+.tz-quest__prev{justify-self:start}
+.tz-quest__skip{grid-column:2}
+.tz-quest__next{grid-column:3}
+.tz-quest__spacer{display:block}
+@media (prefers-reduced-motion:reduce){.tz-quest__item{animation:none}.tz-quest__choice{transition:none}}

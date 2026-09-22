@@ -28,10 +28,15 @@ export function ink(st: Skin) {
   const padR = Number.parseFloat(cs.paddingRight) || 0
   const inner = Math.max(0, ctl.clientWidth - padL - padR)
   const left = st.pad + ctl.offsetLeft + padL
-  const v = ctl.value
+  /* ネイティブのセレクトは値ではなく、選ばれた選択肢の表示文字を罫に写す */
+  const isSelect = ctl instanceof HTMLSelectElement
+  const v = isSelect ? ctl.value && (ctl.selectedOptions[0]?.text ?? '') : ctl.value
 
   well.classList.toggle('has-ink', v.length > 0)
-  if (ctl.tagName === 'INPUT') {
+  if (isSelect) {
+    well.style.setProperty('--tz-ink-from', left.toFixed(1))
+    well.style.setProperty('--tz-ink-len', Math.min(textWidth(ctl, v), inner).toFixed(1))
+  } else if (ctl instanceof HTMLInputElement) {
     well.style.setProperty('--tz-ink-from', left.toFixed(1))
     well.style.setProperty('--tz-ink-len', Math.min(textWidth(ctl, v), inner).toFixed(1))
     let caret = v.length

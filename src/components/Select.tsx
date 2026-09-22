@@ -19,6 +19,7 @@ import { Shell } from '../lib/slot'
 import { circleMark } from '../lib/tezawari/geometry'
 import { fnv, mulberry32 } from '../lib/tezawari/random'
 import { cn } from '../lib/utils'
+import { Rule } from './Rule'
 
 /* =========================================================
    SELECT — セレクトメニュー。
@@ -473,6 +474,36 @@ export function SelectItem({
         <path d="" />
       </svg>
       <span className="tz-slip__label">{children}</span>
+    </li>
+  )
+}
+
+/* ---------- 選択肢の組 ---------- */
+
+const GroupCtx = createContext<string | undefined>(undefined)
+
+/** 選択肢をまとめる組。SelectLabel を置くと、その言葉が組の名前になる */
+export function SelectGroup({ className, children, ...props }: ComponentPropsWithoutRef<'ul'>) {
+  const id = useId()
+  return (
+    <li role="presentation" className="tz-slips__group">
+      {/* biome-ignore lint/a11y/useSemanticElements: listbox の中の選択肢の組 */}
+      <ul role="group" aria-labelledby={id} className={cn('tz-slips__list', className)} {...props}>
+        <GroupCtx.Provider value={id}>{children}</GroupCtx.Provider>
+      </ul>
+    </li>
+  )
+}
+
+export function SelectLabel({ className, ...props }: ComponentPropsWithoutRef<'li'>) {
+  const id = useContext(GroupCtx)
+  return <li role="presentation" id={id} className={cn('tz-slips__label', className)} {...props} />
+}
+
+export function SelectSeparator({ className }: { className?: string }) {
+  return (
+    <li role="presentation" aria-hidden="true" className={cn('tz-slips__sep', className)}>
+      <Rule role="none" />
     </li>
   )
 }

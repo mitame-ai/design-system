@@ -95,6 +95,16 @@ export function paint(st: Skin, salt: number): boolean {
       }),
       false,
     )
+  } else if (form === 'vrule') {
+    /* 縦の罫（vrule）：要素の中央を上から下へ走る一本の線。縦のスライダーなどに使う */
+    const x = pad + w / 2
+    const y0 = pad - 4
+    const y1 = pad + h + 4
+    const n = Math.max(10, Math.round((y1 - y0) / step))
+    const wob = wobbler(rand, grit)
+    st.base = []
+    for (let i = 0; i <= n; i++) st.base.push([x + wob(i / n / 2) * amp, y0 + ((y1 - y0) * i) / n])
+    st.closed = false
   } else {
     const raw = basePoints(pad, pad, w, h, round, step)
     st.base = organic(raw, normals(raw), wobbler(rand, grit), amp)
@@ -218,17 +228,28 @@ export function paintRule(el: HTMLElement, index: number, salt: number) {
   const h = Math.round(el.offsetHeight) || 9
   const rand = mulberry32(fnv(`rule${index}|${salt}`))
   const wob = wobbler(rand, 2)
-  const n = Math.max(6, Math.round(w / 9))
   const f = (v: number) => v.toFixed(2)
-  const y = h / 2
+  /* 縦の罫：高さが幅を上回る要素は、上から下へ引く */
+  const vertical = h > w
+  const len = vertical ? h : w
+  const thick = vertical ? w : h
+  const n = Math.max(6, Math.round(len / 9))
+  /* 短い罫ほど揺れを抑える : 振れ幅が長さに対して大きすぎると、罫ではなく斜線に見える */
+  const sway = (thick / 2 - 0.8) * Math.min(1, len / 120)
   const pts: Point[] = []
-  for (let i = 0; i <= n; i++) pts.push([1 + ((w - 2) * i) / n, y + wob(i / n / 2) * (h / 2 - 0.8)])
+  for (let i = 0; i <= n; i++) {
+    const t = i / n
+    const along = 1 + (len - 2) * t
+    const across = thick / 2 + wob(t / 2) * sway
+    pts.push(vertical ? [across, along] : [along, across])
+  }
   let d = `M${f((pts[0] as Point)[0])},${f((pts[0] as Point)[1])}`
   for (let i = 1; i < pts.length; i++) {
     const p = pts[i - 1] as Point
     const q = pts[i] as Point
-    const mx = (p[0] + q[0]) / 2
-    d += `Q${f(mx)},${f(p[1])} ${f(q[0])},${f(q[1])}`
+    d += vertical
+      ? `Q${f(p[0])},${f((p[1] + q[1]) / 2)} ${f(q[0])},${f(q[1])}`
+      : `Q${f((p[0] + q[0]) / 2)},${f(p[1])} ${f(q[0])},${f(q[1])}`
   }
   el.innerHTML =
     `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">` +

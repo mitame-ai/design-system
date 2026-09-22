@@ -23,6 +23,7 @@ export const buttonVariants = cva('tz', {
       md: '',
       lg: 'tz--lg',
       icon: 'tz--icon',
+      'icon-sm': 'tz--icon tz--icon-sm',
     },
   },
   defaultVariants: {

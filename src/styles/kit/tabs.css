@@ -1,0 +1,65 @@
+/* =========================================================
+   TABS — 見出しを並べ、一枚ずつ読む。
+     一筆   : 選ばれた見出しの下に、その場で一筆引く（line）
+     浮く紙 : 沈めた溝の中で、選ばれた見出しだけが紙として浮く（inlay）
+   ========================================================= */
+.tz-tabs{display:flex;flex-direction:column;gap:18px}
+.tz-tabs[data-orientation=vertical]{flex-direction:row}
+.tz-tabs__list{position:relative;display:inline-flex;align-items:center;gap:4px;width:fit-content}
+.tz-tabs[data-orientation=vertical] .tz-tabs__list{flex-direction:column;align-items:stretch}
+.tz-tab{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:9px 14px 11px;margin:0;border:0;background:none;
+  font:inherit;font-size:14px;letter-spacing:.07em;color:var(--tz-ink-3);cursor:pointer;
+  -webkit-tap-highlight-color:transparent;transition:color 200ms ease;outline:none;white-space:nowrap}
+.tz-tab__label{position:relative;display:inline-flex;align-items:center;gap:7px}
+.tz-tab__label > svg{width:15px;height:15px}
+.tz-tab[data-state=active]{color:var(--tz-ink)}
+@media (hover:hover){.tz-tab:hover:not(:disabled){color:var(--tz-ink-2)}.tz-tab[data-state=active]:hover{color:var(--tz-ink)}}
+.tz-tab:disabled{cursor:not-allowed;opacity:.55}
+.tz-tab:focus-visible{outline:1.5px solid var(--tz-focus);outline-offset:-2px;border-radius:6px}
+
+/* line : 下線は、選ばれた瞬間に左から右へ書かれる */
+.tz-tabs__list--line{padding-bottom:1px}
+/* svg は置換要素なので left/right だけでは伸びない。幅は明示する */
+.tz-tab__line{position:absolute;left:10px;bottom:1px;width:calc(100% - 20px);height:7px;opacity:0;
+  transition:opacity 200ms ease;color:var(--tz-ink)}
+/* 19 の viewBox を高さ 7px に縮めるので、線幅は 19/7 倍で書く（約 2.1px） */
+.tz-tab__line path{stroke-width:5.7}
+.tz-tab[data-state=active] .tz-tab__line{opacity:.92}
+.tz-tab[data-state=active] .tz-tab__line path{animation:tz-write 360ms cubic-bezier(.45,.05,.2,1)}
+@media (hover:hover){.tz-tab:hover:not([data-state=active]) .tz-tab__line{opacity:.18}}
+
+/* inlay : 溝と、浮く紙 */
+.tz-tabs__list--inlay{
+  --tz-pad:10; --tz-amp:1; --tz-grit:2; --tz-fiber:1.1; --tz-radius:10;
+  --tz-grain-freq:0.8; --tz-grain-oct:2; --tz-ring-off:5; --tz-form:box; --tz-stack:0;
+  --tz-dent:0; --tz-reach:0; --tz-tilt:0; --tz-curl:0; --tz-arrive:0;
+  padding:4px;gap:2px}
+.tz-tabs__list--inlay > .tz-shell .tz-fill{fill:var(--tz-ink);fill-opacity:.045}
+.tz-tabs__list--inlay > .tz-shell .tz-edge{opacity:.16;stroke-width:1px}
+.tz-tabs__list--inlay > .tz-shell .tz-edge2{display:none}
+.tz-tabs__list--inlay > .tz-shell .tz-grain{opacity:.08}
+.tz-tabs__list--inlay .tz-tab{
+  --tz-sc:1; --tz-ty:0px; --tz-rx:0deg; --tz-ry:0deg; --tz-nx:0deg; --tz-ny:0deg; --tz-nz:0px; --tz-lift:0; --tz-wear:0;
+  --tz-pad:8; --tz-amp:.8; --tz-grit:1; --tz-fiber:.9; --tz-radius:8;
+  --tz-grain-freq:0.85; --tz-grain-oct:2; --tz-ring-off:4; --tz-form:box; --tz-stack:0; --tz-persp:600px;
+  --tz-dent:1.8; --tz-sigma:.6; --tz-sigma-min:18;
+  --tz-curl:0; --tz-tilt:0; --tz-reach:0; --tz-arrive:0;
+  padding:7px 14px;font-size:13.5px}
+.tz-tabs__list--inlay .tz-tab > .tz-shell .tz-fill{fill:var(--tz-paper-up);fill-opacity:0;transition:fill-opacity 240ms ease}
+.tz-tabs__list--inlay .tz-tab > .tz-shell .tz-shade{display:block;opacity:0;transform:translateY(2.5px);transition:opacity 240ms ease}
+.tz-tabs__list--inlay .tz-tab > .tz-shell .tz-edge{opacity:0;stroke-width:1px;transition:opacity 240ms ease}
+.tz-tabs__list--inlay .tz-tab > .tz-shell .tz-edge2,.tz-tabs__list--inlay .tz-tab > .tz-shell .tz-grain{opacity:0}
+.tz-tabs__list--inlay .tz-tab[data-state=active] > .tz-shell .tz-fill{fill-opacity:1}
+.tz-tabs__list--inlay .tz-tab[data-state=active] > .tz-shell .tz-shade{opacity:.35}
+.tz-tabs__list--inlay .tz-tab[data-state=active] > .tz-shell .tz-edge{opacity:.4}
+.tz-tabs__list--inlay .tz-tab[data-state=active] > .tz-shell .tz-grain{opacity:.1}
+.tz-tabs__list--inlay .tz-tab:focus-visible{outline:none}
+.tz-tabs__list--inlay .tz-tab:focus-visible > .tz-shell .tz-ring{opacity:.95}
+
+.tz-tabs__panel{outline:none}
+.tz-tabs__panel[data-state=active]{animation:tz-settle 360ms cubic-bezier(.2,.9,.3,1)}
+.tz-tabs__panel:focus-visible{outline:1.5px dashed var(--tz-ink-3);outline-offset:6px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){
+  .tz-tab[data-state=active] .tz-tab__line path,.tz-tabs__panel[data-state=active]{animation:none}
+}

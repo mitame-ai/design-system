@@ -1,0 +1,20 @@
+/* =========================================================
+   SKELETON — 下書き。墨を入れる前の、点線の当たり線。
+     湿り : 光は走らせない。紙が湿るように、面の濃さだけが満ち引きする
+   ========================================================= */
+.tz-sketch{
+  --tz-pad:6; --tz-amp:.7; --tz-grit:2; --tz-fiber:.9; --tz-radius:6;
+  --tz-grain-freq:0.8; --tz-grain-oct:2; --tz-ring-off:4; --tz-form:box; --tz-stack:0;
+  --tz-dent:0; --tz-sigma:1; --tz-sigma-min:10;
+  --tz-curl:0; --tz-tilt:0; --tz-reach:0; --tz-arrive:0;
+  position:relative;display:block;min-height:12px;
+}
+.tz-sketch > .tz-shell{animation:none}
+.tz-sketch > .tz-shell .tz-fill{fill:var(--tz-ink);fill-opacity:.045;
+  animation:tz-damp 2.4s ease-in-out infinite}
+.tz-sketch > .tz-shell .tz-grain{opacity:.1}
+.tz-sketch > .tz-shell .tz-edge{stroke:var(--tz-ink-3);stroke-dasharray:2.5 6;stroke-width:1px;opacity:.7}
+.tz-sketch > .tz-shell .tz-edge2{display:none}
+@keyframes tz-damp{50%{fill-opacity:.09}}
+@media (prefers-reduced-motion:reduce){.tz-sketch > .tz-shell .tz-fill{animation:none}}
+.tz-sketch.rounded-full{--tz-radius:999}

@@ -3,6 +3,11 @@ import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
+import pkg from './package.json' with { type: 'json' }
+
+/* 依存は利用側で解決させる : react / radix-ui / recharts などを dist に焼き込まない（サブパスも含む） */
+const deps = [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)]
+const external = (id: string) => deps.some((d) => id === d || id.startsWith(`${d}/`))
 
 export default defineConfig({
   plugins: [
@@ -26,7 +31,7 @@ export default defineConfig({
     },
     cssCodeSplit: false,
     rollupOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime'],
+      external,
       output: {
         assetFileNames: (info) =>
           info.names?.some((n) => n.endsWith('.css')) ? 'tezawari.css' : '[name][extname]',

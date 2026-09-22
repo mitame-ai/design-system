@@ -1,0 +1,25 @@
+/* =========================================================
+   KBD — 木の札。触れても応えない（押されるのは本物のキー）。
+     下辺の筆圧 : 手前の縁だけ墨が濃い。札の厚みに見える
+   ========================================================= */
+.tz-kbd{
+  --tz-pad:5; --tz-amp:.45; --tz-grit:1; --tz-fiber:.7; --tz-radius:4.5;
+  --tz-grain-freq:0.9; --tz-grain-oct:2; --tz-ring-off:3; --tz-form:box; --tz-stack:0;
+  --tz-dent:0; --tz-sigma:1; --tz-sigma-min:10;
+  --tz-curl:0; --tz-tilt:0; --tz-reach:0; --tz-arrive:0;
+  position:relative;display:inline-flex;align-items:center;justify-content:center;
+  min-width:21px;height:21px;padding:0 6px;margin:0;
+  font:inherit;font-size:11px;font-weight:500;letter-spacing:.04em;line-height:1;
+  color:var(--tz-ink-2);vertical-align:.08em;white-space:nowrap;
+}
+.tz-kbd > .tz-shell .tz-fill{fill:var(--tz-paper-up)}
+.tz-kbd > .tz-shell .tz-grain{opacity:.12}
+.tz-kbd > .tz-shell .tz-edge{opacity:.46;stroke-width:1px}
+.tz-kbd > .tz-shell .tz-edge2{opacity:.22;stroke-width:1.8px}
+.tz-kbd__face{position:relative;transform:translateY(-.5px)}
+.tz-kbd-group{display:inline-flex;align-items:center;gap:3px;font:inherit}
+/* 墨の面の上に置くときは、札も墨に沈める */
+.tz--ink .tz-kbd,.tz-tip .tz-kbd{color:inherit}
+.tz--ink .tz-kbd > .tz-shell .tz-fill,.tz-tip .tz-kbd > .tz-shell .tz-fill{fill:var(--tz-on-ink);fill-opacity:.12}
+.tz--ink .tz-kbd > .tz-shell .tz-edge,.tz-tip .tz-kbd > .tz-shell .tz-edge{stroke:var(--tz-on-ink);opacity:.5}
+.tz--ink .tz-kbd > .tz-shell .tz-edge2,.tz-tip .tz-kbd > .tz-shell .tz-edge2{display:none}

@@ -1,7 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Cap, Cards, Reseed } from '../stories/layout'
 import { Button } from './Button'
-import { Card, CardFooter, CardMedia, CardMeta, CardText, CardTitle } from './Card'
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardMedia,
+  CardMeta,
+  CardText,
+  CardTitle,
+} from './Card'
 import { Icon } from './Icon'
 import { Rule } from './Rule'
 
@@ -116,6 +127,29 @@ export const PickedUp: Story = {
         </Card>
       </Cards>
       <Reseed />
+    </>
+  ),
+}
+
+export const Slots: Story = {
+  name: '見出しの行と右肩',
+  render: () => (
+    <>
+      <Cap>見 出 し の 行 — 右 肩 に 操 作 を 置 く</Cap>
+      <Cards>
+        <Card>
+          <CardHeader>
+            <CardTitle>窯の予約</CardTitle>
+            <CardDescription>次の窯は水曜に焚きます</CardDescription>
+            <CardAction>
+              <Button variant="bare" size="sm">
+                変える
+              </Button>
+            </CardAction>
+          </CardHeader>
+          <CardContent>残り 12 点分の棚が空いています。</CardContent>
+        </Card>
+      </Cards>
     </>
   ),
 }

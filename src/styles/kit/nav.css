@@ -1,0 +1,28 @@
+/* =========================================================
+   BREADCRUMB — 道しるべ。区切りは筆の返し
+   ========================================================= */
+.tz-crumbs{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0;padding:0;list-style:none;
+  font-size:13px;letter-spacing:.06em;color:var(--tz-ink-3);overflow-wrap:anywhere}
+.tz-crumbs__item{display:inline-flex;align-items:center;gap:6px}
+.tz-crumbs__link{color:var(--tz-ink-2);text-decoration:none;transition:color 200ms ease}
+.tz-crumbs__link:hover{color:var(--tz-ink);text-decoration:underline;text-decoration-thickness:1px;
+  text-underline-offset:4px;text-decoration-color:var(--tz-ink-3)}
+.tz-crumbs__link:focus-visible{outline:1.5px solid var(--tz-focus);outline-offset:3px;border-radius:3px}
+.tz-crumbs__page{color:var(--tz-ink);font-weight:500}
+.tz-crumbs__sep{display:inline-flex;color:var(--tz-ink-3)}
+.tz-crumbs__sep .tz-glyph{width:12px;height:12px}
+.tz-crumbs__more{display:inline-flex;width:24px;height:24px;align-items:center;justify-content:center}
+
+/* =========================================================
+   PAGINATION — 頁送り。開いている頁の数字に、その場で丸を付ける
+   ========================================================= */
+.tz-pages{display:flex;justify-content:center;width:100%}
+.tz-pages__list{display:flex;flex-wrap:wrap;align-items:center;gap:2px;margin:0;padding:0;list-style:none}
+.tz-pages__link{font-size:14px;letter-spacing:.02em;color:var(--tz-ink-2);text-decoration:none}
+.tz-pages__link.tz--icon-sm{width:38px;height:38px}
+.tz-pages__link.is-current{color:var(--tz-ink);font-weight:600}
+.tz-pages__ring{position:absolute;left:50%;top:50%;width:32px;height:32px;margin:-16px 0 0 -16px;color:var(--tz-ink)}
+.tz-pages__ring path{stroke-width:1.3}
+.tz-pages__step{gap:6px}
+.tz-pages__step .tz-glyph{width:13px;height:13px}
+.tz-pages__more{display:inline-flex;width:38px;height:38px;align-items:center;justify-content:center;color:var(--tz-ink-3)}

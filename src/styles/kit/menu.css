@@ -1,0 +1,74 @@
+/* =========================================================
+   MENU — 札。DropdownMenu / ContextMenu / Menubar の降りてくる紙
+     配る : 開くと項目が一枚ずつ現れる。揃って並ばない（Select と同じ）
+   ========================================================= */
+.tz-menu[data-state=open] .tz-mi{animation:tz-deal 300ms cubic-bezier(.2,.95,.3,1) backwards}
+.tz-menu__scroll > :nth-child(2){--tz-di:1}.tz-menu__scroll > :nth-child(3){--tz-di:2}
+.tz-menu__scroll > :nth-child(4){--tz-di:3}.tz-menu__scroll > :nth-child(5){--tz-di:4}
+.tz-menu__scroll > :nth-child(6){--tz-di:5}.tz-menu__scroll > :nth-child(7){--tz-di:6}
+.tz-menu__scroll > :nth-child(8){--tz-di:7}.tz-menu__scroll > :nth-child(n+9){--tz-di:8}
+.tz-menu[data-state=open] .tz-mi{animation-delay:calc(var(--tz-di,0) * 22ms)}
+
+/* =========================================================
+   MENUBAR — 献立。上に並ぶ見出しの溝
+   ========================================================= */
+.tz-menubar{
+  --tz-pad:8; --tz-amp:.9; --tz-grit:2; --tz-fiber:1; --tz-radius:9;
+  --tz-grain-freq:0.8; --tz-grain-oct:2; --tz-ring-off:4; --tz-form:box; --tz-stack:0;
+  --tz-dent:0; --tz-sigma:1; --tz-sigma-min:30;
+  --tz-curl:0; --tz-tilt:0; --tz-reach:0; --tz-arrive:0;
+  position:relative;display:flex;align-items:center;gap:2px;width:fit-content;padding:4px}
+.tz-menubar > .tz-shell .tz-fill{fill:var(--tz-ink);fill-opacity:.04}
+.tz-menubar > .tz-shell .tz-edge{opacity:.22;stroke-width:1px}
+.tz-menubar > .tz-shell .tz-edge2{display:none}
+.tz-menubar > .tz-shell .tz-grain{opacity:.08}
+.tz-menubar__trigger{position:relative;display:flex;align-items:center;padding:6px 12px;margin:0;border:0;background:none;
+  border-radius:7px;font:inherit;font-size:13.5px;letter-spacing:.06em;color:var(--tz-ink-2);cursor:pointer;outline:none;
+  transition:color 180ms ease}
+.tz-menubar__trigger::after{content:"";position:absolute;left:12px;right:12px;bottom:3px;height:1.6px;border-radius:1px;
+  background:var(--tz-ink);opacity:0;transform:scaleX(.2);transform-origin:left;filter:url(#tz-fiber-g);
+  transition:opacity 200ms ease,transform 320ms cubic-bezier(.45,.05,.2,1)}
+.tz-menubar__trigger[data-highlighted],.tz-menubar__trigger[data-state=open],.tz-menubar__trigger:hover{color:var(--tz-ink)}
+.tz-menubar__trigger[data-state=open]::after,.tz-menubar__trigger:focus-visible::after{opacity:.85;transform:none}
+
+/* =========================================================
+   NAVIGATION MENU — 案内。見出しの下に案内の紙を一枚広げる
+   ========================================================= */
+.tz-nav{position:relative;z-index:10;display:flex;max-width:max-content;align-items:center;justify-content:center}
+.tz-nav__list{display:flex;flex:1;align-items:center;justify-content:center;gap:2px;margin:0;padding:0;list-style:none}
+.tz-nav__item{position:relative}
+.tz-nav__trigger,.tz-nav__list > .tz-nav__item > .tz-nav__link{
+  position:relative;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;margin:0;border:0;background:none;
+  font:inherit;font-size:14px;letter-spacing:.06em;color:var(--tz-ink-2);text-decoration:none;cursor:pointer;outline:none;
+  transition:color 180ms ease}
+.tz-nav__trigger:hover,.tz-nav__trigger[data-state=open],.tz-nav__list > .tz-nav__item > .tz-nav__link:hover{color:var(--tz-ink)}
+.tz-nav__trigger:focus-visible,.tz-nav__link:focus-visible{outline:1.5px solid var(--tz-focus);outline-offset:-1px;border-radius:6px}
+.tz-nav__turn{width:11px;height:11px;transition:rotate 380ms cubic-bezier(.2,1.25,.35,1)}
+.tz-nav__trigger[data-state=open] .tz-nav__turn{rotate:180deg}
+.tz-nav__stage{position:absolute;left:0;top:100%;display:flex;justify-content:center;perspective:1500px}
+.tz-nav__viewport{position:relative;margin-top:10px;overflow:visible;
+  width:var(--radix-navigation-menu-viewport-width);height:var(--radix-navigation-menu-viewport-height);
+  transition:width 300ms cubic-bezier(.2,.9,.3,1),height 300ms cubic-bezier(.2,.9,.3,1)}
+.tz-nav__content{position:absolute;left:0;top:0;padding:18px;width:max-content}
+.tz-nav__content[data-motion=from-start]{animation:tz-nav-from-start 260ms cubic-bezier(.2,.9,.3,1)}
+.tz-nav__content[data-motion=from-end]{animation:tz-nav-from-end 260ms cubic-bezier(.2,.9,.3,1)}
+.tz-nav__content[data-motion=to-start]{animation:tz-nav-to-start 200ms ease-in forwards}
+.tz-nav__content[data-motion=to-end]{animation:tz-nav-to-end 200ms ease-in forwards}
+@keyframes tz-nav-from-start{from{opacity:0;transform:translateX(-24px)}}
+@keyframes tz-nav-from-end{from{opacity:0;transform:translateX(24px)}}
+@keyframes tz-nav-to-start{to{opacity:0;transform:translateX(-24px)}}
+@keyframes tz-nav-to-end{to{opacity:0;transform:translateX(24px)}}
+.tz-nav__content .tz-nav__link{display:flex;flex-direction:column;gap:4px;padding:10px 12px;border-radius:7px;
+  color:var(--tz-ink);text-decoration:none;outline:none;position:relative;transition:transform 260ms cubic-bezier(.2,1.1,.3,1)}
+.tz-nav__content .tz-nav__link::before{content:"";position:absolute;left:0;top:12px;width:2px;height:15px;border-radius:1.2px;
+  background:var(--tz-ink);opacity:0;rotate:-7deg;transition:opacity 180ms ease}
+.tz-nav__content .tz-nav__link:hover,.tz-nav__content .tz-nav__link:focus-visible{transform:translateX(4px)}
+.tz-nav__content .tz-nav__link:hover::before,.tz-nav__content .tz-nav__link:focus-visible::before{opacity:.85}
+.tz-nav__content .tz-nav__link[data-active]::before{opacity:.5}
+.tz-nav__indicator{top:100%;z-index:1;display:flex;height:10px;justify-content:center;overflow:hidden;color:var(--tz-ink-3);
+  transition:width 250ms ease,transform 250ms ease}
+.tz-nav__indicator .tz-glyph{width:12px;height:12px;margin-top:2px}
+@media (prefers-reduced-motion:reduce){
+  .tz-menu[data-state=open] .tz-mi,.tz-nav__content[data-motion]{animation:none}
+  .tz-nav__viewport{transition:none}
+}

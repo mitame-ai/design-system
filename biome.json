@@ -67,7 +67,12 @@
     },
     {
       "includes": ["**/*.stories.tsx"],
-      "linter": { "rules": { "suspicious": { "noArrayIndexKey": "off" } } }
+      "linter": {
+        "rules": {
+          "suspicious": { "noArrayIndexKey": "off" },
+          "a11y": { "noLabelWithoutControl": "off" }
+        }
+      }
     }
   ]
 }

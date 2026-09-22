@@ -2,7 +2,16 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
 import { Cap, Fields, Reseed } from '../stories/layout'
 import { Field, FieldLabel, FieldNote } from './Field'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './Select'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from './Select'
 
 const meta = {
   title: '手触り / Select',
@@ -145,6 +154,40 @@ export const OpeningUpward: Story = {
         </Field>
       </Fields>
       <Reseed />
+    </>
+  ),
+}
+
+export const Grouped: Story = {
+  name: '組に分ける',
+  render: () => (
+    <>
+      <Cap>組 — 選 択 肢 を 産 地 ご と に ま と め る</Cap>
+      <Fields>
+        <Field>
+          <FieldLabel asSpan id="g-soil">
+            産 地
+          </FieldLabel>
+          <Select>
+            <SelectTrigger aria-labelledby="g-soil">
+              <SelectValue placeholder="まだ決めていない" />
+            </SelectTrigger>
+            <SelectContent aria-labelledby="g-soil">
+              <SelectGroup>
+                <SelectLabel>近 畿</SelectLabel>
+                <SelectItem value="信楽">信楽</SelectItem>
+                <SelectItem value="丹波">丹波</SelectItem>
+              </SelectGroup>
+              <SelectSeparator />
+              <SelectGroup>
+                <SelectLabel>九 州</SelectLabel>
+                <SelectItem value="唐津">唐津</SelectItem>
+                <SelectItem value="有田">有田</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </Field>
+      </Fields>
     </>
   ),
 }

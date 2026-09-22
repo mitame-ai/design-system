@@ -1,0 +1,21 @@
+/* =========================================================
+   SPINNER — 待ち。手縫いの針目が輪を回る。
+     拍 : 引く、止める、また引く。一定の速さでは回らない
+   ========================================================= */
+.tz-spinner{display:inline-flex;width:1.25em;height:1.25em;color:var(--tz-ink-2);flex:none}
+.tz-spinner .tz-mark{width:100%;height:100%}
+.tz-spinner .tz-mark path{stroke-width:1.6;stroke-dasharray:.075 .055;
+  animation:tz-stitch-ring 1.45s linear infinite}
+.tz-spinner .tz-mark{animation:tz-spin-drift 5.2s linear infinite}
+@keyframes tz-stitch-ring{
+  0%  {stroke-dashoffset:0;    animation-timing-function:cubic-bezier(.4,0,.15,1)}
+  40% {stroke-dashoffset:-.13; animation-timing-function:linear}
+  54% {stroke-dashoffset:-.13; animation-timing-function:cubic-bezier(.4,0,.15,1)}
+  94% {stroke-dashoffset:-.26; animation-timing-function:linear}
+  100%{stroke-dashoffset:-.26}
+}
+@keyframes tz-spin-drift{to{rotate:360deg}}
+@media (prefers-reduced-motion:reduce){
+  .tz-spinner .tz-mark path{animation-duration:3.2s}
+  .tz-spinner .tz-mark{animation:none}
+}

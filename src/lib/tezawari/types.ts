@@ -1,6 +1,6 @@
 export type Point = [number, number]
 
-export type Form = 'box' | 'rule' | 'ruled'
+export type Form = 'box' | 'rule' | 'vrule' | 'ruled'
 
 /** 各コンポーネント個体の状態管理データ。index.html の `el.__tz` に相当 */
 export interface Skin {
@@ -59,8 +59,8 @@ export interface Skin {
   settleTO: ReturnType<typeof setTimeout> | null
   scribeTO: ReturnType<typeof setTimeout> | null
 
-  /** フィールドに内包される input / textarea 要素 */
-  ctl: HTMLInputElement | HTMLTextAreaElement | null
+  /** フィールドに内包される input / textarea / select 要素 */
+  ctl: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
   /** セレクトフィールド：選択されたテキスト幅をインク描画に反映 */
   pick: boolean
 }

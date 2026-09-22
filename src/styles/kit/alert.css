@@ -1,0 +1,74 @@
+/* =========================================================
+   ALERT — 貼り紙。読んでほしいことを、紙に沈めて示す。
+     傍線 : 朱の貼り紙は、面も枠も塗らない。左に朱の線を一本引く
+   ========================================================= */
+.tz-alert{
+  --tz-pad:14; --tz-amp:1.3; --tz-grit:2; --tz-fiber:1.3; --tz-radius:7;
+  --tz-grain-freq:0.75; --tz-grain-oct:2; --tz-ring-off:6; --tz-form:box; --tz-stack:0;
+  --tz-dent:0; --tz-sigma:1; --tz-sigma-min:60;
+  --tz-curl:0; --tz-tilt:0; --tz-reach:0; --tz-arrive:0;
+  position:relative;display:grid;grid-template-columns:1fr;align-items:start;column-gap:12px;row-gap:3px;
+  padding:15px 18px 16px;color:var(--tz-ink);
+}
+.tz-alert > *:not(.tz-shell){position:relative}
+.tz-alert:has(> .tz-glyph,> .tz-ico,> svg:not(.tz-shell *)){grid-template-columns:18px 1fr}
+.tz-alert > .tz-glyph,.tz-alert > .tz-ico,.tz-alert > svg{grid-row:span 2;width:17px;height:17px;margin-top:2px;color:var(--tz-ink-2)}
+.tz-alert > .tz-shell .tz-fill{fill:var(--tz-ink);fill-opacity:.03}
+.tz-alert > .tz-shell .tz-grain{opacity:.1}
+.tz-alert > .tz-shell .tz-edge{opacity:.3;stroke-width:1px}
+.tz-alert > .tz-shell .tz-edge2{display:none}
+.tz-alert__title{font-size:14px;font-weight:600;letter-spacing:.07em;line-height:1.55}
+.tz-alert__text{font-size:13px;line-height:1.85;letter-spacing:.04em;color:var(--tz-ink-2)}
+.tz-alert__text p{margin:0}
+.tz-alert > .tz-alert__action{position:absolute;top:10px;right:10px}
+.tz-alert:has(.tz-alert__action){padding-right:64px}
+.tz-alert--shu::before{content:"";position:absolute;left:6px;top:13px;bottom:13px;width:2.4px;
+  border-radius:2px;background:var(--tz-shu);opacity:.9;rotate:.6deg;filter:url(#tz-fiber-g)}
+.tz-alert--shu > .tz-glyph,.tz-alert--shu > .tz-ico,.tz-alert--shu > svg,
+.tz-alert--shu .tz-alert__title{color:var(--tz-shu)}
+
+/* =========================================================
+   EMPTY — 空。まだ何も書かれていない紙。
+     当たり線 : 枠は墨を入れる前の点線で描く
+   ========================================================= */
+.tz-empty{
+  --tz-pad:14; --tz-amp:1.8; --tz-grit:2; --tz-fiber:1.4; --tz-radius:9;
+  --tz-grain-freq:0.75; --tz-grain-oct:2; --tz-ring-off:6; --tz-form:box; --tz-stack:0;
+  --tz-dent:0; --tz-sigma:1; --tz-sigma-min:60;
+  --tz-curl:0; --tz-tilt:0; --tz-reach:0; --tz-arrive:0;
+  position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:20px;padding:44px 28px;text-align:center;color:var(--tz-ink);
+}
+.tz-empty > *:not(.tz-shell){position:relative}
+.tz-empty > .tz-shell{animation:none}
+.tz-empty > .tz-shell .tz-edge{stroke:var(--tz-ink-3);stroke-dasharray:3 7;stroke-width:1.1px;opacity:.75}
+.tz-empty > .tz-shell .tz-edge2{display:none}
+.tz-empty > .tz-shell .tz-grain{opacity:.06}
+.tz-empty__head{display:flex;max-width:360px;flex-direction:column;align-items:center;gap:8px}
+.tz-empty__media{display:flex;align-items:center;justify-content:center;margin-bottom:6px;color:var(--tz-ink-2)}
+.tz-empty__media--icon{position:relative;width:52px;height:52px}
+.tz-empty__media--icon > svg:not(.tz-empty__ring){width:22px;height:22px}
+.tz-empty__ring{position:absolute;left:-2px;top:-2px;width:calc(100% + 4px);height:calc(100% + 4px);color:var(--tz-ink-2)}
+.tz-empty__ring path{stroke-width:1.2}
+.tz-empty__title{font-size:16px;font-weight:600;letter-spacing:.08em}
+.tz-empty__text{margin:0;font-size:13px;line-height:1.9;letter-spacing:.04em;color:var(--tz-ink-2)}
+.tz-empty__text a{color:inherit;text-underline-offset:4px}
+.tz-empty__content{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px}
+
+/* =========================================================
+   MARKER — 目印。流れの中に置く、小さな注記
+   ========================================================= */
+.tz-marker{position:relative;display:flex;align-items:center;gap:9px;width:100%;min-height:16px;
+  font-size:12px;letter-spacing:.1em;line-height:1.6;color:var(--tz-ink-3)}
+.tz-marker a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.tz-marker a:hover{color:var(--tz-ink)}
+.tz-marker__icon{display:inline-flex;flex:none;width:15px;height:15px}
+.tz-marker__icon > svg{width:100%;height:100%}
+.tz-marker__content{min-width:0;overflow-wrap:anywhere}
+.tz-marker--separator .tz-marker__content{flex:none;text-align:center}
+.tz-marker__rule.tz-rule{flex:1 1 0;min-width:12px;height:7px;margin:0}
+.tz-marker--border{flex-wrap:wrap;padding-bottom:2px}
+.tz-marker__under.tz-rule{flex:1 0 100%;height:7px;margin:4px 0 0}
+
+/* ---------- 読み上げ専用 ---------- */
+.tz-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}

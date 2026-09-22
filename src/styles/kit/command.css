@@ -1,0 +1,143 @@
+/* =========================================================
+   COMMAND — 索引。書き入れた言葉に合う項目だけが残る
+   ========================================================= */
+.tz-command{display:flex;flex-direction:column;width:100%;min-width:0;color:var(--tz-ink)}
+.tz-command__search{padding:2px 6px 0}
+.tz-command__field{display:flex;align-items:center;gap:10px;padding:0 4px}
+.tz-command__glass{width:16px;height:16px;color:var(--tz-ink-3)}
+.tz-command__input{flex:1;min-width:0;margin:0;padding:10px 0 8px;border:0;background:none;outline:none;
+  font:inherit;font-size:15px;letter-spacing:.05em;color:var(--tz-ink)}
+.tz-command__input::placeholder{color:var(--tz-ink-3);opacity:1}
+.tz-command__rule.tz-rule{margin:0 0 6px;height:8px}
+.tz-command:focus-within .tz-command__rule path{opacity:.8;stroke-width:1.6;transition:opacity 200ms ease}
+.tz-command__list{max-height:320px;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;padding:2px 4px 4px 6px}
+.tz-command__empty,[cmdk-empty]{padding:22px 8px;text-align:center;font-size:13px;letter-spacing:.08em;color:var(--tz-ink-3)}
+.tz-command__group [cmdk-group-heading]{padding:10px 8px 4px;font-size:10.5px;letter-spacing:.2em;color:var(--tz-ink-3)}
+.tz-command__sep .tz-rule{margin:4px 6px;height:7px}
+.tz-command [cmdk-item][data-disabled=true]{color:var(--tz-ink-3);cursor:not-allowed}
+.tz-command-dialog .tz-dialog__inner{padding:18px 16px 12px;gap:0}
+.tz-command-dialog{width:min(560px,calc(100vw - 32px));margin-top:12vh}
+
+/* =========================================================
+   COMBOBOX — 書いて選ぶ。罫の上で書き、下に降りた紙から選ぶ
+   ========================================================= */
+.tz-combobox{position:relative;display:block}
+.tz-well--combo{display:flex;align-items:center}
+.tz-well--combo .tz-input{flex:1;min-width:0;padding-right:22px}
+.tz-combobox__turn{position:absolute;right:3px;bottom:13px;width:13px;height:13px;color:var(--tz-ink-2);pointer-events:none;
+  transition:rotate 380ms cubic-bezier(.2,1.25,.35,1)}
+.tz-well--combo.is-open .tz-combobox__turn{rotate:180deg}
+.tz-combobox__content{width:calc(var(--radix-popover-trigger-width) + 8px);max-width:calc(100vw - 32px);padding:8px 6px}
+.tz-combobox__content[hidden]{display:none}
+.tz-combobox__content .tz-command__list{max-height:min(300px,var(--radix-popover-content-available-height,300px))}
+.tz-mi[data-checked] {color:var(--tz-ink)}
+
+/* =========================================================
+   CALENDAR — 暦。選んだ日に、手で丸を付ける
+     期間 : 両端に丸、あいだに薄く墨を刷く
+     今日 : 数字の下に、小さな墨の点
+   ========================================================= */
+.tz-cal{--tz-cell:38px;position:relative;width:fit-content;color:var(--tz-ink);font-size:13.5px;letter-spacing:.02em}
+.tz-cal__months{position:relative;display:flex;flex-wrap:wrap;gap:28px}
+.tz-cal__month{display:flex;flex-direction:column;gap:10px}
+.tz-cal__nav{position:absolute;inset:0 0 auto;z-index:1;display:flex;align-items:center;justify-content:space-between;
+  height:var(--tz-cell);pointer-events:none}
+.tz-cal__step{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;margin:0;padding:0;
+  border:0;border-radius:50%;background:none;color:var(--tz-ink-2);cursor:pointer;pointer-events:auto;
+  transition:color 180ms ease,translate 260ms cubic-bezier(.2,1.25,.35,1)}
+.tz-cal__step:hover:not(:disabled){color:var(--tz-ink)}
+.tz-cal__step:first-child:hover:not(:disabled){translate:-2px 0}
+.tz-cal__step:last-child:hover:not(:disabled){translate:2px 0}
+.tz-cal__step:disabled{opacity:.35;cursor:not-allowed}
+.tz-cal__step:focus-visible{outline:1.5px solid var(--tz-focus);outline-offset:1px}
+.tz-cal__chevron{width:14px;height:14px}
+.tz-cal__caption{display:flex;align-items:center;justify-content:center;height:var(--tz-cell);padding:0 40px}
+.tz-cal__caption-label{font-size:14px;font-weight:600;letter-spacing:.12em}
+.tz-cal__dropdowns{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600}
+.tz-cal__dropdown-root{position:relative}
+.tz-cal__dropdown{position:absolute;inset:0;opacity:0;cursor:pointer}
+.tz-cal__grid{border-collapse:collapse}
+.tz-cal__weekday{width:var(--tz-cell);height:28px;padding:0;font-size:10.5px;font-weight:400;letter-spacing:.14em;color:var(--tz-ink-3)}
+.tz-cal__weekdays > :first-child{color:color-mix(in srgb,var(--tz-shu) 70%,var(--tz-ink-3))}
+.tz-cal__day{position:relative;width:var(--tz-cell);height:var(--tz-cell);padding:0;text-align:center}
+.tz-cal__daybtn{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  width:100%;height:100%;margin:0;padding:0;border:0;background:none;border-radius:50%;
+  font:inherit;color:inherit;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent}
+.tz-cal__num{position:relative;transition:transform 260ms cubic-bezier(.2,1.25,.35,1)}
+.tz-cal__daybtn:hover .tz-cal__num{transform:translateY(-1px)}
+.tz-cal__daybtn:focus-visible{outline:1.5px dashed var(--tz-focus);outline-offset:-3px}
+.tz-cal__ring{position:absolute;left:50%;top:50%;width:34px;height:34px;margin:-17px 0 0 -17px;color:var(--tz-ink)}
+.tz-cal__ring path{stroke-width:1.35}
+.tz-cal__today{position:absolute;left:50%;bottom:3px;width:9px;height:9px;margin-left:-4.5px;color:var(--tz-ink)}
+.tz-cal__day.is-selected .tz-cal__num{font-weight:600}
+.tz-cal__day.is-outside{color:var(--tz-ink-3)}
+.tz-cal__day.is-outside .tz-cal__today{opacity:.4}
+.tz-cal__day.is-disabled{color:var(--tz-ink-3);opacity:.55}
+.tz-cal__day.is-disabled .tz-cal__daybtn{cursor:not-allowed}
+.tz-cal__day.is-disabled .tz-cal__num{text-decoration:line-through;text-decoration-thickness:1px}
+.tz-cal__day.is-hidden{visibility:hidden}
+/* 期間 : 両端の丸のあいだを、薄い墨の帯でつなぐ */
+.tz-cal__day.is-range-middle::before,.tz-cal__day.is-range-start::before,.tz-cal__day.is-range-end::before{
+  content:"";position:absolute;top:7px;bottom:7px;left:0;right:0;background:var(--tz-ink);opacity:.07;
+  filter:url(#tz-fiber-g)}
+.tz-cal__day.is-range-start::before{left:50%}
+.tz-cal__day.is-range-end::before{right:50%}
+.tz-cal__day.is-range-start.is-range-end::before{display:none}
+.tz-cal__weeknum{width:var(--tz-cell);font-size:10.5px;color:var(--tz-ink-3)}
+.tz-cal__footer{margin-top:10px;font-size:12px;color:var(--tz-ink-2)}
+
+/* DATE PICKER — 暦の紙は Popover と同じ浮き紙 */
+.tz-well--date{--tz-stack:0}
+.tz-date__leaf{width:auto;padding:16px 16px 14px}
+
+/* =========================================================
+   TOAST — 知らせの紙片。隅に一枚ずつ差し込まれ、重なっていく
+   ========================================================= */
+.tz-toaster{position:fixed;z-index:60;width:min(380px,calc(100vw - 32px));pointer-events:none}
+.tz-toaster--bottom-right{right:20px;bottom:20px}
+.tz-toaster--bottom-left{left:20px;bottom:20px}
+.tz-toaster--bottom-center{left:50%;bottom:20px;translate:-50% 0}
+.tz-toaster--top-right{right:20px;top:20px}
+.tz-toaster--top-left{left:20px;top:20px}
+.tz-toaster--top-center{left:50%;top:20px;translate:-50% 0}
+.tz-toaster__list{position:relative;display:grid;margin:0;padding:0;list-style:none}
+.tz-toast{
+  --tz-pad:14; --tz-amp:1.1; --tz-grit:2; --tz-fiber:1.3; --tz-radius:8;
+  --tz-i:0; --tz-h:0px; --tz-dir:-1;
+  grid-area:1 / 1;align-self:end;pointer-events:auto;
+  --tz-off:0px;
+  /* 重ね : 奥の紙片は手前の紙片と縁を揃え、そこから 10px ずつ覗かせる */
+  transform:translateY(calc(var(--tz-dir) * (var(--tz-front-h,0px) - var(--tz-h) + var(--tz-i) * 10px)))
+    scale(calc(1 - var(--tz-i) * .045)) rotate(calc(var(--tz-i) * .35deg));
+  transform-origin:50% 100%;
+  transition:transform 420ms cubic-bezier(.2,1.12,.3,1),opacity 260ms ease;
+  animation:tz-toast-in 460ms cubic-bezier(.2,1.12,.3,1);
+}
+.tz-toast.is-top{--tz-dir:1;align-self:start;transform-origin:50% 0}
+.tz-toast[data-index="0"]{z-index:3}.tz-toast[data-index="1"]{z-index:2}.tz-toast[data-index="2"]{z-index:1}
+.tz-toast:not([data-index="0"]) .tz-toast__body{opacity:0;transition:opacity 200ms ease}
+/* 手を留めると、重なりがほどけて全部読める */
+.tz-toaster.is-expanded .tz-toast{transform:translateY(calc(var(--tz-dir) * var(--tz-off)))}
+.tz-toaster.is-expanded .tz-toast .tz-toast__body{opacity:1}
+.tz-toast.is-buried{opacity:0;pointer-events:none}
+.tz-toast.is-leaving{animation:tz-toast-out 220ms cubic-bezier(.5,0,.9,.4) forwards}
+@keyframes tz-toast-in{from{opacity:0;translate:0 calc(var(--tz-dir) * -24px);rotate:-1.2deg}}
+@keyframes tz-toast-out{to{opacity:0;translate:28px 0;rotate:1.5deg}}
+.tz-toast > .tz-shell .tz-shade{transform:translateY(6px);opacity:.7}
+.tz-toast__body{display:flex;align-items:flex-start;gap:12px;padding:14px 12px 14px 18px}
+.tz-toast__icon{display:flex;flex:none;width:18px;height:18px;margin-top:1px;color:var(--tz-ink-2)}
+.tz-toast__icon .tz-mark,.tz-toast__icon .tz-glyph,.tz-toast__icon .tz-spinner{width:18px;height:18px}
+.tz-toast[data-type=success] .tz-toast__icon{color:var(--tz-ink)}
+.tz-toast[data-type=error] .tz-toast__icon,.tz-toast[data-type=error] .tz-toast__title{color:var(--tz-shu)}
+.tz-toast[data-type=error] .tz-toast__body::before{content:"";position:absolute;left:7px;top:14px;bottom:14px;width:2.2px;
+  border-radius:2px;background:var(--tz-shu);opacity:.9;rotate:.6deg;filter:url(#tz-fiber-g)}
+.tz-toast__text{flex:1;min-width:0;padding-top:1px}
+.tz-toast__title{font-size:13.5px;font-weight:600;letter-spacing:.06em;line-height:1.55}
+.tz-toast__desc{margin-top:2px;font-size:12.5px;line-height:1.7;letter-spacing:.04em;color:var(--tz-ink-2)}
+.tz-toast__action{flex:none;align-self:center}
+.tz-toast__close{flex:none;margin:-6px -2px 0 0;color:var(--tz-ink-3)}
+.tz-toast__close.tz--icon-sm{width:28px;height:28px}
+@media (prefers-reduced-motion:reduce){
+  .tz-toast{transition:opacity 200ms ease;animation:none}
+  .tz-toast.is-leaving{animation:none;opacity:0}
+}

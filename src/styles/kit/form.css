@@ -1,0 +1,123 @@
+/* =========================================================
+   FIELD — 束ね。ラベル、書く場所、注記をひとまとめにする
+   ========================================================= */
+.tz-field--horizontal{display:flex;align-items:flex-start;gap:12px}
+.tz-field--horizontal > .tz-field__label{margin:1px 0 0}
+/* 横並びのラベルは、選択肢の言葉として本文と同じ大きさで書く */
+.tz-field--horizontal .tz-field__label{font-size:14px;letter-spacing:.05em;color:var(--tz-ink);margin:0}
+.tz-field--horizontal > .tz-knob{margin-top:2px}
+.tz-field--horizontal:has(> .tz-field__content){align-items:flex-start}
+.tz-field--responsive{display:grid;gap:4px}
+@media (min-width:640px){.tz-field--responsive{grid-template-columns:minmax(0,180px) 1fr;align-items:baseline;column-gap:24px}}
+.tz-field__content{display:flex;flex:1;min-width:0;flex-direction:column;gap:2px}
+.tz-field__content > .tz-field__note{margin-top:2px}
+.tz-field__title{font-size:14px;font-weight:500;letter-spacing:.06em;line-height:1.5;color:var(--tz-ink)}
+p.tz-field__note{margin:9px 0 0}
+.tz-field--horizontal p.tz-field__note{margin-top:2px}
+/* 朱入れの注記は、束ねの状態によらず朱で書く */
+.tz-field__error{color:var(--tz-shu)}
+.tz-field__error::before{content:"朱  "}
+.tz-field.is-error .tz-field__error::before{content:"朱  "}
+.tz-field__errors{margin:2px 0 0;padding-left:1.2em}
+.tz-field-group{display:flex;flex-direction:column;gap:28px}
+.tz-field-group .tz-field-group{gap:16px}
+.tz-fieldset{display:flex;flex-direction:column;gap:18px;margin:0;padding:0;border:0;min-width:0}
+.tz-fieldset__legend{padding:0;margin:0 0 4px;font-size:15px;font-weight:600;letter-spacing:.08em;color:var(--tz-ink)}
+/* legend は fieldset の flex の外に置かれる。直後の説明は間を詰めて見出しに添える */
+.tz-fieldset__legend + .tz-field__note{margin-top:0}
+.tz-field-sep{display:flex;align-items:center;gap:10px;margin:2px 0}
+.tz-field-sep > .tz-rule{flex:1;margin:0;height:8px}
+.tz-field-sep__text{font-size:11.5px;letter-spacing:.16em;color:var(--tz-ink-3)}
+
+/* =========================================================
+   INPUT GROUP — 添え書きのある入力欄。輪郭は一つ、添え物はその内側に
+   ========================================================= */
+.tz-igroup{display:flex;align-items:center;flex-wrap:wrap;gap:0;cursor:text}
+.tz-igroup .tz-igroup__input{flex:1 1 0;min-width:0}
+.tz-igroup.tz-well--boxed .tz-igroup__input{padding:11px 12px}
+.tz-igroup .tz-igroup__area{flex:1 1 100%;min-height:84px;padding:12px 14px 6px}
+.tz-igroup__addon{position:relative;display:flex;align-items:center;gap:6px;color:var(--tz-ink-3);font-size:13px;
+  letter-spacing:.06em;cursor:default}
+.tz-igroup__addon > .tz-glyph,.tz-igroup__addon > .tz-ico,.tz-igroup__addon > svg:not(.tz-mark){width:15px;height:15px}
+.tz-igroup__addon--start{order:-1;padding-left:12px}
+.tz-igroup__addon--end{order:1;padding-right:8px}
+.tz-well:not(.tz-well--boxed).tz-igroup .tz-igroup__addon--start{padding-left:2px;padding-right:6px}
+.tz-well:not(.tz-well--boxed).tz-igroup .tz-igroup__addon--end{padding-right:0}
+.tz-igroup__addon--top,.tz-igroup__addon--bottom{flex:1 1 100%;justify-content:flex-start;padding:10px 12px 0}
+.tz-igroup__addon--top{order:-1}
+.tz-igroup__addon--bottom{order:1;padding:0 8px 8px 12px}
+.tz-igroup__text{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.tz-igroup__btn.tz--sm{padding:6px 11px;font-size:12.5px}
+.tz-igroup__btn.tz--icon-sm{width:30px;height:30px}
+.tz-igroup.is-off{cursor:not-allowed}
+
+/* =========================================================
+   NATIVE SELECT — 素のセレクト。罫と返しだけを手で描く
+   ========================================================= */
+.tz-well--native{display:flex;align-items:center}
+.tz-native{flex:1;min-width:0;margin:0;padding:7px 26px 9px 3px;border:0;background:none;outline:none;
+  appearance:none;-webkit-appearance:none;border-radius:0;
+  font:inherit;font-size:15px;letter-spacing:.05em;color:var(--tz-ink);cursor:pointer}
+.tz-well--native.tz-well--boxed .tz-native{padding:11px 34px 11px 14px}
+.tz-native:has(option[value=""]:checked){color:var(--tz-ink-3)}
+.tz-native option{color:var(--tz-ink);background:var(--tz-paper-up)}
+.tz-native:disabled{color:var(--tz-ink-3);cursor:not-allowed}
+.tz-native__turn{position:absolute;right:4px;bottom:13px;width:13px;height:13px;color:var(--tz-ink-2);pointer-events:none}
+.tz-well--native.tz-well--boxed .tz-native__turn{right:12px;bottom:auto;top:50%;margin-top:-6.5px}
+.tz-well--native > .tz-shell .tz-soak{display:block}
+.tz-well--native.tz-well--boxed > .tz-shell .tz-soak{display:none}
+
+/* =========================================================
+   INPUT OTP — 枡の罫。今書く枡だけ罫が引き直され、かぎが立つ
+   ========================================================= */
+.tz-otp{display:flex;align-items:center;gap:14px}
+.tz-otp:has(:disabled){opacity:.55}
+.tz-otp__input{outline:none}
+.tz-otp__group{display:flex;align-items:center;gap:8px}
+.tz-otp__slot{
+  --tz-form:rule;
+  --tz-pad:8; --tz-amp:.7; --tz-grit:2; --tz-fiber:.8; --tz-radius:4;
+  --tz-grain-freq:0.8; --tz-grain-oct:2; --tz-ring-off:4; --tz-stack:0;
+  --tz-dent:0; --tz-sigma:1; --tz-sigma-min:10;
+  --tz-curl:0; --tz-tilt:0; --tz-reach:0; --tz-arrive:0;
+  --tz-sw:36;
+  position:relative;display:flex;align-items:flex-end;justify-content:center;
+  width:36px;height:44px;padding-bottom:8px;
+  font-size:21px;font-weight:500;line-height:1;color:var(--tz-ink)}
+.tz-otp__slot > .tz-shell .tz-fill,.tz-otp__slot > .tz-shell .tz-press,
+.tz-otp__slot > .tz-shell .tz-grain,.tz-otp__slot > .tz-shell .tz-shade,
+.tz-otp__slot > .tz-shell .tz-fringe,.tz-otp__slot > .tz-shell .tz-ring,
+.tz-otp__slot > .tz-shell .tz-correct{display:none}
+.tz-otp__slot > .tz-shell .tz-edge{stroke-width:1.15px;opacity:.38;transition:opacity 200ms ease,stroke-width 200ms ease}
+.tz-otp__slot > .tz-shell .tz-edge2{opacity:.12;stroke-width:2.2px}
+.tz-otp__slot > .tz-shell .tz-soak{display:block;stroke-width:2.6px;opacity:.5;
+  stroke-dasharray:0 99999;stroke-dashoffset:-6;transition:stroke-dasharray 220ms cubic-bezier(.3,.8,.35,1)}
+.tz-otp__slot.has-ink > .tz-shell .tz-soak{stroke-dasharray:calc(var(--tz-sw) - 4) 99999}
+.tz-otp__slot.is-active > .tz-shell .tz-edge{opacity:1;stroke-width:2.2px;animation:tz-rule 300ms cubic-bezier(.45,.05,.2,1)}
+.tz-otp__slot.is-active > .tz-shell .tz-hook{opacity:.9;animation:tz-hook 300ms cubic-bezier(.3,1.25,.4,1) 60ms backwards}
+.tz-otp__char{position:relative;transform:translateY(var(--tz-baseline,0px))}
+.tz-otp__nib{position:absolute;left:50%;bottom:9px;width:2px;height:22px;margin-left:-1px;border-radius:1.4px;
+  background:var(--tz-ink);transform:rotate(-7deg);transform-origin:50% 100%;animation:tz-nib 1.4s infinite}
+.tz-otp__sep{display:flex;align-self:flex-end;width:16px;margin-bottom:13px;color:var(--tz-ink-3)}
+.tz-otp__sep .tz-mark{width:16px;height:16px}
+@media (prefers-reduced-motion:reduce){
+  .tz-otp__slot.is-active > .tz-shell .tz-edge,.tz-otp__slot.is-active > .tz-shell .tz-hook{animation:none}
+  .tz-otp__nib{animation:none;opacity:.92}
+}
+
+/* =========================================================
+   CARD — 見出しの行、右肩の操作、本文
+   ========================================================= */
+.tz-card__head{display:grid;grid-template-columns:1fr auto;align-items:start;column-gap:14px;row-gap:4px;margin-bottom:16px}
+.tz-card__head > .tz-card__title{margin:0}
+.tz-card__head > :not(.tz-card__action){grid-column:1}
+.tz-card__action{grid-column:2;grid-row:1 / span 2;align-self:start;justify-self:end}
+.tz-card__content{font-size:13.5px;line-height:1.9;letter-spacing:.04em}
+
+/* =========================================================
+   SELECT — 選択肢の組、組の名前、区切り
+   ========================================================= */
+.tz-slips__group{list-style:none}
+.tz-slips__label{padding:9px 12px 3px 6px;font-size:10.5px;letter-spacing:.2em;color:var(--tz-ink-3);cursor:default}
+.tz-slips__sep{list-style:none;padding:0 6px}
+.tz-slips__sep .tz-rule{margin:4px 0;height:7px}

@@ -1,0 +1,46 @@
+/* =========================================================
+   SLIDER — 一本の罫の上を、手で丸めた玉が滑る。
+     記入 : 選んだ範囲だけ、罫に墨が染みる
+   ========================================================= */
+.tz-slider{position:relative;display:flex;align-items:center;width:100%;height:22px;
+  touch-action:none;user-select:none;-webkit-user-select:none}
+.tz-slider[data-orientation=vertical]{flex-direction:column;width:22px;height:100%;min-height:140px}
+.tz-slider__track{
+  --tz-form:rule;
+  --tz-pad:8; --tz-amp:.7; --tz-grit:2; --tz-fiber:.8; --tz-radius:4;
+  --tz-grain-freq:0.8; --tz-grain-oct:2; --tz-ring-off:4; --tz-stack:0;
+  --tz-dent:0; --tz-sigma:1; --tz-sigma-min:10;
+  --tz-curl:0; --tz-tilt:0; --tz-reach:120; --tz-arrive:0;
+  --tz-pw:0; --tz-pa:0; --tz-pb:0; --tz-lift:0;
+  position:relative;flex-grow:1;height:12px;margin-top:-10px;
+}
+.tz-slider__track > .tz-shell .tz-fill,.tz-slider__track > .tz-shell .tz-press,
+.tz-slider__track > .tz-shell .tz-grain,.tz-slider__track > .tz-shell .tz-shade,
+.tz-slider__track > .tz-shell .tz-fringe,.tz-slider__track > .tz-shell .tz-ring,
+.tz-slider__track > .tz-shell .tz-hook,.tz-slider__track > .tz-shell .tz-correct{display:none}
+.tz-slider__track > .tz-shell .tz-edge{stroke-width:1.15px;opacity:calc(.34 + var(--tz-lift) * .2);transition:opacity 200ms ease}
+.tz-slider__track > .tz-shell .tz-edge2{opacity:.1;stroke-width:2px}
+.tz-slider__track > .tz-shell .tz-soak{display:block;stroke-width:3.2px;opacity:.88;
+  stroke-dasharray:calc(var(--tz-pw) * (var(--tz-pb) - var(--tz-pa))) 99999;
+  stroke-dashoffset:calc(-4 - var(--tz-pw) * var(--tz-pa));
+  transition:stroke-dasharray 90ms ease-out,stroke-dashoffset 90ms ease-out}
+.tz-slider__range{display:none}
+.tz-slider[data-orientation=vertical] .tz-slider__track{--tz-form:vrule;width:12px;height:auto;margin:0}
+/* 縦の目盛りは下が小さい : 染みは上端から (1 − 終わり) だけ離れた所から始まる */
+.tz-slider[data-orientation=vertical] .tz-slider__track > .tz-shell .tz-soak{
+  stroke-dashoffset:calc(-4 - var(--tz-pw) * (1 - var(--tz-pb)))}
+.tz-slider[data-disabled] .tz-slider__track > .tz-shell .tz-edge{stroke-dasharray:2.5 6;stroke:var(--tz-ink-3)}
+.tz-slider[data-disabled] .tz-slider__track > .tz-shell .tz-soak{stroke:var(--tz-ink-3)}
+
+.tz-thumb{
+  --tz-radius:999; --tz-amp:.55; --tz-dent:1.8; --tz-sigma:.9; --tz-tilt:1.6; --tz-reach:70; --tz-arrive:8;
+  display:block;width:20px;height:20px;cursor:grab;outline:none;
+}
+.tz-thumb:active{cursor:grabbing}
+.tz-thumb > .tz-shell .tz-fill{fill:var(--tz-paper-up)}
+.tz-thumb > .tz-shell .tz-shade{display:block;opacity:.35;transform:translateY(2px)}
+.tz-thumb > .tz-shell .tz-edge{stroke-width:1.3px;opacity:.9}
+.tz-thumb > .tz-shell .tz-edge2{stroke-width:2.2px;opacity:.26}
+.tz-thumb > .tz-shell .tz-grain{opacity:.14}
+@media (hover:hover){.tz-thumb:hover > .tz-shell .tz-edge{opacity:1;stroke-width:1.55px}}
+.tz-slider[data-disabled] .tz-thumb{cursor:not-allowed}

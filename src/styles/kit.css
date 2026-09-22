@@ -1,0 +1,25 @@
+/* 手触りの拡張部品。基本の四部品（components.css）の上に積む */
+@import './kit/base.css';
+@import './kit/rule.css';
+@import './kit/kbd.css';
+@import './kit/spinner.css';
+@import './kit/skeleton.css';
+@import './kit/badge.css';
+@import './kit/avatar.css';
+@import './kit/progress.css';
+@import './kit/check.css';
+@import './kit/switch.css';
+@import './kit/slider.css';
+@import './kit/toggle.css';
+@import './kit/alert.css';
+@import './kit/item.css';
+@import './kit/nav.css';
+@import './kit/table.css';
+@import './kit/tabs.css';
+@import './kit/fold.css';
+@import './kit/overlay.css';
+@import './kit/menu.css';
+@import './kit/command.css';
+@import './kit/form.css';
+@import './kit/chat.css';
+@import './kit/misc.css';

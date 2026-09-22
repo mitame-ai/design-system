@@ -1,0 +1,7 @@
+/* ---------- 区切り : 縦の罫。横の罫（.tz-rule）と同じ筆で、上から下へ引く ---------- */
+.tz-rule--v{width:9px;height:auto;align-self:stretch;margin:0 10px;min-height:1em}
+
+/* ---------- ラベル : FieldLabel と同じ調子 ---------- */
+.tz-label-text{display:inline-block;font-size:11.5px;letter-spacing:.2em;color:var(--tz-ink-2);
+  line-height:1.6;cursor:default}
+.tz-label-text:has(+ :disabled),.tz-label-text[data-disabled]{color:var(--tz-ink-3)}

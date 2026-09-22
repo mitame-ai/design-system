@@ -1,3 +1,4 @@
 /* 手触り / Tezawari — 素の CSS 一式。Tailwind を使わない利用側はこれだけを読み込む */
 @import './properties.css';
 @import './components.css';
+@import './kit.css';

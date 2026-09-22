@@ -1,0 +1,74 @@
+/* =========================================================
+   ACCORDION — 折り。畳まれた紙を一段ずつ開く。
+     境目 : 段の境は、手で引いた罫
+     返し : 開くと筆の返しが上を向く
+   ========================================================= */
+.tz-fold{display:block;width:100%}
+.tz-fold__item{position:relative}
+.tz-fold__header{margin:0;display:flex}
+.tz-fold__trigger{display:flex;flex:1;align-items:center;justify-content:space-between;gap:16px;
+  padding:16px 2px 14px;margin:0;border:0;background:none;
+  font:inherit;font-size:15px;font-weight:500;letter-spacing:.06em;line-height:1.55;text-align:left;
+  color:var(--tz-ink);cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent}
+.tz-fold__trigger:focus-visible .tz-fold__label{outline:1.5px solid var(--tz-focus);outline-offset:4px;border-radius:3px}
+.tz-fold__trigger:disabled{color:var(--tz-ink-3);cursor:not-allowed}
+@media (hover:hover){.tz-fold__trigger:hover .tz-fold__label{text-decoration:underline;text-decoration-thickness:1px;
+  text-underline-offset:5px;text-decoration-color:var(--tz-ink-3)}}
+.tz-fold__turn{width:14px;height:14px;color:var(--tz-ink-2);
+  transition:rotate 380ms cubic-bezier(.2,1.25,.35,1);rotate:0deg}
+.tz-fold__trigger[data-state=open] .tz-fold__turn{rotate:180deg}
+.tz-fold__content{overflow:hidden}
+.tz-fold__content[data-state=open]{animation:tz-unfold 340ms cubic-bezier(.2,.9,.3,1)}
+.tz-fold__content[data-state=closed]{animation:tz-refold 240ms cubic-bezier(.4,0,.6,1)}
+@keyframes tz-unfold{from{height:0}to{height:var(--radix-accordion-content-height)}}
+@keyframes tz-refold{from{height:var(--radix-accordion-content-height)}to{height:0}}
+.tz-fold__body{padding:0 2px 18px;font-size:13.5px;line-height:1.9;letter-spacing:.04em;color:var(--tz-ink-2)}
+.tz-fold__body > :first-child{margin-top:0}
+.tz-fold__body > :last-child{margin-bottom:0}
+.tz-fold__content[data-state=open] .tz-fold__body{animation:tz-settle 420ms cubic-bezier(.2,.9,.3,1) 90ms backwards}
+.tz-fold__rule.tz-rule{margin:0;height:7px}
+
+/* COLLAPSIBLE — 畳み。Accordion の一段だけ */
+.tz-collapse{overflow:hidden}
+.tz-collapse[data-state=open]{animation:tz-unfold-c 300ms cubic-bezier(.2,.9,.3,1)}
+.tz-collapse[data-state=closed]{animation:tz-refold-c 220ms cubic-bezier(.4,0,.6,1)}
+@keyframes tz-unfold-c{from{height:0}to{height:var(--radix-collapsible-content-height)}}
+@keyframes tz-refold-c{from{height:var(--radix-collapsible-content-height)}to{height:0}}
+@media (prefers-reduced-motion:reduce){
+  .tz-fold__content[data-state],.tz-collapse[data-state],.tz-fold__content[data-state=open] .tz-fold__body{animation:none}
+  .tz-fold__turn{transition:none}
+}
+
+/* =========================================================
+   SCROLL AREA — 巻物。つまみは筆で引いた一画
+   ========================================================= */
+.tz-scroll{position:relative;overflow:hidden}
+.tz-scroll__viewport{width:100%;height:100%;border-radius:inherit;outline:none}
+.tz-scroll__viewport:focus-visible{outline:1.5px dashed var(--tz-ink-3);outline-offset:-2px}
+.tz-scroll__bar{display:flex;touch-action:none;user-select:none;padding:2px;transition:opacity 260ms ease}
+.tz-scroll__bar[data-orientation=vertical]{width:9px;height:100%}
+.tz-scroll__bar[data-orientation=horizontal]{flex-direction:column;height:9px}
+.tz-scroll__bar[data-state=hidden]{opacity:0}
+.tz-scroll__thumb{position:relative;flex:1;border-radius:3px;background:var(--tz-ink);opacity:.26;
+  filter:url(#tz-fiber-g);transition:opacity 200ms ease}
+.tz-scroll__bar[data-orientation=vertical] .tz-scroll__thumb{rotate:.6deg}
+.tz-scroll__bar[data-orientation=horizontal] .tz-scroll__thumb{rotate:-.25deg}
+.tz-scroll__bar:hover .tz-scroll__thumb,.tz-scroll__thumb:active{opacity:.55}
+
+/* =========================================================
+   RESIZABLE — 仕切り。罫を手でずらして広さを変える
+   ========================================================= */
+.tz-resize{display:flex;width:100%;height:100%}
+.tz-resize__handle{position:relative;display:flex;flex:none;align-items:center;justify-content:center;
+  width:11px;outline:none;cursor:col-resize}
+.tz-resize[aria-orientation=vertical] .tz-resize__handle,
+.tz-resize__handle[aria-orientation=horizontal]{width:auto;height:11px;cursor:row-resize}
+.tz-resize__rule.tz-rule{position:absolute;inset:0 1px;width:auto;height:auto;margin:0;opacity:.8;transition:opacity 200ms ease}
+.tz-resize__handle[aria-orientation=horizontal] .tz-resize__rule.tz-rule{inset:1px 0}
+.tz-resize__handle:hover .tz-resize__rule,.tz-resize__handle[data-separator=active] .tz-resize__rule,
+.tz-resize__handle:focus-visible .tz-resize__rule{opacity:1}
+.tz-resize__handle:hover .tz-rule path,.tz-resize__handle:focus-visible .tz-rule path{opacity:.8;stroke-width:1.6}
+.tz-resize__grip{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;
+  width:14px;height:22px;border-radius:5px;background:var(--tz-paper);color:var(--tz-ink-2)}
+.tz-resize__grip .tz-glyph{width:13px;height:13px}
+.tz-resize__handle[aria-orientation=horizontal] .tz-resize__grip{rotate:90deg}

@@ -1,0 +1,49 @@
+/* =========================================================
+   CHECKBOX — 枡に、手で印を書き入れる。
+     はみ出し : 印は枡から少しはみ出す。書いた印は行儀よく収まらない
+     一画     : 不確定は、横に一画だけ
+   ========================================================= */
+.tz-check{
+  --tz-radius:4.5;
+  display:inline-flex;flex:none;width:18px;height:18px;padding:0;margin:0;
+  border:0;background:none;color:var(--tz-ink);cursor:pointer;vertical-align:middle;
+}
+.tz-check > .tz-shell .tz-fill{fill:var(--tz-paper);fill-opacity:.6}
+.tz-check > .tz-shell .tz-edge{stroke-width:1.2px;opacity:.72}
+.tz-check > .tz-shell .tz-edge2{stroke-width:2px;opacity:.2}
+.tz-check > .tz-shell .tz-grain{opacity:.14}
+.tz-check[data-state=checked] > .tz-shell .tz-edge,
+.tz-check[data-state=indeterminate] > .tz-shell .tz-edge{opacity:.9}
+@media (hover:hover){.tz-check:hover:not(:disabled) > .tz-shell .tz-edge{opacity:1;stroke-width:1.4px}}
+.tz-check__ind{position:absolute;inset:-4px -5px -1px -1px;display:flex;pointer-events:none}
+.tz-check__ind .tz-mark{width:100%;height:100%;flex:1}
+.tz-check__ind .tz-mark path{stroke-width:1.9}
+.tz-check[data-state=checked] .tz-mark--dash,
+.tz-check[data-state=indeterminate] .tz-mark--tick{display:none}
+.tz-check[data-state=indeterminate] .tz-check__ind{inset:-.5px}
+.tz-check:disabled{color:var(--tz-ink-3)}
+
+/* =========================================================
+   RADIO — 手で描いた丸に、墨を一滴落とす
+   ========================================================= */
+.tz-radios{display:grid;gap:12px}
+.tz-radio{
+  --tz-radius:999; --tz-amp:.5;
+  display:inline-flex;flex:none;width:18px;height:18px;padding:0;margin:0;
+  border:0;background:none;color:var(--tz-ink);cursor:pointer;vertical-align:middle;
+}
+.tz-radio > .tz-shell .tz-fill{fill:var(--tz-paper);fill-opacity:.6}
+.tz-radio > .tz-shell .tz-edge{stroke-width:1.2px;opacity:.72}
+.tz-radio > .tz-shell .tz-edge2{stroke-width:2px;opacity:.18}
+.tz-radio > .tz-shell .tz-grain{opacity:.14}
+.tz-radio[data-state=checked] > .tz-shell .tz-edge{opacity:.95}
+@media (hover:hover){.tz-radio:hover:not(:disabled) > .tz-shell .tz-edge{opacity:1;stroke-width:1.4px}}
+.tz-radio__ind{position:absolute;inset:0;display:flex;pointer-events:none}
+.tz-radio__ind .tz-mark{width:100%;height:100%}
+.tz-radio:disabled{color:var(--tz-ink-3)}
+
+/* チェックやラジオに添える言葉 : 並べたとき、印と文字の芯を揃える */
+.tz-choice{display:flex;align-items:flex-start;gap:10px;font-size:14px;letter-spacing:.05em;
+  line-height:1.5;color:var(--tz-ink);cursor:pointer}
+.tz-choice > .tz-knob{margin-top:1.5px}
+.tz-choice:has(:disabled){color:var(--tz-ink-3);cursor:not-allowed}
