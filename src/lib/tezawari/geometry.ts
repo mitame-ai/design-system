@@ -1,7 +1,7 @@
 import { clamp, type Rand, wobbler } from './random'
 import type { Point } from './types'
 
-/** 角丸矩形の周を等間隔で標本化する */
+/** 角丸矩形の外周を等間隔でサンプリングする */
 export function basePoints(
   x0: number,
   y0: number,
@@ -38,7 +38,7 @@ export function basePoints(
   return pts
 }
 
-/** 各点の外向き法線。開いた線では端を片側差分で見る */
+/** 各サンプリング点における外向き法線ベクトルを算出する（開いたパス端点は片側差分で処理） */
 export function normals(pts: Point[], closed = true): Point[] {
   const n = pts.length
   const out: Point[] = []
@@ -54,7 +54,7 @@ export function normals(pts: Point[], closed = true): Point[] {
   return out
 }
 
-/** 各点を法線方向にノイズで押し出す。これが個体差になる */
+/** 各サンプリング点を法線方向にノイズで変位させ、個体差のある輪郭を生成する */
 export const organic = (
   pts: Point[],
   nrm: Point[],
@@ -86,7 +86,7 @@ export function toPath(pts: Point[], closed = true): string {
   return d + (closed ? 'Z' : '')
 }
 
-/** 手で描いた丸 : 一周を少し行き過ぎて、閉じきらない */
+/** 手描き風の丸印パス：始点を行き過ぎて完全には閉じない形状を生成する */
 export function circleMark(rand: Rand): string {
   const n = 30
   const pts: Point[] = []

@@ -2,12 +2,12 @@ import { type RefObject, useEffect, useLayoutEffect, useRef } from 'react'
 import { register, type SkinHandle } from '../lib/tezawari/registry'
 import type { TezawariOptions } from '../lib/tezawari/types'
 
-/** SSR では layout effect が走らないので、そこだけ effect に落とす */
+/** SSR 環境では useLayoutEffect が実行できないため、フォールバックとして useEffect を使用 */
 const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
 
 /**
- * 要素を塗師に預ける。
- * 殻 (`.tz-shell`) は JSX 側で描いておく : 中身は engine が書き込む。
+ * 対象の DOM 要素を Tezawari の描画エンジンに登録するフック。
+ * 外枠となるシェル（.tz-shell）を JSX 側で配置し、その内部の SVG はエンジンが直接生成します。
  */
 export function useTezawari<T extends HTMLElement>(
   ref: RefObject<T | null>,

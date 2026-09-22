@@ -3,11 +3,11 @@ import { toPath } from './geometry'
 import { num } from './random'
 import type { Point, Skin } from './types'
 
-/** 減衰 / 揺り戻し */
+/** 減衰振動パラメータ（減衰率 TAU / 角周波数 OMEGA） */
 const TAU = 0.145
 const OMEGA = 2 * Math.PI * 2.6
 
-/** 押し込み(内向き) と 角起こし(外向き) を重ねて、輪郭を一本だけ書き換える */
+/** 押し込み変形（内向き）と角の浮き上がり（外向き）を合成し、単一の輪郭パスを動的に書き換える */
 export function deform(st: Skin) {
   if (!st.silhouette) return
   const pd = st.pressD || 0
@@ -33,15 +33,15 @@ export function deform(st: Skin) {
   st.silhouette.setAttribute('d', d)
 }
 
-/** 指の位置からガウス減衰する重み */
+/** ポインタ位置からの距離に応じたガウス減衰の重み付け配列を算出する */
 export const weights = (st: Skin, px: number, py: number, sigma: number) => {
   const k = -1 / (2 * sigma * sigma)
   return st.base.map((p) => Math.exp(((p[0] - px) ** 2 + (p[1] - py) ** 2) * k))
 }
 
 /**
- * たわみの深さは時間の関数。
- * 押下は 160ms 以内に沈みきり、解放は減衰振動で 800ms かけて止まる。
+ * たわみの深さの時間変化を計算（アニメーションフレーム処理）。
+ * 押下時は 160ms 以内に急速に沈み込み、解放時は減衰振動を描き約 800ms で静止する。
  */
 export function tick(st: Skin) {
   st.raf = 0
@@ -83,8 +83,8 @@ export function press(st: Skin, x: number, y: number) {
   el.style.setProperty('--tz-sc', '.988')
   el.style.setProperty('--tz-ty', '0.5px')
 
-  /* 指の位置からの距離で変形を決める。広がりは部品ごとに違う :
-     ボタンは一点がへこみ、札は一枚がしなる */
+  /* ポインタ位置からの距離に基づいて変形範囲を決定。
+     ボタンは局所的に一点が沈み、札は全体がしなるように変形する */
   const sigma = Math.max(num(el, '--tz-sigma-min'), Math.min(st.w, st.h) * num(el, '--tz-sigma'))
   st.pressW = weights(st, x + st.pad, y + st.pad, sigma)
   st.D = Math.min(num(el, '--tz-dent'), Math.min(st.w, st.h) * 0.1)
@@ -105,7 +105,7 @@ export function release(st: Skin) {
     st.t0 = performance.now()
     cancelAnimationFrame(st.raf)
     tick(st)
-    /* フレームが止まっても、へこんだままにはしない */
+    /* requestAnimationFrame が停止した場合のセーフティタイマー（確実に水平復帰させる） */
     if (st.settleTO) clearTimeout(st.settleTO)
     st.settleTO = setTimeout(() => {
       cancelAnimationFrame(st.raf)
@@ -114,7 +114,7 @@ export function release(st: Skin) {
       deform(st)
     }, 900)
   }
-  /* 使い込み : 触れられるほど、輪郭と地肌がわずかに馴染む */
+  /* 経年変化（使い込み）：操作回数に応じて輪郭とテクスチャがわずかに馴染む */
   st.wear = Math.min(st.wear + 1, 12)
   el.style.setProperty('--tz-wear', (st.wear / 12).toFixed(3))
 }

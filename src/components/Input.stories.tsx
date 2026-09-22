@@ -90,7 +90,7 @@ export const Composing: Story = {
   name: '変換中',
   render: () => (
     <>
-      <Cap>変 換 中 — まだ墨が定まっていないあいだ、染みは点線になる</Cap>
+      <Cap>変 換 中 — IME 変換中は、墨が定まるまで染みが点線で表示される</Cap>
       <Fields>
         <Field>
           <FieldLabel htmlFor="f-ime">産 地</FieldLabel>

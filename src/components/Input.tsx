@@ -13,8 +13,8 @@ import { Shell } from '../lib/slot'
 import { cn } from '../lib/utils'
 
 /**
- * 書きこむ場所。器でも紙でもない。
- * 既定は枠ではなく罫で、囲いが要るときだけ枡 (boxed) を使う。
+ * 入力フィールド。矩形の枠線ではなく1本の罫線を基本とし、
+ * 短い入力など枠が必要な場合のみ枡型（boxed）を用います。
  */
 export const inputVariants = cva('tz-well', {
   variants: {
@@ -29,9 +29,9 @@ export const inputVariants = cva('tz-well', {
 export interface InputProps
   extends ComponentPropsWithoutRef<'input'>,
     VariantProps<typeof inputVariants> {
-  /** 欄を包む要素に足すクラス */
+  /** 入力フィールドを内包する親要素（ラッパー）に付与するクラス名 */
   wrapperClassName?: string
-  /** 輪郭の種を固定する */
+  /** 輪郭のシード値を固定します */
   seed?: string
 }
 
@@ -52,10 +52,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const ctl = useRef<HTMLInputElement>(null)
   const ref = useComposedRefs(ctl, forwarded)
   const handle = useTezawari(well, { seed })
-  /* 変換中は、まだ墨が定まっていない : 染みを点線にする */
+  /* IME 変換中：確定するまでは墨の染みを点線で表現します */
   const [composing, setComposing] = useState(false)
 
-  /* 記入のたび、書いた範囲だけ罫に墨が染みる。穂先も文字に従う */
+  /* 文字入力に応じて、入力された文字幅の分だけ罫線に墨が染み込みます。キャレット（穂先）も追従します */
   const refresh = useCallback(() => handle.current?.ink(), [handle])
   useEffect(refresh)
 

@@ -8,9 +8,9 @@ export interface Pointer {
 }
 
 /**
- * 気配 — 手が近づいた時点で、触れる前に素材が応える。
- * 強さは m = (1 − d / reach)² × (arrive ? min(1, d / arrive) : 1)。
- * 反応するのは触れられる物だけ (`st.live`)。
+ * 気配（接近検知） — カーソルが近づいた際に、接触前から要素が微細に応答する。
+ * 反応強度: m = (1 − d / reach)² × (arrive ? min(1, d / arrive) : 1)
+ * インタラクティブな操作対象（st.live）のみ反応する。
  */
 export function sense(skins: Iterable<Skin>, pointer: Pointer | null) {
   for (const st of skins) {
@@ -33,7 +33,7 @@ export function sense(skins: Iterable<Skin>, pointer: Pointer | null) {
         const dy = Math.max(r.top - pointer.y, 0, pointer.y - r.bottom)
         const d = Math.hypot(dx, dy)
         if (d < R) {
-          /* 近づくほど強く。arrive を持つ部品は、手が着いたら平らに戻る */
+          /* 距離が近づくほど2次関数的に強く反応。arrive 設定がある要素は接触完了時に水平へ復帰 */
           m = (1 - d / R) ** 2 * (arrive ? Math.min(1, d / arrive) : 1)
           const ox = pointer.x - (r.left + r.width / 2)
           const oy = pointer.y - (r.top + r.height / 2)
@@ -47,13 +47,13 @@ export function sense(skins: Iterable<Skin>, pointer: Pointer | null) {
     }
     if (m === 0 && st.near === 0) continue
     st.near = m
-    /* 近い辺が手の側へ持ち上がる。押したときの傾きとは逆向き */
+    /* カーソルに近い辺がポインタ側へわずかに傾く（押下時の沈み込みとは逆方向） */
     el.style.setProperty('--tz-nx', `${(-ux * m * tilt).toFixed(2)}deg`)
     el.style.setProperty('--tz-ny', `${(uy * m * tilt).toFixed(2)}deg`)
     el.style.setProperty('--tz-nz', `${(-m * (curl ? 2.6 : 2)).toFixed(2)}px`)
     el.style.setProperty('--tz-lift', m.toFixed(3))
 
-    /* 角が起きる : 手にいちばん近い角だけが、紙から離れる */
+    /* 角のめくれ上がり：カーソルに最も近い角のみが持ち上がる */
     if (curl && st.base.length) {
       if (m === 0) {
         st.liftD = 0

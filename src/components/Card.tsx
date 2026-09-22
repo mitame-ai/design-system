@@ -8,17 +8,17 @@ import { cn } from '../lib/utils'
 import { Panel } from './Panel'
 
 /**
- * 札 — 漉かれた一枚の紙。
- * 縁は裁たれておらず、影は矩形のぼかしではなくその個体と同じ輪郭を持つ。
+ * 札（カード） — 手漉き和紙をモチーフにしたコンポーネント。
+ * 裁断されていない手漉き紙の縁を持ち、ドロップシャドウも個々の不規則な輪郭に合わせて投影されます。
  */
 export const cardVariants = cva('tz-card', {
   variants: {
     variant: {
-      /** 置かれた一枚。影と耳を持つ */
+      /** 標準の札。接地影と紙の耳（毛羽立ち）を持ちます */
       plain: '',
-      /** 拾い上げられる札。手にいちばん近い角が紙から起き上がる */
+      /** 拾い上げられる札。カーソルに最も近い角が浮き上がるような反応を示します */
       pick: 'tz-card--pick',
-      /** 象嵌。浮かない札。影も耳も持たず、紙に沈んで区切るだけ */
+      /** 象嵌（インレイ）。浮き上がりや影を持たず、背景に馴染んで領域を区切るためのスタイルです */
       inlay: 'tz-card--inlay',
     },
   },
@@ -79,7 +79,7 @@ export function CardFooter({ className, ...props }: ComponentPropsWithoutRef<'di
   return <div className={cn('tz-card__foot', className)} {...props} />
 }
 
-/** 札の上に置く織り。画像の代わりになる面 */
+/** カード内に配置する織物調のテクスチャ面。画像プレースホルダーとして利用できます */
 export function CardMedia({ className, ...props }: ComponentPropsWithoutRef<'div'>) {
   return <Panel className={cn('tz-card__media', className)} aria-hidden="true" {...props} />
 }

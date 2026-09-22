@@ -1,4 +1,4 @@
-/* 同じ個体は毎回同じ形 : 乱数は種から決まる */
+/* 同一個体の形状再現性：シード値に基づく決定論的疑似乱数生成 */
 
 export const clamp = (v: number, a: number, b: number) => (v < a ? a : v > b ? b : v)
 
@@ -28,8 +28,8 @@ export const mulberry32 =
   }
 
 /**
- * 周期的な1次元ノイズ。周波数は整数 : 閉じた輪郭が継ぎ目なくつながる。
- * grit を上げると細かい破れが混ざる (札の耳)。
+ * 周期的な1次元ノイズ。周波数は整数倍に保ち、閉じた輪郭が継ぎ目なくループするように設計。
+ * grit パラメータを大きくすると高周波成分が増加し、紙の耳（毛羽立ち）のような微細な凹凸が生まれる。
  */
 export const wobbler = (rand: Rand, grit = 1) => {
   const g = Math.max(1, Math.round(grit))

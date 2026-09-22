@@ -13,12 +13,12 @@ export function textWidth(ctl: HTMLElement, str: string) {
   if (!c) return 0
   const cs = getComputedStyle(ctl)
   c.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`
-  /* canvas は letter-spacing を見ない : 字間は自分で足す */
+  /* Canvas API は letter-spacing を計算に入れないため、文字数に応じて手動加算 */
   const ls = Number.parseFloat(cs.letterSpacing) || 0
   return c.measureText(str).width + ls * [...str].length
 }
 
-/** 記入 : 書いた跡が罫に残り、穂先が文字に従う */
+/** 記入処理：入力文字幅に合わせて罫線に墨（インク）を染み込ませ、キャレット位置を同期 */
 export function ink(st: Skin) {
   const well = st.el
   const ctl = st.ctl
@@ -38,7 +38,7 @@ export function ink(st: Skin) {
     try {
       if (ctl.selectionStart !== null) caret = ctl.selectionStart
     } catch {
-      /* type によっては selectionStart を読めない */
+      /* input の type 属性によっては selectionStart 取得時に例外が発生するため防護 */
     }
     const x = clamp(textWidth(ctl, v.slice(0, caret)) - ctl.scrollLeft, 0, inner)
     well.style.setProperty('--tz-nib-x', `${(ctl.offsetLeft + padL + x).toFixed(1)}px`)
@@ -49,7 +49,7 @@ export function ink(st: Skin) {
   }
 }
 
-/** 選 : 書いた文字ではなく、選ばれた言葉の幅がそのまま墨になる */
+/** セレクト項目のインク反映：選択されたテキストの表示幅に基づいて罫線のインク描画を更新 */
 export function inkPick(st: Skin) {
   const well = st.el
   const val = well.querySelector('.tz-pick__val')

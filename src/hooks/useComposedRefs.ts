@@ -7,7 +7,7 @@ function assign<T>(ref: AnyRef<T>, value: T | null) {
   else if (ref) (ref as MutableRefObject<T | null>).current = value
 }
 
-/** 内側で使う ref と、外から渡された ref の両方に同じ要素を入れる */
+/** 内部用の ref と外部から渡された ref の双方に同じ DOM 要素を割り当てるフック */
 export function useComposedRefs<T>(...refs: AnyRef<T>[]) {
   const latest = useRef(refs)
   latest.current = refs

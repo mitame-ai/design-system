@@ -3,16 +3,16 @@ import { clamp, cssv, fnv, mulberry32, num, wobbler } from './random'
 import type { Form, Point, Skin } from './types'
 
 /**
- * 塗師 — ボタンも札も欄も織りも、この一つの関数が描く。
- * 違いは要素に載った CSS トークンだけ。
+ * 描画エンジン — ボタン、札、欄、織りの各コンポーネントを共通のロジックで SVG 描画する。
+ * コンポーネントごとの違いは要素に付与された CSS トークンのみによって決まる。
  *
- * @returns 塗り直したときだけ true
+ * @returns 実際に再描画が行われた場合のみ true
  */
 export function paint(st: Skin, salt: number): boolean {
   const el = st.el
   const w = Math.round(el.offsetWidth)
   const h = Math.round(el.offsetHeight)
-  /* 寸法が測れない要素 (display:none の親を持つ等) は塗らずに飛ばす */
+  /* 寸法が取得できない要素（display:none の親要素配下など）は描画をスキップ */
   if (!w || !h) return false
   if (st.w === w && st.h === h && st.salt === salt) return false
   st.w = w
@@ -31,7 +31,7 @@ export function paint(st: Skin, salt: number): boolean {
   const gfreq = cssv(el, '--tz-grain-freq')
   const goct = cssv(el, '--tz-grain-oct')
   const roff = num(el, '--tz-ring-off')
-  /* 粗い縁ほど高い周波数を含む : それを解像できるだけ細かく標本化する */
+  /* 粗い輪郭ほど高周波成分を含むため、解像度に合わせて細かくサンプリングする */
   const step = clamp(8 / Math.sqrt(grit), 3.2, 8)
   const round = el.classList.contains('tz--icon')
     ? Math.min(w, h) / 2
@@ -44,7 +44,7 @@ export function paint(st: Skin, salt: number): boolean {
   let stack = ''
 
   if (form === 'rule') {
-    /* 罫 : 閉じた輪郭ではなく、下端を走る一本の線 */
+    /* 罫線（rule）：閉じた輪郭ではなく、下端を走る一本の水平線 */
     const y = pad + h
     const x0 = pad - 4
     const x1 = pad + w + 4
@@ -54,7 +54,7 @@ export function paint(st: Skin, salt: number): boolean {
     for (let i = 0; i <= n; i++) st.base.push([x0 + ((x1 - x0) * i) / n, y + wob(i / n / 2) * amp])
     st.closed = false
 
-    /* かぎ : 罫の両端で、筆が上へ跳ねる */
+    /* かぎ（hook）：罫線の両端で筆が上向きに跳ねる形状 */
     const tick = (q: Point, dir: number) => {
       const j = (rand() - 0.5) * 1.1
       const up = 8.4 + rand() * 1.6
@@ -67,7 +67,7 @@ export function paint(st: Skin, salt: number): boolean {
     }
     hooks = tick(st.base[0] as Point, 1) + tick(st.base[st.base.length - 1] as Point, -1)
 
-    /* 重なり : 罫の下から、次の札の縁がのぞいている */
+    /* 重なり：罫線の下から次項目の縁がわずかに覗く表現 */
     const deck = num(el, '--tz-stack') || 0
     if (deck) {
       let sp = ''
@@ -85,7 +85,7 @@ export function paint(st: Skin, salt: number): boolean {
       stack = `<g class="tz-stack">${sp}</g>`
     }
 
-    /* 朱の波線は、罫のすぐ下に引かれる */
+    /* 朱入れ：罫線の直下に引かれる訂正の波線 */
     const cyc = Math.max(3, Math.round(w / 13))
     const jit = wobbler(rand, 2)
     corr = toPath(
@@ -103,7 +103,7 @@ export function paint(st: Skin, salt: number): boolean {
   st.norm = normals(st.base, st.closed)
   st.d0 = toPath(st.base, st.closed)
 
-  /* 原稿用紙 : 面の中に、行の数だけ罫を引く */
+  /* 原稿用紙（ruled）：領域内に行数分の罫線を引く */
   const ctl = el.querySelector('input, textarea') as HTMLElement | null
   if (form === 'ruled' && ctl) {
     const cs = getComputedStyle(ctl)
@@ -124,11 +124,11 @@ export function paint(st: Skin, salt: number): boolean {
     lines = `<g class="tz-lines">${out}</g>`
   }
 
-  /* 焦点の環は別の輪郭を参照する : たわみで焦点表示まで動くと位置が読めない */
+  /* フォーカスリングは独立した輪郭を参照（たわみ変形でフォーカス枠まで歪むのを防止） */
   const rawR = basePoints(pad - roff, pad - roff, w + roff * 2, h + roff * 2, round + roff, step)
   const ring = toPath(organic(rawR, normals(rawR), wobbler(rand, grit), amp * 0.9))
 
-  /* 筆圧 : 線の太さが一定でない */
+  /* 筆圧の表現：輪郭線に太い破線を重ねて手描きの墨だまりを演出 */
   const dash: string[] = []
   for (let acc = 0, per = 2 * (w + h) + 60; acc < per; ) {
     const d = 9 + rand() * 48
@@ -142,7 +142,7 @@ export function paint(st: Skin, salt: number): boolean {
   const s2 = (seed >>> 5) % 991
   const blur = (2 + Math.min(w, h) * 0.026).toFixed(1)
 
-  /* 耳 : 毛羽立ちは場所によって濃さが違う */
+  /* 紙の耳（毛羽立ち）：位置によって不規則な濃度変化を付与 */
   const fray: string[] = []
   for (let acc = 0, per = 2 * (w + h) + 80; acc < per; ) {
     const d = 18 + rand() * 90
@@ -153,7 +153,7 @@ export function paint(st: Skin, salt: number): boolean {
 
   el.style.setProperty('--tz-rot', `${((rand() - 0.5) * (grit > 2 ? 0.34 : 0.7)).toFixed(3)}deg`)
   el.style.setProperty('--tz-baseline', `${((rand() - 0.5) * 0.8).toFixed(2)}px`)
-  /* 息 : 大きい物はゆっくり。周期も位相も個体ごとに違う */
+  /* 息（微細なゆらぎ）：面積の大きい要素ほど長周期で穏やかに呼吸する */
   const slow = Math.min(2.2, 1 + Math.min(w, h) / 260)
   el.style.setProperty('--tz-breath-dur', `${((13 + rand() * 9) * slow).toFixed(1)}s`)
   el.style.setProperty('--tz-breath-delay', `${(-rand() * 30).toFixed(1)}s`)
@@ -201,8 +201,8 @@ ${lines}
 </g></svg>`
 
   st.grad = st.shell.querySelector('radialGradient')
-  /* 輪郭は一本だけ持ち、七つの層が同じものを参照する。
-     変形は一箇所書き換えれば全層に伝わる */
+  /* 輪郭パスは単一の定義を保持し、各描画レイヤーが <use> で参照する。
+     変形時は参照元のパスを1度更新するだけで全レイヤーに反映される */
   st.silhouette = st.shell.querySelector(`#tzd${id}`)
   st.len = Math.ceil(st.silhouette?.getTotalLength() ?? 0)
   el.style.setProperty('--tz-len', String(st.len))
@@ -212,7 +212,7 @@ ${lines}
   return true
 }
 
-/** 手で引いた罫。1px の直線は、この言語には無い */
+/** 手描き風の水平罫線を描画する */
 export function paintRule(el: HTMLElement, index: number, salt: number) {
   const w = Math.round(el.offsetWidth) || 200
   const h = Math.round(el.offsetHeight) || 9

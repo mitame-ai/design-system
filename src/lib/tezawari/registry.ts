@@ -7,9 +7,9 @@ import { type Pointer, sense } from './sense'
 import type { Skin, TezawariOptions } from './types'
 
 /* =========================================================
-   レジストリ — index.html では起動時に一度 querySelectorAll していた場所。
-   React では個体が出入りするので、登録と解除で持ち替える。
-   リスナと Observer は最初の登録で生まれ、最後の解除で片付く。
+   レジストリ — DOM 要素と描画インスタンスの管理。
+   React のコンポーネントマウント・アンマウントに合わせて登録と解除を行う。
+   イベントリスナーや各種 Observer は最初の要素登録時に初期化され、全解除時に破棄される。
    ========================================================= */
 
 const skins = new Map<HTMLElement, Skin>()
@@ -17,10 +17,10 @@ const rules = new Map<HTMLElement, number>()
 
 let salt = 0
 let uid = 0
-/** 描き出しの順。誰も居なくなったら 0 に戻す */
+/** 登場アニメーションの実行順序カウンター。要素がすべて破棄されたら 0 にリセット */
 let births = 0
 
-/** 同じ指定の個体に席を配る。席が同じなら形も同じ : 個体は不変である */
+/** 同一プロパティの要素群に DOM インデックスを割り当てる（インデックスが一致すれば形状も一致する再現性を担保） */
 const seats = new Map<string, Set<number>>()
 function claimSeat(baseKey: string) {
   let used = seats.get(baseKey)
@@ -37,7 +37,7 @@ function releaseSeat(baseKey: string, seat: number) {
   if (!used.size) seats.delete(baseKey)
 }
 
-/* ---------- 大域の観測者たち ---------- */
+/* ---------- グローバル Observer / イベントリスナー ---------- */
 
 let ro: ResizeObserver | null = null
 let io: IntersectionObserver | null = null
@@ -63,7 +63,7 @@ const onLeave = () => {
   pointer = null
   schedule()
 }
-/** タブが隠れている間に止まった動きを、戻った時点で片付ける */
+/** タブ非アクティブ時に中断されたアニメーションを、可視復帰時に確実に完了・復帰させる */
 const onVisible = () => {
   if (document.visibilityState !== 'visible') return
   for (const st of skins.values()) {
@@ -87,7 +87,7 @@ function wire() {
       if (st) paint(st, salt)
     }
   })
-  /* 画面の外にある個体は息を止める : 見えないものを動かし続けない */
+  /* 画面外の要素は呼吸アニメーションを一時停止（パフォーマンス最適化） */
   io = new IntersectionObserver(
     (es) => {
       for (const e of es) {
@@ -111,7 +111,7 @@ function wire() {
   }
   document.addEventListener('visibilitychange', onVisible)
 
-  /* 書体が届いてから測り直す : 幅が変われば輪郭も染みも変わる */
+  /* Web フォント読み込み完了後に再計測・再描画を実行（文字幅の変化を反映） */
   document.fonts?.ready.then(() => {
     for (const st of skins.values()) {
       st.w = 0
@@ -141,9 +141,9 @@ function unwire() {
   document.removeEventListener('visibilitychange', onVisible)
 }
 
-/* ---------- 生まれかた ---------- */
+/* ---------- 登場アニメーション（描画の立ち上がり） ---------- */
 
-/** 部品は一本の線として引かれる。所要時間は個体ごとに散らし、46ms ずつずらす */
+/** 輪郭線が引かれる登場アニメーション。要素ごとに所要時間を分散し 46ms ずつずらして開始 */
 function scribe(st: Skin, order: number) {
   if (prefersReducedMotion() || !st.len) return
   const el = st.el
@@ -151,32 +151,32 @@ function scribe(st: Skin, order: number) {
   el.style.setProperty('--tz-draw-dur', `${st.drawDur.toFixed(0)}ms`)
   el.style.setProperty('--tz-draw-delay', `${delay.toFixed(0)}ms`)
   el.classList.remove('is-drawing')
-  void el.offsetWidth /* アニメーションを確実に巻き戻す */
+  void el.offsetWidth /* リフローを強制してアニメーションを確実に再トリガー */
   el.classList.add('is-drawing')
   if (st.scribeTO) clearTimeout(st.scribeTO)
   st.scribeTO = setTimeout(() => el.classList.remove('is-drawing'), delay + st.drawDur * 2.4)
 }
 
-/* ---------- 触れられる物かどうか ---------- */
+/* ---------- インタラクション対象の判定 ---------- */
 
-/** 押される物。欄を押しても沈まない : ポインタを捕まえたら文字も選べなくなる */
+/** 押下変形を適用する要素（ボタン等）。入力欄は文字選択を阻害しないよう押下対象から除外 */
 const looksPressable = (el: HTMLElement) =>
   !(el as HTMLButtonElement).disabled &&
   (el.matches('button, a[href]') || el.matches('[tabindex]:not([tabindex="-1"])'))
 
-/** 気配だけ感じる物も含む */
+/** カーソル接近（気配）を検知する対象要素 */
 const looksLive = (el: HTMLElement) =>
   looksPressable(el) ||
   el.classList.contains('tz-well') ||
   !!el.querySelector('input:not([disabled]), textarea:not([disabled]), select:not([disabled])')
 
-/* ---------- 公開 ---------- */
+/* ---------- 公開 API ---------- */
 
 export interface SkinHandle {
   readonly skin: Skin
-  /** 塗り直す。force を付けると寸法が変わっていなくても漉き直す */
+  /** 再描画を行う。force を指定した場合は寸法変化がなくても強制再描画 */
   repaint(force?: boolean): void
-  /** 記入の染みと穂先を合わせ直す */
+  /** 入力テキストのインク描画とキャレット位置を再計算 */
   ink(): void
   dispose(): void
 }
@@ -239,8 +239,8 @@ export function register(el: HTMLElement, opts: TezawariOptions = {}): SkinHandl
     pick: el.classList.contains('tz-well--pick'),
   }
 
-  /* 札は内容が着地してから読めるようになる : 読む順に 85ms ずつ遅らせる。
-     ボタンは中身を .tz-label 一枚に包んであるので、この添字は要らない */
+  /* 札（カード）は背景の紙が着地してからコンテンツを可視化（読み順に 85ms ずつ遅延）。
+     ボタンはラベル全体が単一要素で包まれているため個別遅延は不要 */
   if (!el.classList.contains('tz')) {
     let ci = 0
     for (const c of el.children) {
@@ -264,7 +264,7 @@ export function register(el: HTMLElement, opts: TezawariOptions = {}): SkinHandl
       try {
         el.setPointerCapture(e.pointerId)
       } catch {
-        /* 捕まえられない環境もある */
+        /* ポインタキャプチャに非対応の環境向けフォールバック */
       }
     }
     const up = () => release(st)
@@ -311,7 +311,7 @@ export function register(el: HTMLElement, opts: TezawariOptions = {}): SkinHandl
   }
 }
 
-/** 手で引いた罫を登録する */
+/** 手描き風の水平罫線（Rule）を登録する */
 export function registerRule(el: HTMLElement): () => void {
   wire()
   const i = rules.size
@@ -327,8 +327,8 @@ export function registerRule(el: HTMLElement): () => void {
 }
 
 /**
- * 窯出し — 大域の salt を進めて、全個体を焼き直す。
- * 一つずつの形は変わるが、次に焼き直すまでその形のままでいる。
+ * 形状の再生成（Reseed） — グローバルシードを進めて全コンポーネントの形状を再描画する。
+ * 各個体の形状は一新されるが、次回 reseed が呼ばれるまではその形状を安定して維持する。
  */
 export function reseed() {
   salt++
@@ -339,7 +339,7 @@ export function reseed() {
   for (const st of skins.values()) reInk(st)
 }
 
-/** 寸法や中身が変わったとき、全部まとめて漉き直す */
+/** レイアウト変更時などに、すべての登録要素を一括で再計測・再描画する */
 export function repaintAll() {
   for (const st of skins.values()) {
     st.w = 0

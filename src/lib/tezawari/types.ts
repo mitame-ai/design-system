@@ -2,31 +2,31 @@ export type Point = [number, number]
 
 export type Form = 'box' | 'rule' | 'ruled'
 
-/** 一つの個体が憶えていること。index.html の `el.__tz` に相当する。 */
+/** 各コンポーネント個体の状態管理データ。index.html の `el.__tz` に相当 */
 export interface Skin {
   el: HTMLElement
-  /** 殻。SVG の層はすべてここに書き込まれる */
+  /** シェル要素。全 SVG レイヤーはこの内部に生成される */
   shell: HTMLElement
-  /** SVG の id を分けるための連番 */
+  /** SVG の id を一意にするための連番 */
   id: number
-  /** 輪郭の種。同じ key なら再読み込みしても同じ形に戻る */
+  /** 輪郭のシード値。同一の key であれば再読み込み後も同一形状を再現 */
   key: string
-  /** key のうち、席の番号を除いた部分 */
+  /** key のうち、DOM インデックスを除いた基本識別子 */
   baseKey: string
-  /** 同じ baseKey を持つ個体のなかでの席 */
+  /** 同一の baseKey を持つ要素群の中での DOM 出現順インデックス */
   slot: number
-  /** 描き出しの順。46ms ずつずれて生まれる */
+  /** 登場アニメーションの順序（46ms ごとにずらして実行） */
   birth: number
 
   w: number
   h: number
   pad: number
   salt: number
-  /** 使い込み。触れるたび 12 まで増える */
+  /** 経年変化（使い込み）カウンター。インタラクションごとに加算（最大 12） */
   wear: number
-  /** 気配の強さ */
+  /** 気配（カーソル接近）の反応強度 */
   near: number
-  /** 触れられる物か。触れられない物は応えない */
+  /** インタラクティブな操作対象かどうか */
   live: boolean
   pressable: boolean
 
@@ -34,7 +34,7 @@ export interface Skin {
   norm: Point[]
   closed: boolean
   d0: string
-  /** 最後に書いた変形の丸め値。同じなら書き直さない */
+  /** 直近で適用した transform の丸め値（変更がない場合の再描画スキップ用） */
   dkey: string
   len: number
   silhouette: SVGPathElement | null
@@ -47,7 +47,7 @@ export interface Skin {
   corner: string
   /** たわみの深さの目標値 */
   D: number
-  /** 解放が始まった時点の深さ */
+  /** 解放開始時点の深さ */
   d1: number
   phase: 'press' | 'release'
   t0: number
@@ -59,15 +59,15 @@ export interface Skin {
   settleTO: ReturnType<typeof setTimeout> | null
   scribeTO: ReturnType<typeof setTimeout> | null
 
-  /** 欄が抱えている入力要素 */
+  /** フィールドに内包される input / textarea 要素 */
   ctl: HTMLInputElement | HTMLTextAreaElement | null
-  /** 選ぶ欄は、選んだ言葉の幅を墨にする */
+  /** セレクトフィールド：選択されたテキスト幅をインク描画に反映 */
   pick: boolean
 }
 
 export interface TezawariOptions {
-  /** 輪郭の種を明示的に固定する。同じ seed は同じ形になる */
+  /** 輪郭のシード値を明示的に固定（同一 seed で同一形状を再現） */
   seed?: string
-  /** 押される物か。既定では tagName と tabindex から決める */
+  /** 押下アニメーションを有効にするかどうか（未指定時は tagName や tabindex から自動判定） */
   pressable?: boolean
 }

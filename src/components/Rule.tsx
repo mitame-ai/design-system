@@ -2,7 +2,7 @@ import { type ComponentPropsWithoutRef, useEffect, useRef } from 'react'
 import { registerRule } from '../lib/tezawari/registry'
 import { cn } from '../lib/utils'
 
-/** 手で引いた罫。1px の直線は、この言語には無い */
+/** 手描き風の水平罫線。機械的な直線ではなく、微細なゆらぎを持たせています */
 export function Rule({ className, ...props }: ComponentPropsWithoutRef<'div'>) {
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {

@@ -7,9 +7,9 @@ import { decorateChild, Shell } from '../lib/slot'
 import { cn } from '../lib/utils'
 
 /**
- * 形づくられた器。
- * 塗り (ink) / 輪郭 (contour) / 素地 (bare) の三態を持つ。
- * 素地は手を伸ばしたときに線が引かれ、それまで輪郭を持たない。
+ * 器（うつわ）のような成形物としてのボタン。
+ * 塗り（ink）、輪郭（contour）、素地（bare）の3つのバリアントを持ちます。
+ * 素地はホバー時に線が引かれ、それまでは輪郭を持ちません。
  */
 export const buttonVariants = cva('tz', {
   variants: {
@@ -35,9 +35,9 @@ export interface ButtonProps
   extends ComponentPropsWithoutRef<'button'>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
-  /** 読み込み中。縫い目が手縫いの拍で進む */
+  /** ローディング状態。手縫いのような間隔で破線が進みます */
   loading?: boolean
-  /** 輪郭の種を固定する。同じ seed は同じ形になる */
+  /** 輪郭のシード値を固定します。同一の seed を指定すると常に同じ形状が再現されます */
   seed?: string
 }
 

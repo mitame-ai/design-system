@@ -9,8 +9,8 @@ export interface PanelProps extends ComponentPropsWithoutRef<'div'> {
 }
 
 /**
- * 織り — 方向を持つ繊維の面。
- * 札の中で画像の代わりに使う。異方性のノイズだけで作るので、外部の画像を持たない。
+ * 織り（パネル） — 規則的な方向性を持つ繊維テクスチャの面。
+ * カード内で画像の代わりとして使用します。異方性ノイズにより生成されるため、外部の画像ファイルを必要としません。
  */
 export const Panel = forwardRef<HTMLDivElement, PanelProps>(function Panel(
   { className, seed, children, ...props },

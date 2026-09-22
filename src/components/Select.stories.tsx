@@ -123,7 +123,7 @@ export const OpeningUpward: Story = {
   name: '上向きに開く',
   render: () => (
     <>
-      <Cap>置 き 場 — 下に入らなければ、札束は上へ繰り出される</Cap>
+      <Cap>展 開 方 向 — 下部に余白がない場合、ドロップダウンは上方へ展開される</Cap>
       <div className="h-[62vh]" />
       <Fields>
         <Field>

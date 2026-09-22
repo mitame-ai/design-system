@@ -14,13 +14,13 @@ export const Weave: Story = {
   name: '織り',
   render: () => (
     <>
-      <Cap>織 り — 方向を持つ繊維の面。外部の画像を持たない</Cap>
+      <Cap>織 り — 規則的な方向性を持つ繊維テクスチャの面（外部画像不使用）</Cap>
       <div className="mb-14 grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-6">
         <Panel className="h-[104px]" />
         <Panel className="h-[104px]" />
         <Panel className="h-[104px]" />
       </div>
-      <Cap>大 き さ — 粗さは寸法で変わらない。目の細かさは同じ</Cap>
+      <Cap>大 き さ — 要素の寸法に関わらず、テクスチャの密度と粗さは一定に保たれる</Cap>
       <div className="mb-14 flex flex-wrap items-end gap-6">
         <Panel className="h-[56px] w-[120px]" />
         <Panel className="h-[104px] w-[220px]" />

@@ -21,11 +21,11 @@ import { fnv, mulberry32 } from '../lib/tezawari/random'
 import { cn } from '../lib/utils'
 
 /* =========================================================
-   SELECT — 書く場所ではなく、選ぶ場所。
-     重なり : 閉じていても、下に札が重なっているのが見えている
-     繰る   : 開くと札が一枚ずつ繰り出される。揃って並ばない
-     丸印   : 選ばれた札には、その場で丸が描かれる
-     写す   : 選んだ言葉は、欄の罫に墨として移る
+   SELECT — セレクトメニュー。
+     重なり : 閉じた状態でも、下に札（選択肢）が重なっている気配を感じさせる
+     繰る   : 展開時に札が一枚ずつ順に繰り出される
+     丸印   : 選択された項目には、手描き風の丸印が付与される
+     写す   : 選択されたテキストの幅に応じて、罫線に墨が染み込む
    ========================================================= */
 
 interface ItemRec {
@@ -43,7 +43,7 @@ interface SelectCtx {
   value: string | undefined
   label: string | undefined
   activeId: string | null
-  /** 札の並びは DOM の順で決まる */
+  /** 選択肢の並び順（DOM ツリーの出現順） */
   items: React.MutableRefObject<ItemRec[]>
   registerItem: (rec: ItemRec) => () => void
   indexOf: (id: string) => number
@@ -59,7 +59,7 @@ interface SelectCtx {
 const Ctx = createContext<SelectCtx | null>(null)
 const useSelect = () => {
   const c = useContext(Ctx)
-  if (!c) throw new Error('Select の部品は <Select> の中でしか使えません')
+  if (!c) throw new Error('Select の関連コンポーネントは <Select> の内部で配置してください')
   return c
 }
 
@@ -67,7 +67,7 @@ export interface SelectProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onCh
   value?: string
   defaultValue?: string
   onValueChange?: (value: string) => void
-  /** 輪郭の種を固定する */
+  /** 輪郭のシード値を固定します */
   seed?: string
   children?: ReactNode
 }
@@ -178,13 +178,13 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(function Select(
     else openList()
   }, [open, close, openList])
 
-  /* 開いた瞬間に、繰り出す札を決める */
+  /* 展開時の初期選択またはフォーカス位置を決定 */
   useLayoutEffect(() => {
     if (!open) return
     setActive(pending.current)
   }, [open, setActive])
 
-  /* 外を押したら閉じる */
+  /* メニュー外のクリックで閉じる */
   useEffect(() => {
     if (!open) return
     const outside = (e: PointerEvent) => {
@@ -194,7 +194,7 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(function Select(
     return () => document.removeEventListener('pointerdown', outside, true)
   }, [open, close])
 
-  /* 個体差 : 札は揃って並ばない。丸印も一つずつ違う形で描かれる */
+  /* 個体差の付与：各選択肢の傾き・位置の微細なゆらぎと丸印のパスを生成 */
   useLayoutEffect(() => {
     void version
     const rand = mulberry32(fnv(`pick|${key}`))
@@ -212,8 +212,8 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(function Select(
     })
   }, [version, key])
 
-  /* 選んだ言葉は、そのまま罫の墨になる */
-  // biome-ignore lint/correctness/useExhaustiveDependencies: 札が揃ってから幅を測る
+  /* 選択された値の文字幅に合わせて罫線のインク描画を更新 */
+  // biome-ignore lint/correctness/useExhaustiveDependencies: 選択肢が描画された後に幅を再計測する
   useEffect(() => {
     const id = requestAnimationFrame(() => handle.current?.ink())
     return () => cancelAnimationFrame(id)
@@ -251,7 +251,7 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(function Select(
       } else if (k === 'Tab') {
         close(false)
       } else if (k.length === 1) {
-        /* 頭の一字で探す */
+        /* 先頭文字によるキーボード検索 */
         const at = items.current.findIndex(
           (r, i) => usable(i) && i !== activeIndex && r.label.trim().startsWith(k),
         )
@@ -312,7 +312,7 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(function Select(
   )
 })
 
-/* ---------- 引き手 ---------- */
+/* ---------- トリガー（引き手） ---------- */
 
 export interface SelectTriggerProps extends ComponentPropsWithoutRef<'button'> {}
 
@@ -341,7 +341,7 @@ export const SelectTrigger = forwardRef<HTMLButtonElement, SelectTriggerProps>(
         {...props}
       >
         {children}
-        {/* 返し : 筆が下で止まって返る。開けば向きが変わる */}
+        {/* アイコン（返し）：開閉状態に応じて向きが回転 */}
         <svg
           className="tz-pick__turn"
           viewBox="0 0 13 13"
@@ -356,7 +356,7 @@ export const SelectTrigger = forwardRef<HTMLButtonElement, SelectTriggerProps>(
 )
 
 export interface SelectValueProps extends ComponentPropsWithoutRef<'span'> {
-  /** まだ選んでいないときの言葉。墨は乗らない */
+  /** 未選択時のプレースホルダーテキスト */
   placeholder?: string
 }
 
@@ -369,10 +369,10 @@ export function SelectValue({ className, placeholder, ...props }: SelectValuePro
   )
 }
 
-/* ---------- 札束 ---------- */
+/* ---------- リストポップオーバー（札束） ---------- */
 
 export interface SelectContentProps extends ComponentPropsWithoutRef<'div'> {
-  /** 一覧に見出しを結びつける */
+  /** リストボックスに紐付けるラベル要素の ID */
   'aria-labelledby'?: string
 }
 
@@ -386,7 +386,7 @@ export const SelectContent = forwardRef<HTMLDivElement, SelectContentProps>(func
   const handle = useTezawari(panel)
   const labelledBy = props['aria-labelledby']
 
-  /* 浮いている紙は、出した瞬間に漉く : 隠れている間は測れない */
+  /* 展開時に寸法を計測してシェルの描画を行う */
   useLayoutEffect(() => {
     if (!s.open) return
     handle.current?.repaint(true)
@@ -463,7 +463,7 @@ export function SelectItem({
       }}
       {...props}
     >
-      {/* 丸印 : 選ばれた札は、その場で丸をつけられる。d は Select が配る */}
+      {/* 選択マーク：選択された項目に手描き風の丸印を描画 */}
       <svg
         className="tz-slip__mark"
         viewBox="0 0 19 19"

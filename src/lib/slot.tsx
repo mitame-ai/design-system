@@ -1,8 +1,8 @@
 import { cloneElement, isValidElement, type ReactNode } from 'react'
 
 /**
- * asChild で渡された要素の中身を包み直す。
- * 殻とラベルは部品の作りの一部なので、差し替えた要素の中にも要る。
+ * asChild で渡された要素の内部構造を補完する。
+ * シェル（.tz-shell）やラベルは Tezawari の表示に不可欠なため、置換先要素の内部にも挿入します。
  */
 export function decorateChild(
   children: ReactNode,
@@ -12,5 +12,5 @@ export function decorateChild(
   return cloneElement(children, undefined, decorate(children.props.children))
 }
 
-/** 殻。中身は塗師が書き込むので、React 側は空のままにしておく */
+/** シェル要素。内部の SVG は描画エンジンが生成するため、React 側では空の要素として描画します */
 export const Shell = () => <span className="tz-shell" aria-hidden="true" />

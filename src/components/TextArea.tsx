@@ -5,15 +5,15 @@ import { Shell } from '../lib/slot'
 import { cn } from '../lib/utils'
 
 export interface TextAreaProps extends ComponentPropsWithoutRef<'textarea'> {
-  /** 欄を包む要素に足すクラス */
+  /** 入力欄を内包する親要素（ラッパー）に付与するクラス名 */
   wrapperClassName?: string
-  /** 輪郭の種を固定する */
+  /** 輪郭のシード値を固定します */
   seed?: string
 }
 
 /**
- * 原稿用紙。面の中に行の数だけ罫が引かれている。
- * 行は紙に引かれているので、書いても動かない。
+ * 原稿用紙風の複数行入力フィールド。
+ * 指定行数分の罫線が描画されます。
  */
 export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function TextArea(
   { className, wrapperClassName, disabled, rows = 4, seed, ...props },
@@ -24,8 +24,8 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
   const ref = useComposedRefs(ctl, forwarded)
   const handle = useTezawari(well, { seed })
 
-  /* 行数が変われば、罫の本数も変わる : 面を漉き直す */
-  // biome-ignore lint/correctness/useExhaustiveDependencies: rows は DOM を変えるので、値そのものを見る
+  /* 行数の変更に伴い罫線の本数が変わるため、コンポーネントを再描画します */
+  // biome-ignore lint/correctness/useExhaustiveDependencies: rows の変更に合わせて再描画を実行するため
   useEffect(() => {
     handle.current?.repaint(true)
   }, [handle, rows])

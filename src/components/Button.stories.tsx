@@ -115,10 +115,10 @@ export const States: Story = {
 }
 
 export const Reseeding: Story = {
-  name: '窯出し',
+  name: '形状の再生成',
   render: () => (
     <>
-      <Cap>個 体 差 — 焼き直すと、すべての形が変わる</Cap>
+      <Cap>個 体 差 — シードを更新すると、すべての形状が新しく生成される</Cap>
       <Row>
         <Button variant="contour">湯呑</Button>
         <Button variant="contour">湯呑</Button>

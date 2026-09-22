@@ -3,8 +3,8 @@ import { canPaint } from './env'
 const DEFS_ID = 'tz-defs'
 
 /**
- * 紙の繊維とアイコンの歪みに使うフィルタを、文書に一度だけ置く。
- * `filter="url(#tz-fiber-g)"` は文書スコープなので、どこかに一つあればよい。
+ * 紙の繊維テクスチャおよびアイコン変形に用いる SVG フィルターをドキュメントに一度だけ注入する。
+ * `filter="url(#tz-fiber-g)"` はドキュメントスコープであるため、全体で1つ存在すれば機能する。
  */
 export function ensureDefs() {
   if (!canPaint()) return

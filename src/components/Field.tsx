@@ -3,21 +3,21 @@ import { cn } from '../lib/utils'
 
 export interface FieldProps extends ComponentPropsWithoutRef<'div'> {
   /**
-   * 誤り。赤い枠ではなく、後から引かれる朱の波線で示す。
-   * 罫そのものは墨のまま残る : 朱は加えられる印であって、紙を塗り替えない。
+   * エラー状態。全体を赤枠にするのではなく、校正の朱入れのように朱色の波線と注記で示します。
+   * 罫線そのものは墨色のまま維持されます。
    */
   invalid?: boolean
 }
 
-/** 欄とその見出し、注記をひとまとめにする */
+/** 入力欄・ラベル・注記を束ねるフィールドコンポーネント */
 export function Field({ className, invalid = false, ...props }: FieldProps) {
   return <div className={cn('tz-field', invalid && 'is-error', className)} {...props} />
 }
 
 export interface FieldLabelProps extends ComponentPropsWithoutRef<'label'> {
-  /** 要る欄であることを朱の点で示す */
+  /** 必須入力項目であることを朱色の印で示します */
   required?: boolean
-  /** 選ぶ欄のように for が効かない相手には span で出す */
+  /** Select など htmlFor が使用できない要素向けに、ラベルを span 要素として描画します */
   asSpan?: boolean
 }
 
@@ -41,7 +41,7 @@ export function FieldLabel({
   )
 }
 
-/** 注記。誤りのときは朱になり、頭に「朱」が付く */
+/** 注記テキスト。エラー時には朱色になり、先頭に朱入れの印が付与されます */
 export function FieldNote({ className, ...props }: ComponentPropsWithoutRef<'span'>) {
   return <span className={cn('tz-field__note', className)} {...props} />
 }

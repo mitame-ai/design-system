@@ -4,7 +4,7 @@ import { cn } from '../lib/utils'
 export interface IconProps extends ComponentPropsWithoutRef<'svg'> {}
 
 /**
- * 部品に添える印。線は繊維のフィルタを通すので、真っ直ぐには引かれない。
+ * アイコン表示用コンポーネント。輪郭線に繊維感のある SVG フィルターを通すことで、手描き風の風合いを与えます。
  *
  * ```tsx
  * <Icon><path d="M2.4 8 H13.2 M8.6 3.6 L13.3 8 L8.6 12.4" /></Icon>
