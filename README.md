@@ -51,7 +51,7 @@ Tailwind CSS をお使いの場合は、テーマファイルを読み込むこ�
 | `TextArea` | — | 原稿用紙風の入力欄。`rows` の指定行数分だけ罫線が描画されます |
 | `Select` | — | `Select` / `SelectTrigger` / `SelectValue` / `SelectContent` / `SelectItem` |
 | `Card` | `plain` / `pick` / `inlay` | `CardTitle` / `CardText` / `CardMeta` / `CardFooter` / `CardMedia` |
-| `Panel` | — | 織物調のテクスチャ面。画像プレースホルダーなどに使用します |
+| `Panel` | — | テクスチャパネル。画像プレースホルダーなどに使用します |
 | `Field` | — | `FieldLabel` / `FieldNote` を内包し、`invalid` 時に朱色の訂正線が表示されます |
 | `Rule` | — | 手描き風の水平罫線 |
 | `Icon` | — | アイコン用ラッパー（`.tz-ico`）。繊維感のある SVG フィルターを通します |

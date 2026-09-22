@@ -43,7 +43,7 @@ export const Picking: Story = {
   name: '選ぶ',
   render: () => (
     <>
-      <Cap>選 ぶ — 閉じていても、下に札が重なっている</Cap>
+      <Cap>選 ぶ — 閉じていても、下に選択肢が重なっている</Cap>
       <Fields>
         <Field>
           <FieldLabel asSpan id="l-soil">
@@ -80,7 +80,7 @@ export const Picking: Story = {
               <SelectItem value="焼締">焼締</SelectItem>
             </SelectContent>
           </Select>
-          <FieldNote id="n-fire">未選択の欄には、まだ墨が乗っていない</FieldNote>
+          <FieldNote id="n-fire">未選択の項目には、まだ墨が乗っていない</FieldNote>
         </Field>
       </Fields>
     </>

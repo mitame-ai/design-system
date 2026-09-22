@@ -53,10 +53,10 @@ export const Writing: Story = {
 }
 
 export const BoxedAndCorrected: Story = {
-  name: '枡と朱',
+  name: 'ボックス型とエラー',
   render: () => (
     <>
-      <Cap>枡 と 朱 — 囲いが要るとき、訂正されるとき</Cap>
+      <Cap>ボックス型とエラー — 枠が必要なとき、エラー表示のとき</Cap>
       <Fields>
         <Field>
           <FieldLabel htmlFor="f-count">客 数</FieldLabel>
@@ -67,7 +67,7 @@ export const BoxedAndCorrected: Story = {
             defaultValue="六"
             aria-describedby="n-count"
           />
-          <FieldNote id="n-count">短い記号は、罫より枡が読みやすい</FieldNote>
+          <FieldNote id="n-count">短い記号は、罫線より枠型が読みやすい</FieldNote>
         </Field>
 
         <Field invalid>

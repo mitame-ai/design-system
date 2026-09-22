@@ -3,7 +3,7 @@ import { clamp, cssv, fnv, mulberry32, num, wobbler } from './random'
 import type { Form, Point, Skin } from './types'
 
 /**
- * 描画エンジン — ボタン、札、欄、織りの各コンポーネントを共通のロジックで SVG 描画する。
+ * 描画エンジン — ボタン、カード、入力欄、パネルの各コンポーネントを共通のロジックで SVG 描画する。
  * コンポーネントごとの違いは要素に付与された CSS トークンのみによって決まる。
  *
  * @returns 実際に再描画が行われた場合のみ true

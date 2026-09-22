@@ -30,10 +30,10 @@ export const Playground: Story = {
 }
 
 export const Sheets: Story = {
-  name: '札',
+  name: 'カード',
   render: () => (
     <>
-      <Cap>札 — 影も耳も、その一枚のかたちを持つ</Cap>
+      <Cap>カード — 影も縁も、その一枚の輪郭を持つ</Cap>
       <Cards>
         <Card>
           <CardMedia />
@@ -65,7 +65,7 @@ export const Sheets: Story = {
         </Card>
 
         <Card variant="inlay">
-          <CardTitle>象嵌の札</CardTitle>
+          <CardTitle>インレイカード</CardTitle>
           <CardText>
             浮かない面。影を持たず、紙に沈んで区切るだけ。触れられないものは、応えない。
           </CardText>
@@ -79,10 +79,10 @@ export const Sheets: Story = {
 }
 
 export const PickedUp: Story = {
-  name: '拾い上げる',
+  name: '浮き上がり',
   render: () => (
     <>
-      <Cap>拾 い 上 げ る — 手が近づいた角が起きる</Cap>
+      <Cap>浮 き 上 が り — 手が近づいた角が起きる</Cap>
       <Cards min={300}>
         <Card variant="pick" asChild>
           <a href="#kiln">
@@ -108,7 +108,7 @@ export const PickedUp: Story = {
                 <path d="M2.4 8 H13.2 M8.6 3.6 L13.3 8 L8.6 12.4" />
               </Icon>
             </CardTitle>
-            <CardText>同じ指定の札。耳の破れかたも、影のかたちも、揺れる周期も違う。</CardText>
+            <CardText>同じ指定のカード。縁のゆらぎも、影のかたちも、揺れる周期も違う。</CardText>
             <CardFooter>
               <CardMeta>別 の 個 体</CardMeta>
             </CardFooter>

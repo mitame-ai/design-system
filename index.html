@@ -54,7 +54,7 @@
   --tz-arrive:     26;     /* 手が着いたら平らに戻る距離 (0 = 戻さない) */
   --tz-persp:      760px;
   --tz-form:       box;    /* box | rule | ruled */
-  --tz-stack:      0;      /* 下に重なっている札の枚数 */
+  --tz-stack:      0;      /* 下に重なっているカードの枚数 */
 
   /* --- motion tokens: 押しは速く、戻りは遅く緩む --- */
   --tz-press-curve:   cubic-bezier(.32,.72,.4,1);
@@ -115,7 +115,7 @@ body{
 .row{display:flex;flex-wrap:wrap;gap:20px 22px;align-items:center;margin:0 0 58px}
 
 /* =========================================================
-   共通の地 : ボタンも札も、同じ素材のうえに成り立つ
+   共通の地 : ボタンもカードも、同じ素材のうえに成り立つ
    ========================================================= */
 .tz,.tz-card{
   --tz-sc:1; --tz-ty:0px; --tz-lay:0px; --tz-rx:0deg; --tz-ry:0deg;
@@ -262,7 +262,7 @@ body{
   stroke-linecap:round;stroke-linejoin:round}
 
 /* =========================================================
-   CARD — 一枚の手漉きの紙。形づくられた器ではなく、漉かれた面。
+   CARD — 一枚の手漉きの紙。成形されたボタンとは異なり、漉かれた面。
      耳     : 縁は切られていない。振れ幅も粗さもボタンより大きい
      接地影 : 影は矩形のぼかしではなく、その個体と同じ輪郭を持つ
      角     : 手が近づいた角が起きる。拾い上げられる合図
@@ -318,7 +318,7 @@ body{
 .tz-rule svg{display:block;overflow:visible;width:100%;height:100%}
 .tz-rule path{fill:none;stroke:var(--tz-ink);stroke-width:1.1;stroke-linecap:round;opacity:.42}
 
-/* 織り : 面に方向を持つ繊維。異方性のノイズで作る */
+/* パネル : 面に方向を持つ繊維。異方性のノイズで作る */
 .tz-panel{
   --tz-pad:8; --tz-amp:1.7; --tz-grit:4; --tz-fiber:1.6; --tz-radius:5;
   --tz-grain-freq:0.02 0.62; --tz-grain-oct:1; --tz-ring-off:5;
@@ -330,7 +330,7 @@ body{
 .tz-panel > .tz-shell .tz-edge{opacity:.3;stroke-width:1px}
 .tz-panel > .tz-shell .tz-edge2{display:none}
 
-/* --- 拾い上げる : 角が手の側へ起きる。触れられる札だけ --- */
+/* --- 浮き上がり : 角が手の側へ起きる。触れられるカードだけ --- */
 .tz-card--pick{
   --tz-curl:3.4; --tz-tilt:1.1; --tz-reach:150; --tz-arrive:0;
   cursor:pointer;text-decoration:none;color:inherit;
@@ -342,7 +342,7 @@ body{
 }
 .tz-card--pick .tz-card__title{display:flex;align-items:center;justify-content:space-between;gap:18px}
 
-/* --- 象嵌 : 浮かない札。紙に沈めて区切るだけの面 --- */
+/* --- インレイ（象嵌） : 浮かないカード。紙に沈めて区切るだけの面 --- */
 .tz-card--inlay{--tz-amp:1.8}
 .tz-card--inlay > .tz-shell .tz-grain{opacity:.1}
 .tz-card--inlay > .tz-shell .tz-shade{display:none}
@@ -355,9 +355,9 @@ body{
   margin:0 0 30px}
 
 /* =========================================================
-   INPUT — 器でも紙でもなく、書きこむ場所。
+   INPUT — 書きこむ場所。
      罫   : 枠ではなく、一本の罫。書く場所は線で示す
-     記入 : 書いた分だけ、罫に墨が染みる。欄は書かれたことを憶える
+     記入 : 書いた分だけ、罫に墨が染みる。入力欄は書かれたことを憶える
      穂先 : 明滅する 1px の棒をやめ、手で持った穂の呼吸にする
      朱   : 誤りは赤い枠ではなく、朱の波線で訂正される
    ========================================================= */
@@ -365,7 +365,7 @@ body{
   --tz-form:rule;
   --tz-pad:12; --tz-amp:.85; --tz-grit:2; --tz-fiber:.9; --tz-radius:6;
   --tz-grain-freq:0.8; --tz-grain-oct:2; --tz-ring-off:6; --tz-persp:900px;
-  /* 欄は押される物ではない : 沈まず、傾かない。近づけば罫が濃くなるだけ */
+  /* 入力欄は押される物ではない : 沈まず、傾かない。近づけば罫が濃くなるだけ */
   --tz-dent:0; --tz-sigma:1; --tz-sigma-min:40;
   --tz-curl:0; --tz-tilt:0; --tz-reach:130; --tz-arrive:0;
   --tz-release-dur:420ms;
@@ -376,7 +376,7 @@ body{
 .tz-well > .tz-shell .tz-grain,
 .tz-well > .tz-shell .tz-shade,
 .tz-well > .tz-shell .tz-fringe,
-/* 欄を囲まない : 焦点は「囲い」ではなく「罫が引き直されること」で示す */
+/* 入力欄を囲まない : 焦点は「囲い」ではなく「罫が引き直されること」で示す */
 .tz-well > .tz-shell .tz-ring{display:none}
 .tz-well > .tz-shell .tz-edge{
   stroke-width:1.15px;opacity:calc(.38 + var(--tz-lift) * .26);
@@ -386,7 +386,7 @@ body{
 .tz-well:focus-within > .tz-shell .tz-edge{
   opacity:1;stroke-width:2.2px;
   animation:tz-rule 300ms cubic-bezier(.45,.05,.2,1)}
-/* 枡は引き直さない : 囲いは既にそこにある。濃くなるだけでいい */
+/* ボックス型は引き直さない : 囲いは既にそこにある。濃くなるだけでいい */
 .tz-well--boxed:focus-within > .tz-shell .tz-edge,
 .tz-well--ruled:focus-within > .tz-shell .tz-edge{stroke-width:1.9px;animation:none}
 .tz-well--boxed:focus-within > .tz-shell .tz-edge2,
@@ -450,7 +450,7 @@ body{
 .tz-well:focus-within .tz-input::placeholder,
 .tz-well:focus-within .tz-area::placeholder{opacity:.45}
 
-/* 枡 : 罫ではなく囲いが要るとき (数値、短い記号) */
+/* ボックス型 : 罫ではなく囲いが要るとき (数値、短い記号) */
 .tz-well--boxed{--tz-form:box; --tz-amp:1.1; --tz-grit:2; --tz-radius:9; --tz-dent:1.5}
 .tz-well--boxed > .tz-shell .tz-fill{display:block;fill:var(--tz-paper);fill-opacity:.6}
 .tz-well--boxed > .tz-shell .tz-grain{display:block;opacity:.14}
@@ -464,7 +464,7 @@ body{
 .tz-well--ruled > .tz-shell .tz-soak{display:none}
 .tz-lines path{fill:none;stroke:var(--tz-ink);stroke-width:.9px;stroke-linecap:round;opacity:.17}
 
-/* 書かれていない欄は、まだ紙が用意されていない */
+/* 書かれていない入力欄は、まだ紙が用意されていない */
 .tz-well.is-off > .tz-shell .tz-edge{stroke:var(--tz-ink-3);stroke-dasharray:2.5 6;
   opacity:.7;stroke-width:1px}
 .tz-well.is-off > .tz-shell .tz-edge2,
@@ -485,10 +485,10 @@ body{
 
 /* =========================================================
    SELECT — 書く場所ではなく、選ぶ場所。
-     重なり : 閉じていても、下に札が重なっているのが見えている
-     繰る   : 開くと札が一枚ずつ繰り出される。揃って並ばない
-     丸印   : 選ばれた札には、その場で丸が描かれる
-     写す   : 選んだ言葉は、欄の罫に墨として移る
+     重なり : 閉じていても、下に選択肢が重なっているのが見えている
+     展開   : 開くと選択肢が一枚ずつ現れる。揃って並ばない
+     丸印   : 選ばれた項目には、その場で丸が描かれる
+     写す   : 選んだ言葉は、入力欄の罫に墨として移る
    ========================================================= */
 .tz-well--pick{--tz-stack:2}
 .tz-stack path{fill:none;stroke:var(--tz-ink);stroke-width:1px;stroke-linecap:round;
@@ -513,7 +513,7 @@ body{
   stroke-linejoin:round}
 .tz-well--pick.is-open .tz-pick__turn{rotate:180deg}
 
-/* 札束 : 開いた面は、札と同じ紙 */
+/* リストポップオーバー : 開いた面は、カードと同じ紙 */
 .tz-slips{
   position:absolute;left:-4px;right:-4px;top:calc(100% + 11px);
   z-index:30;padding:9px 7px;margin:0;
@@ -535,7 +535,7 @@ body{
   transform:translateX(var(--tz-sx,0)) rotate(var(--tz-sr,0deg));
   transition:transform 260ms cubic-bezier(.2,1.1,.3,1),color 200ms ease;
 }
-/* 繰り出す : 見ている札は、束からわずかに押し出される */
+/* 選択肢 : 見ている項目は、わずかに押し出される */
 .tz-slip.is-active{color:var(--tz-ink);
   transform:translateX(calc(var(--tz-sx,0px) + 6px)) rotate(var(--tz-sr,0deg))}
 .tz-slip::before{content:"";position:absolute;left:-4px;top:50%;
@@ -547,7 +547,7 @@ body{
 .tz-slip[aria-disabled="true"] .tz-slip__label{text-decoration:line-through;
   text-decoration-thickness:1px;text-decoration-color:var(--tz-ink-3)}
 
-/* 丸印 : 選ばれた札は、その場で丸をつけられる */
+/* 丸印 : 選ばれた項目は、その場で丸をつけられる */
 .tz-slip__mark{flex:none;width:19px;height:19px;overflow:visible;opacity:0;
   transition:opacity 200ms ease}
 .tz-slip__mark path{fill:none;stroke:var(--tz-ink);stroke-width:1.4;
@@ -567,7 +567,7 @@ body{
 /* =========================================================
    生まれかた : 部品ごとに違う
      ボタン : 一本の線として引かれる
-     札     : 紙として置かれる。内容は着地してから読める
+     カード : 紙として置かれる。内容は着地してから読める
    ========================================================= */
 .tz.is-drawing .tz-edge{
   stroke-dasharray:var(--tz-len);stroke-dashoffset:0;
@@ -692,7 +692,7 @@ body{
 
   <p class="sect">C A R D</p>
 
-  <p class="cap">札 — 影も耳も、その一枚のかたちを持つ</p>
+  <p class="cap">カード — 影も耳も、その一枚のかたちを持つ</p>
   <div class="cards">
     <article class="tz-card">
       <div class="tz-panel tz-card__media" aria-hidden="true"></div>
@@ -716,7 +716,7 @@ body{
     </article>
 
     <article class="tz-card tz-card--inlay">
-      <h3 class="tz-card__title">象嵌の札</h3>
+      <h3 class="tz-card__title">インレイカード</h3>
       <p class="tz-card__text">浮かない面。影を持たず、紙に沈んで区切るだけ。触れられないものは、応えない。</p>
       <div class="tz-card__foot">
         <span class="tz-card__meta">非 対 話</span>
@@ -724,7 +724,7 @@ body{
     </article>
   </div>
 
-  <p class="cap">拾 い 上 げ る — 手が近づいた角が起きる</p>
+  <p class="cap">浮 き 上 が り — 手が近づいた角が起きる</p>
   <div class="cards" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
     <a class="tz-card tz-card--pick" href="#">
       <h3 class="tz-card__title">この一客を選ぶ
@@ -741,7 +741,7 @@ body{
           <path d="M2.4 8 H13.2 M8.6 3.6 L13.3 8 L8.6 12.4"/>
         </svg>
       </h3>
-      <p class="tz-card__text">同じ指定の札。耳の破れかたも、影のかたちも、揺れる周期も違う。</p>
+      <p class="tz-card__text">同じ指定のカード。耳の破れかたも、影のかたちも、揺れる周期も違う。</p>
       <div class="tz-card__foot"><span class="tz-card__meta">別 の 個 体</span></div>
     </a>
   </div>
@@ -771,7 +771,7 @@ body{
     </div>
   </div>
 
-  <p class="cap">枡 と 朱 — 囲いが要るとき、訂正されるとき</p>
+  <p class="cap">ボックス型と朱 — 囲いが要るとき、訂正されるとき</p>
   <div class="fields">
     <div class="tz-field">
       <label class="tz-field__label" for="f-count">客 数</label>
@@ -780,7 +780,7 @@ body{
                aria-describedby="n-count">
         <span class="tz-nib" aria-hidden="true"></span>
       </span>
-      <span class="tz-field__note" id="n-count">短い記号は、罫より枡が読みやすい</span>
+      <span class="tz-field__note" id="n-count">短い記号は、罫より枠型が読みやすい</span>
     </div>
 
     <div class="tz-field is-error">
@@ -806,7 +806,7 @@ body{
 
   <p class="sect">S E L E C T</p>
 
-  <p class="cap">選 ぶ — 閉じていても、下に札が重なっている</p>
+  <p class="cap">選 ぶ — 閉じていても、下に選択肢が重なっている</p>
   <div class="fields">
     <div class="tz-field">
       <span class="tz-field__label" id="l-soil">土</span>
@@ -851,7 +851,7 @@ body{
           </ul>
         </div>
       </div>
-      <span class="tz-field__note" id="n-fire">未選択の欄には、まだ墨が乗っていない</span>
+      <span class="tz-field__note" id="n-fire">未選択の項目には、まだ墨が乗っていない</span>
     </div>
   </div>
 
@@ -894,7 +894,7 @@ body{
     return ((t ^ t >>> 14) >>> 0) / 4294967296;
   };
   /* 周期的な1次元ノイズ。周波数は整数 : 閉じた輪郭が継ぎ目なくつながる。
-     grit を上げると細かい破れが混ざる (札の耳) */
+     grit を上げると細かい破れが混ざる (カードの耳) */
   const wobbler = (rand, grit = 1) => {
     const g = Math.max(1, Math.round(grit));
     const hs = [[1,1],[2,.58],[3,.34],[5,.2],[7,.12]]
@@ -956,7 +956,7 @@ body{
   }
 
   /* =========================================================
-     塗師 : ボタンも札も織りも、この一つの関数が描く。
+     塗師 : ボタンもカードもパネルも、この一つの関数が描く。
      違いは要素に載った CSS トークンだけ。
      ========================================================= */
   function paint(el) {
@@ -1003,7 +1003,7 @@ body{
       };
       hooks = tick(st.base[0], 1) + tick(st.base[st.base.length - 1], -1);
 
-      /* 重なり : 罫の下から、次の札の縁がのぞいている */
+      /* 重なり : 罫の下から、次の選択肢の縁がのぞいている */
       const deck = num(el, '--tz-stack') || 0;
       if (deck) {
         let sp = '';
@@ -1204,7 +1204,7 @@ ${lines}
     el.style.setProperty('--tz-ty', '0.5px');
 
     /* 指の位置からの距離で変形を決める。広がりは部品ごとに違う :
-       ボタンは一点がへこみ、札は一枚がしなる */
+       ボタンは一点がへこみ、カードは一枚がしなる */
     const sigma = Math.max(num(el, '--tz-sigma-min'), Math.min(st.w, st.h) * num(el, '--tz-sigma'));
     st.pressW = weights(st, x + st.pad, y + st.pad, sigma);
     st.D = Math.min(num(el, '--tz-dent'), Math.min(st.w, st.h) * .1);
@@ -1291,7 +1291,7 @@ ${lines}
   /* ---------- 気配 : 触れる前から応える。触れられる物だけ ---------- */
   const skins = [...document.querySelectorAll('.tz, .tz-card, .tz-panel, .tz-well')];
   /* 押される物と、気配だけ感じる物は別 :
-     欄を押しても沈まない。ポインタを捕まえたら文字も選べなくなる */
+     入力欄を押しても沈まない。ポインタを捕まえたら文字も選べなくなる */
   const isPressable = el => !el.disabled &&
     (el.matches('button, a[href]') || el.matches('[tabindex]:not([tabindex="-1"])'));
   const isLive = el => isPressable(el) || el.classList.contains('tz-well') ||
@@ -1374,7 +1374,7 @@ ${lines}
     shell.setAttribute('aria-hidden', 'true');
     el.prepend(shell);
 
-    /* ボタンだけは中身を一枚に包む。札は構造を持つので触らない */
+    /* ボタンだけは中身を一枚に包む。カードは構造を持つので触らない */
     if (el.classList.contains('tz')) {
       const label = document.createElement('span');
       label.className = 'tz-label';
@@ -1411,7 +1411,7 @@ ${lines}
     el.addEventListener('blur', () => release(el));
   });
 
-  /* ---------- 欄を繋ぐ ---------- */
+  /* ---------- 入力欄を繋ぐ ---------- */
   document.querySelectorAll('.tz-well').forEach(well => {
     const ctl = well.querySelector('input, textarea');
     if (!ctl) return;
@@ -1454,7 +1454,7 @@ ${lines}
     const mark = circleMark(rand);
     opts.forEach((o, i) => {
       o.id ||= `tz-slip-${wi}-${i}`;
-      /* 個体差 : 札は揃って並ばない */
+      /* 個体差 : 選択肢は揃って並ばない */
       o.style.setProperty('--tz-si', i);
       o.style.setProperty('--tz-sr', ((rand() - .5) * .55).toFixed(2) + 'deg');
       o.style.setProperty('--tz-sx', ((rand() - .5) * 1.8).toFixed(2) + 'px');

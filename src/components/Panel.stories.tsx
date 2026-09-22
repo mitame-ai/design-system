@@ -11,10 +11,10 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Weave: Story = {
-  name: '織り',
+  name: 'パネル',
   render: () => (
     <>
-      <Cap>織 り — 規則的な方向性を持つ繊維テクスチャの面（外部画像不使用）</Cap>
+      <Cap>パ ネ ル — 規則的な方向性を持つ繊維テクスチャの面（外部画像不使用）</Cap>
       <div className="mb-14 grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-6">
         <Panel className="h-[104px]" />
         <Panel className="h-[104px]" />

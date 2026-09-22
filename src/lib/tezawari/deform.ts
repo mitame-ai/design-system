@@ -84,7 +84,7 @@ export function press(st: Skin, x: number, y: number) {
   el.style.setProperty('--tz-ty', '0.5px')
 
   /* ポインタ位置からの距離に基づいて変形範囲を決定。
-     ボタンは局所的に一点が沈み、札は全体がしなるように変形する */
+     ボタンは局所的に一点が沈み、カードは全体がしなるように変形する */
   const sigma = Math.max(num(el, '--tz-sigma-min'), Math.min(st.w, st.h) * num(el, '--tz-sigma'))
   st.pressW = weights(st, x + st.pad, y + st.pad, sigma)
   st.D = Math.min(num(el, '--tz-dent'), Math.min(st.w, st.h) * 0.1)

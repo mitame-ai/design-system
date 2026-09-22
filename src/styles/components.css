@@ -32,7 +32,7 @@
                    ui-rounded,-apple-system,"Segoe UI",system-ui,sans-serif;
 
   /* --- 作りの既定値。部品は必ず自分で上書きする :
-         トークンは継承するので、札の中のボタンが札の粗さを貰ってはいけない --- */
+         トークンは継承するので、カードの中のボタンがカードの粗さを貰ってはいけない --- */
   --tz-pad:        10;     /* 輪郭が紙からはみ出せる余白 (px) */
   --tz-amp:        1.05;   /* 個体差の振れ幅 (px) */
   --tz-grit:       1;      /* 縁の粗さ (空間周波数の倍率, 整数) */
@@ -50,7 +50,7 @@
   --tz-arrive:     26;     /* 手が着いたら平らに戻る距離 (0 = 戻さない) */
   --tz-persp:      760px;
   --tz-form:       box;    /* box | rule | ruled */
-  --tz-stack:      0;      /* 下に重なっている札の枚数 */
+  --tz-stack:      0;      /* 下に重なっているカードの枚数 */
 
   /* --- motion tokens: 押しは速く、戻りは遅く緩む --- */
   --tz-press-curve:   cubic-bezier(.32,.72,.4,1);
@@ -95,7 +95,7 @@
 .tz-defs{position:absolute;width:0;height:0;overflow:hidden}
 
 /* =========================================================
-   共通の地 : ボタンも札も、同じ素材のうえに成り立つ
+   共通の地 : ボタンもカードも、同じ素材のうえに成り立つ
    ========================================================= */
 .tz,.tz-card{
   --tz-sc:1; --tz-ty:0px; --tz-lay:0px; --tz-rx:0deg; --tz-ry:0deg;
@@ -242,7 +242,7 @@
   stroke-linecap:round;stroke-linejoin:round}
 
 /* =========================================================
-   CARD — 一枚の手漉きの紙。形づくられた器ではなく、漉かれた面。
+   CARD — 一枚の手漉きの紙。成形されたボタンとは異なり、漉かれた面。
      耳     : 縁は切られていない。振れ幅も粗さもボタンより大きい
      接地影 : 影は矩形のぼかしではなく、その個体と同じ輪郭を持つ
      角     : 手が近づいた角が起きる。拾い上げられる合図
@@ -298,7 +298,7 @@
 .tz-rule svg{display:block;overflow:visible;width:100%;height:100%}
 .tz-rule path{fill:none;stroke:var(--tz-ink);stroke-width:1.1;stroke-linecap:round;opacity:.42}
 
-/* 織り : 面に方向を持つ繊維。異方性のノイズで作る */
+/* パネル : 面に方向を持つ繊維。異方性のノイズで作る */
 .tz-panel{
   --tz-pad:8; --tz-amp:1.7; --tz-grit:4; --tz-fiber:1.6; --tz-radius:5;
   --tz-grain-freq:0.02 0.62; --tz-grain-oct:1; --tz-ring-off:5;
@@ -310,7 +310,7 @@
 .tz-panel > .tz-shell .tz-edge{opacity:.3;stroke-width:1px}
 .tz-panel > .tz-shell .tz-edge2{display:none}
 
-/* --- 拾い上げる : 角が手の側へ起きる。触れられる札だけ --- */
+/* --- 浮き上がり : 角が手の側へ起きる。触れられるカードだけ --- */
 .tz-card--pick{
   --tz-curl:3.4; --tz-tilt:1.1; --tz-reach:150; --tz-arrive:0;
   cursor:pointer;text-decoration:none;color:inherit;
@@ -322,7 +322,7 @@
 }
 .tz-card--pick .tz-card__title{display:flex;align-items:center;justify-content:space-between;gap:18px}
 
-/* --- 象嵌 : 浮かない札。紙に沈めて区切るだけの面 --- */
+/* --- インレイ（象嵌） : 浮かないカード。紙に沈めて区切るだけの面 --- */
 .tz-card--inlay{--tz-amp:1.8}
 .tz-card--inlay > .tz-shell .tz-grain{opacity:.1}
 .tz-card--inlay > .tz-shell .tz-shade{display:none}
@@ -332,9 +332,9 @@
 .tz-card--inlay > .tz-shell .tz-edge2{display:none}
 
 /* =========================================================
-   INPUT — 器でも紙でもなく、書きこむ場所。
+   INPUT — 書きこむ場所。
      罫   : 枠ではなく、一本の罫。書く場所は線で示す
-     記入 : 書いた分だけ、罫に墨が染みる。欄は書かれたことを憶える
+     記入 : 書いた分だけ、罫に墨が染みる。入力欄は書かれたことを憶える
      穂先 : 明滅する 1px の棒をやめ、手で持った穂の呼吸にする
      朱   : 誤りは赤い枠ではなく、朱の波線で訂正される
    ========================================================= */
@@ -342,7 +342,7 @@
   --tz-form:rule;
   --tz-pad:12; --tz-amp:.85; --tz-grit:2; --tz-fiber:.9; --tz-radius:6;
   --tz-grain-freq:0.8; --tz-grain-oct:2; --tz-ring-off:6; --tz-persp:900px;
-  /* 欄は押される物ではない : 沈まず、傾かない。近づけば罫が濃くなるだけ */
+  /* 入力欄は押される物ではない : 沈まず、傾かない。近づけば罫が濃くなるだけ */
   --tz-dent:0; --tz-sigma:1; --tz-sigma-min:40;
   --tz-curl:0; --tz-tilt:0; --tz-reach:130; --tz-arrive:0;
   --tz-release-dur:420ms;
@@ -353,7 +353,7 @@
 .tz-well > .tz-shell .tz-grain,
 .tz-well > .tz-shell .tz-shade,
 .tz-well > .tz-shell .tz-fringe,
-/* 欄を囲まない : 焦点は「囲い」ではなく「罫が引き直されること」で示す */
+/* 入力欄を囲まない : 焦点は「囲い」ではなく「罫が引き直されること」で示す */
 .tz-well > .tz-shell .tz-ring{display:none}
 .tz-well > .tz-shell .tz-edge{
   stroke-width:1.15px;opacity:calc(.38 + var(--tz-lift) * .26);
@@ -363,7 +363,7 @@
 .tz-well:focus-within > .tz-shell .tz-edge{
   opacity:1;stroke-width:2.2px;
   animation:tz-rule 300ms cubic-bezier(.45,.05,.2,1)}
-/* 枡は引き直さない : 囲いは既にそこにある。濃くなるだけでいい */
+/* ボックス型は引き直さない : 囲いは既にそこにある。濃くなるだけでいい */
 .tz-well--boxed:focus-within > .tz-shell .tz-edge,
 .tz-well--ruled:focus-within > .tz-shell .tz-edge{stroke-width:1.9px;animation:none}
 .tz-well--boxed:focus-within > .tz-shell .tz-edge2,
@@ -427,7 +427,7 @@
 .tz-well:focus-within .tz-input::placeholder,
 .tz-well:focus-within .tz-area::placeholder{opacity:.45}
 
-/* 枡 : 罫ではなく囲いが要るとき (数値、短い記号) */
+/* ボックス型 : 罫ではなく囲いが要るとき (数値、短い記号) */
 .tz-well--boxed{--tz-form:box; --tz-amp:1.1; --tz-grit:2; --tz-radius:9; --tz-dent:1.5}
 .tz-well--boxed > .tz-shell .tz-fill{display:block;fill:var(--tz-paper);fill-opacity:.6}
 .tz-well--boxed > .tz-shell .tz-grain{display:block;opacity:.14}
@@ -441,7 +441,7 @@
 .tz-well--ruled > .tz-shell .tz-soak{display:none}
 .tz-lines path{fill:none;stroke:var(--tz-ink);stroke-width:.9px;stroke-linecap:round;opacity:.17}
 
-/* 書かれていない欄は、まだ紙が用意されていない */
+/* 書かれていない入力欄は、まだ紙が用意されていない */
 .tz-well.is-off > .tz-shell .tz-edge{stroke:var(--tz-ink-3);stroke-dasharray:2.5 6;
   opacity:.7;stroke-width:1px}
 .tz-well.is-off > .tz-shell .tz-edge2,
@@ -459,10 +459,10 @@
 
 /* =========================================================
    SELECT — 書く場所ではなく、選ぶ場所。
-     重なり : 閉じていても、下に札が重なっているのが見えている
-     繰る   : 開くと札が一枚ずつ繰り出される。揃って並ばない
-     丸印   : 選ばれた札には、その場で丸が描かれる
-     写す   : 選んだ言葉は、欄の罫に墨として移る
+     重なり : 閉じていても、下に選択肢が重なっているのが見えている
+     展開   : 開くと選択肢が一枚ずつ現れる。揃って並ばない
+     丸印   : 選ばれた項目には、その場で丸が描かれる
+     写す   : 選んだ言葉は、入力欄の罫に墨として移る
    ========================================================= */
 .tz-well--pick{--tz-stack:2}
 .tz-stack path{fill:none;stroke:var(--tz-ink);stroke-width:1px;stroke-linecap:round;
@@ -487,7 +487,7 @@
   stroke-linejoin:round}
 .tz-well--pick.is-open .tz-pick__turn{rotate:180deg}
 
-/* 札束 : 開いた面は、札と同じ紙 */
+/* リストポップオーバー : 開いた面は、カードと同じ紙 */
 .tz-slips{
   position:absolute;left:-4px;right:-4px;top:calc(100% + 11px);
   z-index:30;padding:9px 7px;margin:0;
@@ -509,7 +509,7 @@
   transform:translateX(var(--tz-sx,0)) rotate(var(--tz-sr,0deg));
   transition:transform 260ms cubic-bezier(.2,1.1,.3,1),color 200ms ease;
 }
-/* 繰り出す : 見ている札は、束からわずかに押し出される */
+/* 選択肢 : 見ている項目は、わずかに押し出される */
 .tz-slip.is-active{color:var(--tz-ink);
   transform:translateX(calc(var(--tz-sx,0px) + 6px)) rotate(var(--tz-sr,0deg))}
 .tz-slip::before{content:"";position:absolute;left:-4px;top:50%;
@@ -521,7 +521,7 @@
 .tz-slip[aria-disabled="true"] .tz-slip__label{text-decoration:line-through;
   text-decoration-thickness:1px;text-decoration-color:var(--tz-ink-3)}
 
-/* 丸印 : 選ばれた札は、その場で丸をつけられる */
+/* 丸印 : 選ばれた項目は、その場で丸をつけられる */
 .tz-slip__mark{flex:none;width:19px;height:19px;overflow:visible;opacity:0;
   transition:opacity 200ms ease}
 .tz-slip__mark path{fill:none;stroke:var(--tz-ink);stroke-width:1.4;
@@ -541,7 +541,7 @@
 /* =========================================================
    生まれかた : 部品ごとに違う
      ボタン : 一本の線として引かれる
-     札     : 紙として置かれる。内容は着地してから読める
+     カード : 紙として置かれる。内容は着地してから読める
    ========================================================= */
 .tz.is-drawing .tz-edge{
   stroke-dasharray:var(--tz-len);stroke-dashoffset:0;

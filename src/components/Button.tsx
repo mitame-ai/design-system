@@ -7,7 +7,7 @@ import { decorateChild, Shell } from '../lib/slot'
 import { cn } from '../lib/utils'
 
 /**
- * 器（うつわ）のような成形物としてのボタン。
+ * 手作業の質感を備えたボタンコンポーネント。
  * 塗り（ink）、輪郭（contour）、素地（bare）の3つのバリアントを持ちます。
  * 素地はホバー時に線が引かれ、それまでは輪郭を持ちません。
  */

@@ -14,7 +14,7 @@ import { cn } from '../lib/utils'
 
 /**
  * 入力フィールド。矩形の枠線ではなく1本の罫線を基本とし、
- * 短い入力など枠が必要な場合のみ枡型（boxed）を用います。
+ * 短い入力など枠が必要な場合のみボックス型（boxed）を用います。
  */
 export const inputVariants = cva('tz-well', {
   variants: {

@@ -239,7 +239,7 @@ export function register(el: HTMLElement, opts: TezawariOptions = {}): SkinHandl
     pick: el.classList.contains('tz-well--pick'),
   }
 
-  /* 札（カード）は背景の紙が着地してからコンテンツを可視化（読み順に 85ms ずつ遅延）。
+  /* カードは背景の紙が着地してからコンテンツを可視化（読み順に 85ms ずつ遅延）。
      ボタンはラベル全体が単一要素で包まれているため個別遅延は不要 */
   if (!el.classList.contains('tz')) {
     let ci = 0
