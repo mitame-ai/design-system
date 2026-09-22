@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "build-design-harness": {
+      "source": "mitame-ai/skills",
+      "sourceType": "github",
+      "skillPath": "build-design-harness/SKILL.md",
+      "computedHash": "d8eb0c6709523caf3bdbc2ae296950897e1d1a741323f4d9c99fe95cb301ce94"
+    }
+  }
+}
