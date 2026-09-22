@@ -1,0 +1,599 @@
+/* =========================================================
+   Tezawari (手触り) — an organic, hand-made interface language
+
+   素材の原則
+     個体差 : 同じ指定から、二度同じ形は出ない。ただし一つの個体は不変
+     筆圧   : 線の太さは一定でない
+     地肌   : 面には繊維がある
+
+   動きの原則
+     気配 : 手が近づいた時点で、触れる前に素材が応える
+     たわみ: 触れた一点が変形し、離すと減衰しながら戻る
+     息   : 静止していても、完全には止まっていない
+     質量 : 大きい物はゆっくり動き、ばねも弱い
+     節度 : 反応するのは、触れられる物だけ
+
+   Components: Button (.tz) / Card (.tz-card) / Panel (.tz-panel) / Input (.tz-well)
+   どれも同じ塗師 (paint) が描く。違いはトークンだけ。
+   ========================================================= */
+
+:root{
+  /* --- material tokens (color is deliberately quiet) --- */
+  --tz-paper:      #f2efe9;
+  --tz-ink:        #2b2724;
+  --tz-ink-2:      #6d655c;
+  --tz-ink-3:      #a89f93;
+  --tz-on-ink:     #f6f2ea;
+  --tz-focus:      #2b2724;
+  --tz-shade:      rgba(43,39,36,.4);
+  --tz-shu:        #9d4526;   /* 朱 : 訂正だけに使う */
+  --tz-paper-up:   #f9f7f3;   /* 持ち上がった紙 : 光を多く受ける */
+  --tz-font:       "Hiragino Maru Gothic ProN","Hiragino Kaku Gothic ProN",
+                   ui-rounded,-apple-system,"Segoe UI",system-ui,sans-serif;
+
+  /* --- 作りの既定値。部品は必ず自分で上書きする :
+         トークンは継承するので、札の中のボタンが札の粗さを貰ってはいけない --- */
+  --tz-pad:        10;     /* 輪郭が紙からはみ出せる余白 (px) */
+  --tz-amp:        1.05;   /* 個体差の振れ幅 (px) */
+  --tz-grit:       1;      /* 縁の粗さ (空間周波数の倍率, 整数) */
+  --tz-fiber:      1.15;   /* 繊維レベルのゆらぎ */
+  --tz-radius:     13;
+  --tz-grain-freq: 0.85;   /* 地肌の目 */
+  --tz-grain-oct:  2;
+  --tz-ring-off:   5;
+  --tz-dent:       3.6;    /* たわみの深さ (px) */
+  --tz-sigma:      0.55;   /* たわみの広がり (短辺比) */
+  --tz-sigma-min:  26;
+  --tz-curl:       0;      /* 角の起き上がり (px) */
+  --tz-tilt:       1.9;    /* 気配で傾く角度 (deg) */
+  --tz-reach:      160;    /* 気配が届く距離 (px) */
+  --tz-arrive:     26;     /* 手が着いたら平らに戻る距離 (0 = 戻さない) */
+  --tz-persp:      760px;
+  --tz-form:       box;    /* box | rule | ruled */
+  --tz-stack:      0;      /* 下に重なっている札の枚数 */
+
+  /* --- motion tokens: 押しは速く、戻りは遅く緩む --- */
+  --tz-press-curve:   cubic-bezier(.32,.72,.4,1);
+  --tz-press-dur:     90ms;
+  --tz-release-curve: cubic-bezier(.2,1.42,.34,1);
+  --tz-release-dur:   540ms;
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --tz-paper:      #1c1a18;
+    --tz-ink:        #e8e2d8;
+    --tz-ink-2:      #a79e93;
+    --tz-ink-3:      #6a625a;
+    --tz-on-ink:     #1b1917;
+    --tz-focus:      #e8e2d8;
+    --tz-shade:      rgba(0,0,0,.55);
+    --tz-shu:        #d98a63;
+    --tz-paper-up:   #272421;
+  }
+}
+
+/* 寸法は border-box で測る : paint() は offsetWidth / offsetHeight を見る */
+.tz,.tz *,
+.tz-card,.tz-card *,
+.tz-panel,.tz-panel *,
+.tz-well,.tz-well *,
+.tz-field,.tz-field *{box-sizing:border-box}
+
+/* 地 : 部品を一つ置くだけなら要らない。面として使うときの紙 */
+.tz-stage{
+  position:relative;z-index:1;
+  background:var(--tz-paper);
+  color:var(--tz-ink);
+  font-family:var(--tz-font);
+  -webkit-font-smoothing:antialiased;
+}
+
+/* 紙の繊維 : 画面全体をひとつの素材として扱う */
+.paper{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.42;mix-blend-mode:soft-light}
+@media (prefers-color-scheme:dark){.paper{opacity:.26}}
+.tz-defs{position:absolute;width:0;height:0;overflow:hidden}
+
+/* =========================================================
+   共通の地 : ボタンも札も、同じ素材のうえに成り立つ
+   ========================================================= */
+.tz,.tz-card{
+  --tz-sc:1; --tz-ty:0px; --tz-lay:0px; --tz-rx:0deg; --tz-ry:0deg;
+  --tz-nx:0deg; --tz-ny:0deg; --tz-nz:0px; --tz-lift:0; --tz-wear:0;
+  position:relative;
+  transform:
+    perspective(var(--tz-persp))
+    translateY(calc(var(--tz-ty) + var(--tz-nz) + var(--tz-lay)))
+    rotateX(calc(var(--tz-rx) + var(--tz-ny)))
+    rotateY(calc(var(--tz-ry) + var(--tz-nx)))
+    scale(var(--tz-sc));
+  transition:
+    --tz-sc var(--tz-release-dur) var(--tz-release-curve),
+    --tz-ty var(--tz-release-dur) var(--tz-release-curve),
+    --tz-rx var(--tz-release-dur) var(--tz-release-curve),
+    --tz-ry var(--tz-release-dur) var(--tz-release-curve),
+    /* 気配は手に遅れない : ほぼ即時 */
+    --tz-nx 90ms linear, --tz-ny 90ms linear,
+    --tz-nz 140ms ease-out, --tz-lift 140ms ease-out,
+    --tz-wear 1400ms cubic-bezier(.2,.7,.3,1);
+}
+.tz.is-press,.tz-card.is-press{
+  transition-duration:var(--tz-press-dur);transition-timing-function:var(--tz-press-curve)}
+
+/* 息 : 静止時もわずかに動いている。個体ごとに周期も位相も違う */
+.tz-shell{
+  position:absolute; inset:calc(var(--tz-pad) * -1px);
+  pointer-events:none;
+  will-change:transform;
+  animation:tz-breathe var(--tz-breath-dur,16s) ease-in-out var(--tz-breath-delay,0s) infinite;
+}
+@keyframes tz-breathe{
+  0%,100%{transform:rotate(var(--tz-rot,0deg))                 scale(1)      translate(0,0)}
+  28%    {transform:rotate(calc(var(--tz-rot,0deg) + .085deg))  scale(1.0038) translate(.2px,-.16px)}
+  61%    {transform:rotate(calc(var(--tz-rot,0deg) - .07deg))   scale(.9982)  translate(-.17px,.13px)}
+}
+.tz-shell svg{display:block;overflow:visible}
+
+/* --- 層 : どの部品も同じ順で塗られる --- */
+.tz-shade {display:none;fill:var(--tz-shade)}
+.tz-fill  {fill:none}
+.tz-press {opacity:0;transition:opacity 760ms cubic-bezier(.22,.7,.3,1)}
+.is-press > .tz-shell .tz-press{opacity:1;transition-duration:70ms}
+.tz-grain {fill:#000;mix-blend-mode:soft-light;opacity:calc(.2 + var(--tz-wear) * .12);pointer-events:none}
+.tz-edge  {fill:none;stroke:var(--tz-ink);stroke-width:calc(1.35px + var(--tz-wear) * .15px);
+           stroke-linecap:round;stroke-linejoin:round;opacity:.9;
+           transition:opacity 260ms ease,stroke-width 260ms ease}
+.tz-edge2 {fill:none;stroke:var(--tz-ink);stroke-width:calc(2.5px + var(--tz-wear) * .2px);
+           stroke-linecap:round;stroke-linejoin:round;opacity:.3;transition:opacity 260ms ease}
+.tz-fringe{display:none;fill:none;stroke:var(--tz-ink);stroke-width:2.6;
+           stroke-linecap:round;opacity:.17}
+.tz-ring  {fill:none;stroke:var(--tz-focus);stroke-width:2;stroke-linecap:round;opacity:0;
+           transition:opacity 160ms ease}
+.tz:focus-visible,.tz-card:focus-visible{outline:none}
+.tz:focus-visible > .tz-shell .tz-ring,
+.tz-card:focus-visible > .tz-shell .tz-ring{opacity:.95}
+
+/* =========================================================
+   BUTTON
+   ========================================================= */
+.tz{
+  --tz-pad:10; --tz-amp:1.05; --tz-grit:1; --tz-fiber:1.15; --tz-radius:13;
+  --tz-grain-freq:0.85; --tz-grain-oct:2; --tz-ring-off:5; --tz-persp:760px;
+  --tz-form:box; --tz-stack:0;
+  --tz-dent:3.6; --tz-sigma:.55; --tz-sigma-min:26;
+  --tz-curl:0; --tz-tilt:1.9; --tz-reach:160; --tz-arrive:26;
+  --tz-release-dur:540ms; --tz-release-curve:cubic-bezier(.2,1.42,.34,1);
+
+  display:inline-flex; align-items:center; justify-content:center;
+  gap:.55em;
+  margin:0; padding:13px 24px;
+  border:0; background:none;
+  font:inherit; font-size:15px; font-weight:500;
+  letter-spacing:.055em;
+  color:var(--tz-ink);
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.tz-label{position:relative;display:inline-flex;align-items:center;gap:.55em;
+  transform:translateY(var(--tz-baseline,0px))}
+
+/* --- variant: ink (塗り) --- */
+.tz--ink{color:var(--tz-on-ink)}
+.tz--ink .tz-fill{fill:var(--tz-ink)}
+.tz--ink .tz-edge{stroke:var(--tz-ink);opacity:1}
+.tz--ink .tz-edge2{stroke:var(--tz-ink);opacity:.5}
+.tz--ink .tz-grain{opacity:calc(.34 + var(--tz-wear) * .16)}
+.tz--ink .tz-s0{stop-color:rgba(0,0,0,.26)}
+.tz--ink .tz-s1{stop-color:rgba(0,0,0,0)}
+
+/* --- variant: contour (輪郭) --- */
+.tz--contour .tz-fill{fill:var(--tz-paper);fill-opacity:.55;transition:fill-opacity 320ms ease}
+.tz--contour .tz-s0{stop-color:rgba(0,0,0,.14)}
+.tz--contour .tz-s1{stop-color:rgba(0,0,0,0)}
+
+/* --- variant: bare (素地) : 手を伸ばしたときに線が引かれる --- */
+.tz--bare .tz-fill{fill:var(--tz-ink);fill-opacity:0;transition:fill-opacity 320ms ease}
+.tz--bare .tz-edge,.tz--bare .tz-edge2{opacity:0}
+.tz--bare .tz-grain{opacity:0}
+.tz--bare .tz-s0{stop-color:rgba(0,0,0,.14)}
+.tz--bare .tz-s1{stop-color:rgba(0,0,0,0)}
+
+/* --- 触れる : 浮き上がるのではなく、線に墨が入る --- */
+@media (hover:hover){
+  .tz:hover:not(:disabled) .tz-edge{opacity:1;stroke-width:calc(1.6px + var(--tz-wear) * .15px)}
+  .tz:hover:not(:disabled) .tz-edge2{opacity:.42}
+  .tz--contour:hover:not(:disabled) .tz-fill{fill-opacity:1}
+  .tz--bare:hover:not(:disabled) .tz-edge{opacity:.6}
+  .tz--bare:hover:not(:disabled) .tz-edge2{opacity:.14}
+  .tz--bare:hover:not(:disabled) .tz-fill{fill-opacity:.05}
+}
+
+/* --- sizes --- */
+.tz--sm{font-size:13px;padding:9px 17px;letter-spacing:.06em}
+.tz--lg{font-size:17px;padding:17px 32px}
+.tz--icon{padding:0;width:48px;height:48px}
+
+/* --- disabled : 下書きのまま、まだ墨が入っていない --- */
+.tz:disabled{cursor:not-allowed;color:var(--tz-ink-3)}
+.tz:disabled .tz-shell{animation:none}
+.tz:disabled .tz-edge{stroke:var(--tz-ink-3);stroke-dasharray:2.5 6;opacity:.75;stroke-width:1.1px}
+.tz:disabled .tz-edge2{display:none}
+.tz:disabled .tz-fill{fill:var(--tz-ink-3);fill-opacity:.09}
+.tz:disabled .tz-grain{opacity:.12}
+
+/* --- loading : 手縫いの拍。一定速度では進まない --- */
+.tz.is-loading{cursor:progress}
+.tz.is-loading .tz-label{opacity:.5}
+.tz.is-loading .tz-edge2{display:none}
+.tz.is-loading .tz-edge{stroke-dasharray:9 8;stroke-width:1.5px;
+  animation:tz-stitch 1.45s linear infinite}
+.tz--ink.is-loading .tz-edge{stroke:var(--tz-on-ink);opacity:.85}
+@keyframes tz-stitch{
+  0%  {stroke-dashoffset:0;   animation-timing-function:cubic-bezier(.4,0,.15,1)}
+  40% {stroke-dashoffset:-17; animation-timing-function:linear}
+  54% {stroke-dashoffset:-17; animation-timing-function:cubic-bezier(.4,0,.15,1)}
+  94% {stroke-dashoffset:-34; animation-timing-function:linear}
+  100%{stroke-dashoffset:-34}
+}
+
+.tz-ico{width:1.05em;height:1.05em;overflow:visible;flex:none}
+.tz-ico path{fill:none;stroke:currentColor;stroke-width:1.5;
+  stroke-linecap:round;stroke-linejoin:round}
+
+/* =========================================================
+   CARD — 一枚の手漉きの紙。形づくられた器ではなく、漉かれた面。
+     耳     : 縁は切られていない。振れ幅も粗さもボタンより大きい
+     接地影 : 影は矩形のぼかしではなく、その個体と同じ輪郭を持つ
+     角     : 手が近づいた角が起きる。拾い上げられる合図
+     質量   : 板は速く戻らない
+   ========================================================= */
+.tz-card{
+  --tz-pad:24;
+  --tz-amp:2.05;         /* 耳 : 大きい紙ほど縁は暴れる */
+  --tz-grit:3;           /* 細かい破れを含む */
+  --tz-fiber:2.1;
+  --tz-radius:7;
+  --tz-grain-freq:0.7;
+  --tz-grain-oct:3;
+  --tz-ring-off:9;
+  --tz-persp:1500px;
+  --tz-form:box; --tz-stack:0;
+  /* 板は一点でへこまない。全体がしなる */
+  --tz-dent:2.3; --tz-sigma:1.7; --tz-sigma-min:120;
+  --tz-curl:0; --tz-tilt:0; --tz-reach:0; --tz-arrive:0;
+  /* 質量が大きいほど、ゆっくり戻り、ばねは控えめ */
+  --tz-release-dur:760ms;
+  --tz-release-curve:cubic-bezier(.24,1.16,.36,1);
+
+  display:block;
+  padding:26px 28px 24px;
+}
+.tz-card > *:not(.tz-shell){position:relative}
+.tz-card > .tz-shell .tz-shade{display:block;
+  transform:translateY(calc(3.6px + var(--tz-lift) * 6px + var(--tz-lay) * -.9));
+  opacity:calc(.85 + var(--tz-lift) * .15);
+  transition:opacity 140ms ease-out}
+.tz-card > .tz-shell .tz-fill{fill:var(--tz-paper)}
+.tz-card > .tz-shell .tz-fringe{display:block}
+.tz-card > .tz-shell .tz-edge{opacity:.3;stroke-width:1px}
+.tz-card > .tz-shell .tz-edge2{opacity:.16;stroke-width:2px}
+.tz-card > .tz-shell .tz-grain{opacity:.15}
+.tz-card > .tz-shell .tz-s0{stop-color:rgba(0,0,0,.1)}
+.tz-card > .tz-shell .tz-s1{stop-color:rgba(0,0,0,0)}
+/* 押すと紙は机に押しつけられる : 影は縮んで濃くなる */
+.tz-card.is-press > .tz-shell .tz-shade{opacity:.62;transform:translateY(1px);transition-duration:70ms}
+
+.tz-card__title{margin:0 0 9px;font-size:16px;font-weight:600;letter-spacing:.07em;
+  line-height:1.5}
+.tz-card__text{margin:0;font-size:13.5px;line-height:1.9;letter-spacing:.045em;
+  color:var(--tz-ink-2)}
+.tz-card__meta{font-size:10.5px;letter-spacing:.2em;color:var(--tz-ink-3)}
+.tz-card__foot{display:flex;align-items:center;justify-content:space-between;
+  gap:14px;margin-top:20px}
+.tz-card__media{height:104px;margin:0 0 20px}
+
+/* 手で引いた罫 : 1px の直線は、この言語には無い */
+.tz-rule{height:9px;margin:16px 0 14px}
+.tz-rule svg{display:block;overflow:visible;width:100%;height:100%}
+.tz-rule path{fill:none;stroke:var(--tz-ink);stroke-width:1.1;stroke-linecap:round;opacity:.42}
+
+/* 織り : 面に方向を持つ繊維。異方性のノイズで作る */
+.tz-panel{
+  --tz-pad:8; --tz-amp:1.7; --tz-grit:4; --tz-fiber:1.6; --tz-radius:5;
+  --tz-grain-freq:0.02 0.62; --tz-grain-oct:1; --tz-ring-off:5;
+  --tz-form:box; --tz-stack:0;
+  position:relative;
+}
+.tz-panel > .tz-shell .tz-fill{fill:var(--tz-ink);fill-opacity:.055}
+.tz-panel > .tz-shell .tz-grain{opacity:.5}
+.tz-panel > .tz-shell .tz-edge{opacity:.3;stroke-width:1px}
+.tz-panel > .tz-shell .tz-edge2{display:none}
+
+/* --- 拾い上げる : 角が手の側へ起きる。触れられる札だけ --- */
+.tz-card--pick{
+  --tz-curl:3.4; --tz-tilt:1.1; --tz-reach:150; --tz-arrive:0;
+  cursor:pointer;text-decoration:none;color:inherit;
+}
+.tz-card--pick > .tz-shell .tz-edge{transition:opacity 300ms ease,stroke-width 300ms ease}
+@media (hover:hover){
+  .tz-card--pick:hover > .tz-shell .tz-edge{opacity:.72;stroke-width:1.25px}
+  .tz-card--pick:hover > .tz-shell .tz-fringe{opacity:.28}
+}
+.tz-card--pick .tz-card__title{display:flex;align-items:center;justify-content:space-between;gap:18px}
+
+/* --- 象嵌 : 浮かない札。紙に沈めて区切るだけの面 --- */
+.tz-card--inlay{--tz-amp:1.8}
+.tz-card--inlay > .tz-shell .tz-grain{opacity:.1}
+.tz-card--inlay > .tz-shell .tz-shade{display:none}
+.tz-card--inlay > .tz-shell .tz-fill{fill:var(--tz-ink);fill-opacity:.032}
+.tz-card--inlay > .tz-shell .tz-fringe{display:none}
+.tz-card--inlay > .tz-shell .tz-edge{opacity:.2}
+.tz-card--inlay > .tz-shell .tz-edge2{display:none}
+
+/* =========================================================
+   INPUT — 器でも紙でもなく、書きこむ場所。
+     罫   : 枠ではなく、一本の罫。書く場所は線で示す
+     記入 : 書いた分だけ、罫に墨が染みる。欄は書かれたことを憶える
+     穂先 : 明滅する 1px の棒をやめ、手で持った穂の呼吸にする
+     朱   : 誤りは赤い枠ではなく、朱の波線で訂正される
+   ========================================================= */
+.tz-well{
+  --tz-form:rule;
+  --tz-pad:12; --tz-amp:.85; --tz-grit:2; --tz-fiber:.9; --tz-radius:6;
+  --tz-grain-freq:0.8; --tz-grain-oct:2; --tz-ring-off:6; --tz-persp:900px;
+  /* 欄は押される物ではない : 沈まず、傾かない。近づけば罫が濃くなるだけ */
+  --tz-dent:0; --tz-sigma:1; --tz-sigma-min:40;
+  --tz-curl:0; --tz-tilt:0; --tz-reach:130; --tz-arrive:0;
+  --tz-release-dur:420ms;
+  position:relative; display:block;
+}
+.tz-well > .tz-shell .tz-fill,
+.tz-well > .tz-shell .tz-press,
+.tz-well > .tz-shell .tz-grain,
+.tz-well > .tz-shell .tz-shade,
+.tz-well > .tz-shell .tz-fringe,
+/* 欄を囲まない : 焦点は「囲い」ではなく「罫が引き直されること」で示す */
+.tz-well > .tz-shell .tz-ring{display:none}
+.tz-well > .tz-shell .tz-edge{
+  stroke-width:1.15px;opacity:calc(.38 + var(--tz-lift) * .26);
+  transition:opacity 200ms ease,stroke-width 200ms ease}
+.tz-well > .tz-shell .tz-edge2{opacity:.14;stroke-width:2.2px}
+/* 焦点 : 薄い下書きの罫が、その場で引き直されて本式の罫になる */
+.tz-well:focus-within > .tz-shell .tz-edge{
+  opacity:1;stroke-width:2.2px;
+  animation:tz-rule 300ms cubic-bezier(.45,.05,.2,1)}
+/* 枡は引き直さない : 囲いは既にそこにある。濃くなるだけでいい */
+.tz-well--boxed:focus-within > .tz-shell .tz-edge,
+.tz-well--ruled:focus-within > .tz-shell .tz-edge{stroke-width:1.9px;animation:none}
+.tz-well--boxed:focus-within > .tz-shell .tz-edge2,
+.tz-well--ruled:focus-within > .tz-shell .tz-edge2{opacity:.3}
+@keyframes tz-rule{
+  from{stroke-dasharray:var(--tz-len);stroke-dashoffset:var(--tz-len)}
+  to  {stroke-dasharray:var(--tz-len);stroke-dashoffset:0}
+}
+
+/* かぎ : 両端で筆が上に跳ね、書ける範囲を示す。囲わずに端を教える */
+.tz-hook{fill:none;stroke:var(--tz-ink);stroke-width:1.7px;stroke-linecap:round;
+  opacity:0;transform-box:fill-box;transform-origin:50% 100%;
+  transition:opacity 160ms ease}
+.tz-well:focus-within > .tz-shell .tz-hook{
+  opacity:.9;animation:tz-hook 300ms cubic-bezier(.3,1.25,.4,1) 60ms backwards}
+@keyframes tz-hook{from{opacity:0;transform:scaleY(.15)}}
+
+/* 記入 : 書いた範囲だけ、罫に墨が染みる */
+.tz-soak{display:none;fill:none;stroke:var(--tz-ink);stroke-width:2.6px;
+  stroke-linecap:round;opacity:.5;
+  stroke-dasharray:var(--tz-ink-len,0) 9999;
+  stroke-dashoffset:calc(var(--tz-ink-from,0) * -1);
+  transition:stroke-dasharray 200ms cubic-bezier(.3,.8,.35,1),opacity 300ms ease}
+.tz-well > .tz-shell .tz-soak{display:block}
+.tz-well.is-composing > .tz-shell .tz-soak{stroke-dasharray:4 5;opacity:.45}
+
+/* 朱 : 訂正は枠の色を変えるのではなく、線を引かれること */
+.tz-correct{display:none;fill:none;stroke:var(--tz-shu);stroke-width:1.5px;
+  stroke-linecap:round;opacity:0}
+.tz-field.is-error .tz-correct{display:block;opacity:.95;
+  stroke-dasharray:var(--tz-clen);
+  animation:tz-strike 520ms cubic-bezier(.5,.05,.3,1) backwards}
+@keyframes tz-strike{from{stroke-dashoffset:var(--tz-clen)}}
+.tz-field.is-error .tz-field__note{color:var(--tz-shu)}
+.tz-field.is-error .tz-field__note::before{content:"朱  "}
+
+/* 穂先 : 四角い明滅をやめる。消えるのは速く、戻るのは遅い */
+.tz-nib{
+  position:absolute;left:0;translate:var(--tz-nib-x,0) 0;
+  bottom:var(--tz-nib-b,7px);width:2px;height:1.1em;
+  background:var(--tz-ink);border-radius:1.4px;opacity:0;pointer-events:none;
+  transform:rotate(-7deg);transform-origin:50% 100%;
+  transition:translate 80ms cubic-bezier(.3,.85,.4,1)}
+.tz-well:focus-within .tz-nib{animation:tz-nib 1.4s infinite}
+@keyframes tz-nib{
+  0%  {opacity:.92;animation-timing-function:linear}
+  46% {opacity:.92;animation-timing-function:cubic-bezier(.85,0,.9,.3)}
+  56% {opacity:0;  animation-timing-function:linear}
+  76% {opacity:0;  animation-timing-function:cubic-bezier(.1,.65,.3,1)}
+  100%{opacity:.92}
+}
+
+.tz-input,.tz-area{
+  display:block;width:100%;margin:0;border:0;background:none;outline:none;
+  font:inherit;font-size:15px;letter-spacing:.05em;color:var(--tz-ink);
+  padding:7px 3px 9px;caret-color:transparent;
+}
+.tz-area{caret-color:var(--tz-ink);resize:none;line-height:30px;padding:9px 6px}
+.tz-input::placeholder,.tz-area::placeholder{color:var(--tz-ink-3);opacity:1;
+  transition:opacity 280ms ease}
+.tz-well:focus-within .tz-input::placeholder,
+.tz-well:focus-within .tz-area::placeholder{opacity:.45}
+
+/* 枡 : 罫ではなく囲いが要るとき (数値、短い記号) */
+.tz-well--boxed{--tz-form:box; --tz-amp:1.1; --tz-grit:2; --tz-radius:9; --tz-dent:1.5}
+.tz-well--boxed > .tz-shell .tz-fill{display:block;fill:var(--tz-paper);fill-opacity:.6}
+.tz-well--boxed > .tz-shell .tz-grain{display:block;opacity:.14}
+.tz-well--boxed > .tz-shell .tz-soak{display:none}
+.tz-well--boxed .tz-input{padding:11px 14px}
+
+/* 原稿用紙 : 面の中に罫が引かれている */
+.tz-well--ruled{--tz-form:ruled; --tz-amp:1.6; --tz-grit:3; --tz-radius:7; --tz-dent:0}
+.tz-well--ruled > .tz-shell .tz-fill{display:block;fill:var(--tz-paper);fill-opacity:.5}
+.tz-well--ruled > .tz-shell .tz-grain{display:block;opacity:.16}
+.tz-well--ruled > .tz-shell .tz-soak{display:none}
+.tz-lines path{fill:none;stroke:var(--tz-ink);stroke-width:.9px;stroke-linecap:round;opacity:.17}
+
+/* 書かれていない欄は、まだ紙が用意されていない */
+.tz-well.is-off > .tz-shell .tz-edge{stroke:var(--tz-ink-3);stroke-dasharray:2.5 6;
+  opacity:.7;stroke-width:1px}
+.tz-well.is-off > .tz-shell .tz-edge2,
+.tz-well.is-off > .tz-shell .tz-soak{display:none}
+.tz-well.is-off .tz-shell{animation:none}
+.tz-input:disabled,.tz-area:disabled{color:var(--tz-ink-3);cursor:not-allowed}
+
+.tz-field{display:block}
+.tz-field__label{display:block;font-size:11.5px;letter-spacing:.2em;
+  color:var(--tz-ink-2);margin:0 0 4px}
+.tz-field__note{display:block;font-size:11px;letter-spacing:.1em;
+  color:var(--tz-ink-3);margin:9px 0 0;line-height:1.6}
+.tz-field__need{color:var(--tz-shu);margin-left:.5em;font-size:13px;
+  vertical-align:-.1em}
+
+/* =========================================================
+   SELECT — 書く場所ではなく、選ぶ場所。
+     重なり : 閉じていても、下に札が重なっているのが見えている
+     繰る   : 開くと札が一枚ずつ繰り出される。揃って並ばない
+     丸印   : 選ばれた札には、その場で丸が描かれる
+     写す   : 選んだ言葉は、欄の罫に墨として移る
+   ========================================================= */
+.tz-well--pick{--tz-stack:2}
+.tz-stack path{fill:none;stroke:var(--tz-ink);stroke-width:1px;stroke-linecap:round;
+  opacity:calc(.26 / var(--k));
+  transition:transform 380ms cubic-bezier(.2,1.1,.3,1),opacity 260ms ease}
+.tz-well--pick.is-open .tz-stack path{
+  transform:translateY(calc(var(--k) * 2.6px));opacity:calc(.4 / var(--k))}
+
+.tz-pick{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  width:100%;margin:0;padding:7px 3px 9px;border:0;background:none;
+  font:inherit;font-size:15px;letter-spacing:.05em;color:var(--tz-ink);
+  text-align:left;cursor:pointer;outline:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.tz-pick__val{display:block}
+.tz-pick.is-empty .tz-pick__val{color:var(--tz-ink-3)}
+/* 返し : 筆が下で止まって返る。開けば向きが変わる */
+.tz-pick__turn{flex:none;width:13px;height:13px;overflow:visible;
+  transition:rotate 380ms cubic-bezier(.2,1.25,.35,1);rotate:0deg}
+.tz-pick__turn path{fill:none;stroke:var(--tz-ink-2);stroke-linecap:round;
+  stroke-linejoin:round}
+.tz-well--pick.is-open .tz-pick__turn{rotate:180deg}
+
+/* 札束 : 開いた面は、札と同じ紙 */
+.tz-slips{
+  position:absolute;left:-4px;right:-4px;top:calc(100% + 11px);
+  z-index:30;padding:9px 7px;margin:0;
+}
+/* 浮いている紙は、机の上の紙と同じ調子には見えない */
+.tz-slips > .tz-shell .tz-fill{fill:var(--tz-paper-up);fill-opacity:1}
+.tz-slips > .tz-shell .tz-shade{opacity:1;transform:translateY(9px)}
+.tz-slips > .tz-shell .tz-edge{opacity:.38}
+.tz-slips[hidden]{display:none}
+.tz-slips__list{list-style:none;margin:0;padding:0}
+.tz-well--pick{z-index:1}
+.tz-well--pick.is-open{z-index:40}
+.tz-slips.is-up{top:auto;bottom:calc(100% + 11px)}
+
+.tz-slip{
+  position:relative;display:flex;align-items:center;gap:9px;
+  padding:8px 12px 8px 6px;font-size:14px;letter-spacing:.05em;
+  color:var(--tz-ink-2);cursor:pointer;
+  transform:translateX(var(--tz-sx,0)) rotate(var(--tz-sr,0deg));
+  transition:transform 260ms cubic-bezier(.2,1.1,.3,1),color 200ms ease;
+}
+/* 繰り出す : 見ている札は、束からわずかに押し出される */
+.tz-slip.is-active{color:var(--tz-ink);
+  transform:translateX(calc(var(--tz-sx,0px) + 6px)) rotate(var(--tz-sr,0deg))}
+.tz-slip::before{content:"";position:absolute;left:-4px;top:50%;
+  width:2px;height:15px;margin-top:-7.5px;border-radius:1.2px;
+  background:var(--tz-ink);opacity:0;rotate:-7deg;
+  transition:opacity 180ms ease}
+.tz-slip.is-active::before{opacity:.85}
+.tz-slip[aria-disabled="true"]{color:var(--tz-ink-3);cursor:not-allowed}
+.tz-slip[aria-disabled="true"] .tz-slip__label{text-decoration:line-through;
+  text-decoration-thickness:1px;text-decoration-color:var(--tz-ink-3)}
+
+/* 丸印 : 選ばれた札は、その場で丸をつけられる */
+.tz-slip__mark{flex:none;width:19px;height:19px;overflow:visible;opacity:0;
+  transition:opacity 200ms ease}
+.tz-slip__mark path{fill:none;stroke:var(--tz-ink);stroke-width:1.4;
+  stroke-linecap:round;stroke-dasharray:var(--mlen);stroke-dashoffset:0}
+.tz-slip[aria-selected="true"] .tz-slip__mark{opacity:.9}
+.tz-slip[aria-selected="true"] .tz-slip__mark path{
+  animation:tz-circle 460ms cubic-bezier(.45,.05,.2,1)}
+@keyframes tz-circle{from{stroke-dashoffset:var(--mlen)}}
+
+.tz-well--pick.is-open .tz-slip{
+  animation:tz-deal 320ms cubic-bezier(.2,.95,.3,1) calc(var(--tz-si,0) * 28ms) backwards}
+@keyframes tz-deal{
+  from{opacity:0;
+       transform:translate(calc(var(--tz-sx,0px) - 4px), 8px) rotate(calc(var(--tz-sr,0deg) + 1.4deg))}
+}
+
+/* =========================================================
+   生まれかた : 部品ごとに違う
+     ボタン : 一本の線として引かれる
+     札     : 紙として置かれる。内容は着地してから読める
+   ========================================================= */
+.tz.is-drawing .tz-edge{
+  stroke-dasharray:var(--tz-len);stroke-dashoffset:0;
+  animation:tz-draw var(--tz-draw-dur) cubic-bezier(.55,.06,.3,1) var(--tz-draw-delay) backwards;
+}
+.tz.is-drawing .tz-fill{
+  animation:tz-soak calc(var(--tz-draw-dur) * 1.25) ease-out
+            calc(var(--tz-draw-delay) + var(--tz-draw-dur) * .5) backwards;
+}
+.tz.is-drawing .tz-grain,.tz.is-drawing .tz-edge2{
+  animation:tz-fade calc(var(--tz-draw-dur) * .9) ease-out
+            calc(var(--tz-draw-delay) + var(--tz-draw-dur) * .6) backwards;
+}
+.tz.is-drawing .tz-label{
+  animation:tz-lift calc(var(--tz-draw-dur) * .8) cubic-bezier(.2,.9,.3,1)
+            calc(var(--tz-draw-delay) + var(--tz-draw-dur) * .55) backwards;
+}
+@keyframes tz-draw{from{stroke-dashoffset:var(--tz-len)}}
+@keyframes tz-soak{from{fill-opacity:0}}
+@keyframes tz-fade{from{opacity:0}}
+@keyframes tz-lift{from{opacity:0;transform:translateY(calc(var(--tz-baseline,0px) + 3px))}}
+
+.tz-well.is-drawing > .tz-shell .tz-edge{
+  stroke-dasharray:var(--tz-len);stroke-dashoffset:0;
+  animation:tz-draw var(--tz-draw-dur) cubic-bezier(.5,.05,.3,1) var(--tz-draw-delay) backwards;
+}
+.tz-card.is-drawing{
+  animation:tz-place calc(var(--tz-draw-dur) * 1.1) cubic-bezier(.16,.84,.26,1)
+            var(--tz-draw-delay) backwards;
+}
+.tz-card.is-drawing > *:not(.tz-shell){
+  animation:tz-settle calc(var(--tz-draw-dur) * .7) cubic-bezier(.2,.9,.3,1)
+            calc(var(--tz-draw-delay) + var(--tz-draw-dur) * .55 + var(--tz-ci,0) * 85ms) backwards;
+}
+@keyframes tz-place{from{opacity:0;--tz-lay:-9px;--tz-sc:1.014}}
+@keyframes tz-settle{from{opacity:0;transform:translateY(4px)}}
+
+@media (prefers-reduced-motion:reduce){
+  .tz,.tz-card{transition:none}
+  .tz-shell{animation:none}
+  .tz-press{transition-duration:160ms}
+  .tz.is-loading .tz-edge{animation-duration:3.2s}
+  .tz.is-drawing .tz-edge,.tz.is-drawing .tz-fill,
+  .tz.is-drawing .tz-grain,.tz.is-drawing .tz-edge2,
+  .tz.is-drawing .tz-label,
+  .tz-card.is-drawing,.tz-card.is-drawing > *,
+  .tz-well.is-drawing > .tz-shell .tz-edge,
+  .tz-well:focus-within > .tz-shell .tz-edge,
+  .tz-well:focus-within > .tz-shell .tz-hook,
+  .tz-field.is-error .tz-correct,
+  .tz-well--pick.is-open .tz-slip,
+  .tz-slip[aria-selected="true"] .tz-slip__mark path{animation:none}
+  .tz-well:focus-within .tz-nib{animation:none;opacity:.92}
+  .tz-nib{transition:none}
+}

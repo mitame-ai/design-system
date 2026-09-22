@@ -1,0 +1,14 @@
+/* Tailwind v4 のテーマに手触りのトークンを流し込む。
+   bg-tz-paper / text-tz-ink / font-tz のように使える。
+   実体は :root の --tz-* なので、暗い配色の切り替えもそのまま効く。 */
+@theme inline {
+  --color-tz-paper:    var(--tz-paper);
+  --color-tz-paper-up: var(--tz-paper-up);
+  --color-tz-ink:      var(--tz-ink);
+  --color-tz-ink-2:    var(--tz-ink-2);
+  --color-tz-ink-3:    var(--tz-ink-3);
+  --color-tz-on-ink:   var(--tz-on-ink);
+  --color-tz-shu:      var(--tz-shu);
+
+  --font-tz: var(--tz-font);
+}

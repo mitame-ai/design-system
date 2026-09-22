@@ -1,0 +1,7 @@
+/* 開発と Storybook の入口。Tailwind と手触りを併せて読み込む。
+   .tz* は components レイヤに入れるので、ユーティリティで上書きできる。
+   @property だけはレイヤの外に置く : レイヤの中では登録が効かず、ばねが死ぬ。 */
+@import 'tailwindcss';
+@import './theme.css';
+@import './properties.css';
+@import './components.css' layer(components);

@@ -1,0 +1,12 @@
+/* 動く値は @property で登録する : var() 由来の transform は
+   登録しないと補間されず、ばねが効かない */
+@property --tz-sc   {syntax:"<number>";inherits:false;initial-value:1}
+@property --tz-ty   {syntax:"<length>";inherits:false;initial-value:0px}
+@property --tz-lay  {syntax:"<length>";inherits:false;initial-value:0px}
+@property --tz-rx   {syntax:"<angle>"; inherits:false;initial-value:0deg}
+@property --tz-ry   {syntax:"<angle>"; inherits:false;initial-value:0deg}
+@property --tz-nx   {syntax:"<angle>"; inherits:false;initial-value:0deg}
+@property --tz-ny   {syntax:"<angle>"; inherits:false;initial-value:0deg}
+@property --tz-nz   {syntax:"<length>";inherits:false;initial-value:0px}
+@property --tz-lift {syntax:"<number>";inherits:true; initial-value:0}
+@property --tz-wear {syntax:"<number>";inherits:true; initial-value:0}

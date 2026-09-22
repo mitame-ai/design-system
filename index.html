@@ -1,0 +1,1608 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>手触り / Tezawari — Button, Card, Input</title>
+<style>
+/* =========================================================
+   Tezawari (手触り) — an organic, hand-made interface language
+
+   素材の原則
+     個体差 : 同じ指定から、二度同じ形は出ない。ただし一つの個体は不変
+     筆圧   : 線の太さは一定でない
+     地肌   : 面には繊維がある
+
+   動きの原則
+     気配 : 手が近づいた時点で、触れる前に素材が応える
+     たわみ: 触れた一点が変形し、離すと減衰しながら戻る
+     息   : 静止していても、完全には止まっていない
+     質量 : 大きい物はゆっくり動き、ばねも弱い
+     節度 : 反応するのは、触れられる物だけ
+
+   Components: Button (.tz) / Card (.tz-card) / Panel (.tz-panel) / Input (.tz-well)
+   どれも同じ塗師 (paint) が描く。違いはトークンだけ。
+   ========================================================= */
+
+:root{
+  /* --- material tokens (color is deliberately quiet) --- */
+  --tz-paper:      #f2efe9;
+  --tz-ink:        #2b2724;
+  --tz-ink-2:      #6d655c;
+  --tz-ink-3:      #a89f93;
+  --tz-on-ink:     #f6f2ea;
+  --tz-focus:      #2b2724;
+  --tz-shade:      rgba(43,39,36,.4);
+  --tz-shu:        #9d4526;   /* 朱 : 訂正だけに使う */
+  --tz-paper-up:   #f9f7f3;   /* 持ち上がった紙 : 光を多く受ける */
+
+  /* --- 作りの既定値。部品は必ず自分で上書きする :
+         トークンは継承するので、札の中のボタンが札の粗さを貰ってはいけない --- */
+  --tz-pad:        10;     /* 輪郭が紙からはみ出せる余白 (px) */
+  --tz-amp:        1.05;   /* 個体差の振れ幅 (px) */
+  --tz-grit:       1;      /* 縁の粗さ (空間周波数の倍率, 整数) */
+  --tz-fiber:      1.15;   /* 繊維レベルのゆらぎ */
+  --tz-radius:     13;
+  --tz-grain-freq: 0.85;   /* 地肌の目 */
+  --tz-grain-oct:  2;
+  --tz-ring-off:   5;
+  --tz-dent:       3.6;    /* たわみの深さ (px) */
+  --tz-sigma:      0.55;   /* たわみの広がり (短辺比) */
+  --tz-sigma-min:  26;
+  --tz-curl:       0;      /* 角の起き上がり (px) */
+  --tz-tilt:       1.9;    /* 気配で傾く角度 (deg) */
+  --tz-reach:      160;    /* 気配が届く距離 (px) */
+  --tz-arrive:     26;     /* 手が着いたら平らに戻る距離 (0 = 戻さない) */
+  --tz-persp:      760px;
+  --tz-form:       box;    /* box | rule | ruled */
+  --tz-stack:      0;      /* 下に重なっている札の枚数 */
+
+  /* --- motion tokens: 押しは速く、戻りは遅く緩む --- */
+  --tz-press-curve:   cubic-bezier(.32,.72,.4,1);
+  --tz-press-dur:     90ms;
+  --tz-release-curve: cubic-bezier(.2,1.42,.34,1);
+  --tz-release-dur:   540ms;
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --tz-paper:      #1c1a18;
+    --tz-ink:        #e8e2d8;
+    --tz-ink-2:      #a79e93;
+    --tz-ink-3:      #6a625a;
+    --tz-on-ink:     #1b1917;
+    --tz-focus:      #e8e2d8;
+    --tz-shade:      rgba(0,0,0,.55);
+    --tz-shu:        #d98a63;
+    --tz-paper-up:   #272421;
+  }
+}
+
+/* 動く値は @property で登録する : var() 由来の transform は
+   登録しないと補間されず、ばねが効かない */
+@property --tz-sc   {syntax:"<number>";inherits:false;initial-value:1}
+@property --tz-ty   {syntax:"<length>";inherits:false;initial-value:0px}
+@property --tz-lay  {syntax:"<length>";inherits:false;initial-value:0px}
+@property --tz-rx   {syntax:"<angle>"; inherits:false;initial-value:0deg}
+@property --tz-ry   {syntax:"<angle>"; inherits:false;initial-value:0deg}
+@property --tz-nx   {syntax:"<angle>"; inherits:false;initial-value:0deg}
+@property --tz-ny   {syntax:"<angle>"; inherits:false;initial-value:0deg}
+@property --tz-nz   {syntax:"<length>";inherits:false;initial-value:0px}
+@property --tz-lift {syntax:"<number>";inherits:true; initial-value:0}
+@property --tz-wear {syntax:"<number>";inherits:true; initial-value:0}
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--tz-paper);
+  color:var(--tz-ink);
+  font-family:"Hiragino Maru Gothic ProN","Hiragino Kaku Gothic ProN",
+              ui-rounded,-apple-system,"Segoe UI",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+
+/* 紙の繊維 : 画面全体をひとつの素材として扱う */
+.paper{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.42;mix-blend-mode:soft-light}
+@media (prefers-color-scheme:dark){.paper{opacity:.26}}
+.tz-defs{position:absolute;width:0;height:0;overflow:hidden}
+
+.stage{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:72px 28px 140px}
+.title{font-size:13px;letter-spacing:.34em;color:var(--tz-ink-2);margin:0 0 64px;font-weight:500}
+.title b{font-weight:600;color:var(--tz-ink);letter-spacing:.2em;margin-right:.8em}
+.cap{font-size:11px;letter-spacing:.18em;color:var(--tz-ink-3);margin:0 0 18px}
+.sect{font-size:11px;letter-spacing:.3em;color:var(--tz-ink-2);margin:0 0 30px;
+  padding-top:52px;font-weight:600}
+.row{display:flex;flex-wrap:wrap;gap:20px 22px;align-items:center;margin:0 0 58px}
+
+/* =========================================================
+   共通の地 : ボタンも札も、同じ素材のうえに成り立つ
+   ========================================================= */
+.tz,.tz-card{
+  --tz-sc:1; --tz-ty:0px; --tz-lay:0px; --tz-rx:0deg; --tz-ry:0deg;
+  --tz-nx:0deg; --tz-ny:0deg; --tz-nz:0px; --tz-lift:0; --tz-wear:0;
+  position:relative;
+  transform:
+    perspective(var(--tz-persp))
+    translateY(calc(var(--tz-ty) + var(--tz-nz) + var(--tz-lay)))
+    rotateX(calc(var(--tz-rx) + var(--tz-ny)))
+    rotateY(calc(var(--tz-ry) + var(--tz-nx)))
+    scale(var(--tz-sc));
+  transition:
+    --tz-sc var(--tz-release-dur) var(--tz-release-curve),
+    --tz-ty var(--tz-release-dur) var(--tz-release-curve),
+    --tz-rx var(--tz-release-dur) var(--tz-release-curve),
+    --tz-ry var(--tz-release-dur) var(--tz-release-curve),
+    /* 気配は手に遅れない : ほぼ即時 */
+    --tz-nx 90ms linear, --tz-ny 90ms linear,
+    --tz-nz 140ms ease-out, --tz-lift 140ms ease-out,
+    --tz-wear 1400ms cubic-bezier(.2,.7,.3,1);
+}
+.tz.is-press,.tz-card.is-press{
+  transition-duration:var(--tz-press-dur);transition-timing-function:var(--tz-press-curve)}
+
+/* 息 : 静止時もわずかに動いている。個体ごとに周期も位相も違う */
+.tz-shell{
+  position:absolute; inset:calc(var(--tz-pad) * -1px);
+  pointer-events:none;
+  will-change:transform;
+  animation:tz-breathe var(--tz-breath-dur,16s) ease-in-out var(--tz-breath-delay,0s) infinite;
+}
+@keyframes tz-breathe{
+  0%,100%{transform:rotate(var(--tz-rot,0deg))                 scale(1)      translate(0,0)}
+  28%    {transform:rotate(calc(var(--tz-rot,0deg) + .085deg))  scale(1.0038) translate(.2px,-.16px)}
+  61%    {transform:rotate(calc(var(--tz-rot,0deg) - .07deg))   scale(.9982)  translate(-.17px,.13px)}
+}
+.tz-shell svg{display:block;overflow:visible}
+
+/* --- 層 : どの部品も同じ順で塗られる --- */
+.tz-shade {display:none;fill:var(--tz-shade)}
+.tz-fill  {fill:none}
+.tz-press {opacity:0;transition:opacity 760ms cubic-bezier(.22,.7,.3,1)}
+.is-press > .tz-shell .tz-press{opacity:1;transition-duration:70ms}
+.tz-grain {fill:#000;mix-blend-mode:soft-light;opacity:calc(.2 + var(--tz-wear) * .12);pointer-events:none}
+.tz-edge  {fill:none;stroke:var(--tz-ink);stroke-width:calc(1.35px + var(--tz-wear) * .15px);
+           stroke-linecap:round;stroke-linejoin:round;opacity:.9;
+           transition:opacity 260ms ease,stroke-width 260ms ease}
+.tz-edge2 {fill:none;stroke:var(--tz-ink);stroke-width:calc(2.5px + var(--tz-wear) * .2px);
+           stroke-linecap:round;stroke-linejoin:round;opacity:.3;transition:opacity 260ms ease}
+.tz-fringe{display:none;fill:none;stroke:var(--tz-ink);stroke-width:2.6;
+           stroke-linecap:round;opacity:.17}
+.tz-ring  {fill:none;stroke:var(--tz-focus);stroke-width:2;stroke-linecap:round;opacity:0;
+           transition:opacity 160ms ease}
+.tz:focus-visible,.tz-card:focus-visible{outline:none}
+.tz:focus-visible > .tz-shell .tz-ring,
+.tz-card:focus-visible > .tz-shell .tz-ring{opacity:.95}
+
+/* =========================================================
+   BUTTON
+   ========================================================= */
+.tz{
+  --tz-pad:10; --tz-amp:1.05; --tz-grit:1; --tz-fiber:1.15; --tz-radius:13;
+  --tz-grain-freq:0.85; --tz-grain-oct:2; --tz-ring-off:5; --tz-persp:760px;
+  --tz-form:box; --tz-stack:0;
+  --tz-dent:3.6; --tz-sigma:.55; --tz-sigma-min:26;
+  --tz-curl:0; --tz-tilt:1.9; --tz-reach:160; --tz-arrive:26;
+  --tz-release-dur:540ms; --tz-release-curve:cubic-bezier(.2,1.42,.34,1);
+
+  display:inline-flex; align-items:center; justify-content:center;
+  gap:.55em;
+  margin:0; padding:13px 24px;
+  border:0; background:none;
+  font:inherit; font-size:15px; font-weight:500;
+  letter-spacing:.055em;
+  color:var(--tz-ink);
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.tz-label{position:relative;display:inline-flex;align-items:center;gap:.55em;
+  transform:translateY(var(--tz-baseline,0px))}
+
+/* --- variant: ink (塗り) --- */
+.tz--ink{color:var(--tz-on-ink)}
+.tz--ink .tz-fill{fill:var(--tz-ink)}
+.tz--ink .tz-edge{stroke:var(--tz-ink);opacity:1}
+.tz--ink .tz-edge2{stroke:var(--tz-ink);opacity:.5}
+.tz--ink .tz-grain{opacity:calc(.34 + var(--tz-wear) * .16)}
+.tz--ink .tz-s0{stop-color:rgba(0,0,0,.26)}
+.tz--ink .tz-s1{stop-color:rgba(0,0,0,0)}
+
+/* --- variant: contour (輪郭) --- */
+.tz--contour .tz-fill{fill:var(--tz-paper);fill-opacity:.55;transition:fill-opacity 320ms ease}
+.tz--contour .tz-s0{stop-color:rgba(0,0,0,.14)}
+.tz--contour .tz-s1{stop-color:rgba(0,0,0,0)}
+
+/* --- variant: bare (素地) : 手を伸ばしたときに線が引かれる --- */
+.tz--bare .tz-fill{fill:var(--tz-ink);fill-opacity:0;transition:fill-opacity 320ms ease}
+.tz--bare .tz-edge,.tz--bare .tz-edge2{opacity:0}
+.tz--bare .tz-grain{opacity:0}
+.tz--bare .tz-s0{stop-color:rgba(0,0,0,.14)}
+.tz--bare .tz-s1{stop-color:rgba(0,0,0,0)}
+
+/* --- 触れる : 浮き上がるのではなく、線に墨が入る --- */
+@media (hover:hover){
+  .tz:hover:not(:disabled) .tz-edge{opacity:1;stroke-width:calc(1.6px + var(--tz-wear) * .15px)}
+  .tz:hover:not(:disabled) .tz-edge2{opacity:.42}
+  .tz--contour:hover:not(:disabled) .tz-fill{fill-opacity:1}
+  .tz--bare:hover:not(:disabled) .tz-edge{opacity:.6}
+  .tz--bare:hover:not(:disabled) .tz-edge2{opacity:.14}
+  .tz--bare:hover:not(:disabled) .tz-fill{fill-opacity:.05}
+}
+
+/* --- sizes --- */
+.tz--sm{font-size:13px;padding:9px 17px;letter-spacing:.06em}
+.tz--lg{font-size:17px;padding:17px 32px}
+.tz--icon{padding:0;width:48px;height:48px}
+
+/* --- disabled : 下書きのまま、まだ墨が入っていない --- */
+.tz:disabled{cursor:not-allowed;color:var(--tz-ink-3)}
+.tz:disabled .tz-shell{animation:none}
+.tz:disabled .tz-edge{stroke:var(--tz-ink-3);stroke-dasharray:2.5 6;opacity:.75;stroke-width:1.1px}
+.tz:disabled .tz-edge2{display:none}
+.tz:disabled .tz-fill{fill:var(--tz-ink-3);fill-opacity:.09}
+.tz:disabled .tz-grain{opacity:.12}
+
+/* --- loading : 手縫いの拍。一定速度では進まない --- */
+.tz.is-loading{cursor:progress}
+.tz.is-loading .tz-label{opacity:.5}
+.tz.is-loading .tz-edge2{display:none}
+.tz.is-loading .tz-edge{stroke-dasharray:9 8;stroke-width:1.5px;
+  animation:tz-stitch 1.45s linear infinite}
+.tz--ink.is-loading .tz-edge{stroke:var(--tz-on-ink);opacity:.85}
+@keyframes tz-stitch{
+  0%  {stroke-dashoffset:0;   animation-timing-function:cubic-bezier(.4,0,.15,1)}
+  40% {stroke-dashoffset:-17; animation-timing-function:linear}
+  54% {stroke-dashoffset:-17; animation-timing-function:cubic-bezier(.4,0,.15,1)}
+  94% {stroke-dashoffset:-34; animation-timing-function:linear}
+  100%{stroke-dashoffset:-34}
+}
+
+.tz-ico{width:1.05em;height:1.05em;overflow:visible;flex:none}
+.tz-ico path{fill:none;stroke:currentColor;stroke-width:1.5;
+  stroke-linecap:round;stroke-linejoin:round}
+
+/* =========================================================
+   CARD — 一枚の手漉きの紙。形づくられた器ではなく、漉かれた面。
+     耳     : 縁は切られていない。振れ幅も粗さもボタンより大きい
+     接地影 : 影は矩形のぼかしではなく、その個体と同じ輪郭を持つ
+     角     : 手が近づいた角が起きる。拾い上げられる合図
+     質量   : 板は速く戻らない
+   ========================================================= */
+.tz-card{
+  --tz-pad:24;
+  --tz-amp:2.05;         /* 耳 : 大きい紙ほど縁は暴れる */
+  --tz-grit:3;           /* 細かい破れを含む */
+  --tz-fiber:2.1;
+  --tz-radius:7;
+  --tz-grain-freq:0.7;
+  --tz-grain-oct:3;
+  --tz-ring-off:9;
+  --tz-persp:1500px;
+  --tz-form:box; --tz-stack:0;
+  /* 板は一点でへこまない。全体がしなる */
+  --tz-dent:2.3; --tz-sigma:1.7; --tz-sigma-min:120;
+  --tz-curl:0; --tz-tilt:0; --tz-reach:0; --tz-arrive:0;
+  /* 質量が大きいほど、ゆっくり戻り、ばねは控えめ */
+  --tz-release-dur:760ms;
+  --tz-release-curve:cubic-bezier(.24,1.16,.36,1);
+
+  display:block;
+  padding:26px 28px 24px;
+}
+.tz-card > *:not(.tz-shell){position:relative}
+.tz-card > .tz-shell .tz-shade{display:block;
+  transform:translateY(calc(3.6px + var(--tz-lift) * 6px + var(--tz-lay) * -.9));
+  opacity:calc(.85 + var(--tz-lift) * .15);
+  transition:opacity 140ms ease-out}
+.tz-card > .tz-shell .tz-fill{fill:var(--tz-paper)}
+.tz-card > .tz-shell .tz-fringe{display:block}
+.tz-card > .tz-shell .tz-edge{opacity:.3;stroke-width:1px}
+.tz-card > .tz-shell .tz-edge2{opacity:.16;stroke-width:2px}
+.tz-card > .tz-shell .tz-grain{opacity:.15}
+.tz-card > .tz-shell .tz-s0{stop-color:rgba(0,0,0,.1)}
+.tz-card > .tz-shell .tz-s1{stop-color:rgba(0,0,0,0)}
+/* 押すと紙は机に押しつけられる : 影は縮んで濃くなる */
+.tz-card.is-press > .tz-shell .tz-shade{opacity:.62;transform:translateY(1px);transition-duration:70ms}
+
+.tz-card__title{margin:0 0 9px;font-size:16px;font-weight:600;letter-spacing:.07em;
+  line-height:1.5}
+.tz-card__text{margin:0;font-size:13.5px;line-height:1.9;letter-spacing:.045em;
+  color:var(--tz-ink-2)}
+.tz-card__meta{font-size:10.5px;letter-spacing:.2em;color:var(--tz-ink-3)}
+.tz-card__foot{display:flex;align-items:center;justify-content:space-between;
+  gap:14px;margin-top:20px}
+.tz-card__media{height:104px;margin:0 0 20px}
+
+/* 手で引いた罫 : 1px の直線は、この言語には無い */
+.tz-rule{height:9px;margin:16px 0 14px}
+.tz-rule svg{display:block;overflow:visible;width:100%;height:100%}
+.tz-rule path{fill:none;stroke:var(--tz-ink);stroke-width:1.1;stroke-linecap:round;opacity:.42}
+
+/* 織り : 面に方向を持つ繊維。異方性のノイズで作る */
+.tz-panel{
+  --tz-pad:8; --tz-amp:1.7; --tz-grit:4; --tz-fiber:1.6; --tz-radius:5;
+  --tz-grain-freq:0.02 0.62; --tz-grain-oct:1; --tz-ring-off:5;
+  --tz-form:box; --tz-stack:0;
+  position:relative;
+}
+.tz-panel > .tz-shell .tz-fill{fill:var(--tz-ink);fill-opacity:.055}
+.tz-panel > .tz-shell .tz-grain{opacity:.5}
+.tz-panel > .tz-shell .tz-edge{opacity:.3;stroke-width:1px}
+.tz-panel > .tz-shell .tz-edge2{display:none}
+
+/* --- 拾い上げる : 角が手の側へ起きる。触れられる札だけ --- */
+.tz-card--pick{
+  --tz-curl:3.4; --tz-tilt:1.1; --tz-reach:150; --tz-arrive:0;
+  cursor:pointer;text-decoration:none;color:inherit;
+}
+.tz-card--pick > .tz-shell .tz-edge{transition:opacity 300ms ease,stroke-width 300ms ease}
+@media (hover:hover){
+  .tz-card--pick:hover > .tz-shell .tz-edge{opacity:.72;stroke-width:1.25px}
+  .tz-card--pick:hover > .tz-shell .tz-fringe{opacity:.28}
+}
+.tz-card--pick .tz-card__title{display:flex;align-items:center;justify-content:space-between;gap:18px}
+
+/* --- 象嵌 : 浮かない札。紙に沈めて区切るだけの面 --- */
+.tz-card--inlay{--tz-amp:1.8}
+.tz-card--inlay > .tz-shell .tz-grain{opacity:.1}
+.tz-card--inlay > .tz-shell .tz-shade{display:none}
+.tz-card--inlay > .tz-shell .tz-fill{fill:var(--tz-ink);fill-opacity:.032}
+.tz-card--inlay > .tz-shell .tz-fringe{display:none}
+.tz-card--inlay > .tz-shell .tz-edge{opacity:.2}
+.tz-card--inlay > .tz-shell .tz-edge2{display:none}
+
+.cards{display:grid;gap:36px 34px;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));
+  margin:0 0 30px}
+
+/* =========================================================
+   INPUT — 器でも紙でもなく、書きこむ場所。
+     罫   : 枠ではなく、一本の罫。書く場所は線で示す
+     記入 : 書いた分だけ、罫に墨が染みる。欄は書かれたことを憶える
+     穂先 : 明滅する 1px の棒をやめ、手で持った穂の呼吸にする
+     朱   : 誤りは赤い枠ではなく、朱の波線で訂正される
+   ========================================================= */
+.tz-well{
+  --tz-form:rule;
+  --tz-pad:12; --tz-amp:.85; --tz-grit:2; --tz-fiber:.9; --tz-radius:6;
+  --tz-grain-freq:0.8; --tz-grain-oct:2; --tz-ring-off:6; --tz-persp:900px;
+  /* 欄は押される物ではない : 沈まず、傾かない。近づけば罫が濃くなるだけ */
+  --tz-dent:0; --tz-sigma:1; --tz-sigma-min:40;
+  --tz-curl:0; --tz-tilt:0; --tz-reach:130; --tz-arrive:0;
+  --tz-release-dur:420ms;
+  position:relative; display:block;
+}
+.tz-well > .tz-shell .tz-fill,
+.tz-well > .tz-shell .tz-press,
+.tz-well > .tz-shell .tz-grain,
+.tz-well > .tz-shell .tz-shade,
+.tz-well > .tz-shell .tz-fringe,
+/* 欄を囲まない : 焦点は「囲い」ではなく「罫が引き直されること」で示す */
+.tz-well > .tz-shell .tz-ring{display:none}
+.tz-well > .tz-shell .tz-edge{
+  stroke-width:1.15px;opacity:calc(.38 + var(--tz-lift) * .26);
+  transition:opacity 200ms ease,stroke-width 200ms ease}
+.tz-well > .tz-shell .tz-edge2{opacity:.14;stroke-width:2.2px}
+/* 焦点 : 薄い下書きの罫が、その場で引き直されて本式の罫になる */
+.tz-well:focus-within > .tz-shell .tz-edge{
+  opacity:1;stroke-width:2.2px;
+  animation:tz-rule 300ms cubic-bezier(.45,.05,.2,1)}
+/* 枡は引き直さない : 囲いは既にそこにある。濃くなるだけでいい */
+.tz-well--boxed:focus-within > .tz-shell .tz-edge,
+.tz-well--ruled:focus-within > .tz-shell .tz-edge{stroke-width:1.9px;animation:none}
+.tz-well--boxed:focus-within > .tz-shell .tz-edge2,
+.tz-well--ruled:focus-within > .tz-shell .tz-edge2{opacity:.3}
+@keyframes tz-rule{
+  from{stroke-dasharray:var(--tz-len);stroke-dashoffset:var(--tz-len)}
+  to  {stroke-dasharray:var(--tz-len);stroke-dashoffset:0}
+}
+
+/* かぎ : 両端で筆が上に跳ね、書ける範囲を示す。囲わずに端を教える */
+.tz-hook{fill:none;stroke:var(--tz-ink);stroke-width:1.7px;stroke-linecap:round;
+  opacity:0;transform-box:fill-box;transform-origin:50% 100%;
+  transition:opacity 160ms ease}
+.tz-well:focus-within > .tz-shell .tz-hook{
+  opacity:.9;animation:tz-hook 300ms cubic-bezier(.3,1.25,.4,1) 60ms backwards}
+@keyframes tz-hook{from{opacity:0;transform:scaleY(.15)}}
+
+/* 記入 : 書いた範囲だけ、罫に墨が染みる */
+.tz-soak{display:none;fill:none;stroke:var(--tz-ink);stroke-width:2.6px;
+  stroke-linecap:round;opacity:.5;
+  stroke-dasharray:var(--tz-ink-len,0) 9999;
+  stroke-dashoffset:calc(var(--tz-ink-from,0) * -1);
+  transition:stroke-dasharray 200ms cubic-bezier(.3,.8,.35,1),opacity 300ms ease}
+.tz-well > .tz-shell .tz-soak{display:block}
+.tz-well.is-composing > .tz-shell .tz-soak{stroke-dasharray:4 5;opacity:.45}
+
+/* 朱 : 訂正は枠の色を変えるのではなく、線を引かれること */
+.tz-correct{display:none;fill:none;stroke:var(--tz-shu);stroke-width:1.5px;
+  stroke-linecap:round;opacity:0}
+.tz-field.is-error .tz-correct{display:block;opacity:.95;
+  stroke-dasharray:var(--tz-clen);
+  animation:tz-strike 520ms cubic-bezier(.5,.05,.3,1) backwards}
+@keyframes tz-strike{from{stroke-dashoffset:var(--tz-clen)}}
+.tz-field.is-error .tz-field__note{color:var(--tz-shu)}
+.tz-field.is-error .tz-field__note::before{content:"朱  "}
+
+/* 穂先 : 四角い明滅をやめる。消えるのは速く、戻るのは遅い */
+.tz-nib{
+  position:absolute;left:0;translate:var(--tz-nib-x,0) 0;
+  bottom:var(--tz-nib-b,7px);width:2px;height:1.1em;
+  background:var(--tz-ink);border-radius:1.4px;opacity:0;pointer-events:none;
+  transform:rotate(-7deg);transform-origin:50% 100%;
+  transition:translate 80ms cubic-bezier(.3,.85,.4,1)}
+.tz-well:focus-within .tz-nib{animation:tz-nib 1.4s infinite}
+@keyframes tz-nib{
+  0%  {opacity:.92;animation-timing-function:linear}
+  46% {opacity:.92;animation-timing-function:cubic-bezier(.85,0,.9,.3)}
+  56% {opacity:0;  animation-timing-function:linear}
+  76% {opacity:0;  animation-timing-function:cubic-bezier(.1,.65,.3,1)}
+  100%{opacity:.92}
+}
+
+.tz-input,.tz-area{
+  display:block;width:100%;margin:0;border:0;background:none;outline:none;
+  font:inherit;font-size:15px;letter-spacing:.05em;color:var(--tz-ink);
+  padding:7px 3px 9px;caret-color:transparent;
+}
+.tz-area{caret-color:var(--tz-ink);resize:none;line-height:30px;padding:9px 6px}
+.tz-input::placeholder,.tz-area::placeholder{color:var(--tz-ink-3);opacity:1;
+  transition:opacity 280ms ease}
+.tz-well:focus-within .tz-input::placeholder,
+.tz-well:focus-within .tz-area::placeholder{opacity:.45}
+
+/* 枡 : 罫ではなく囲いが要るとき (数値、短い記号) */
+.tz-well--boxed{--tz-form:box; --tz-amp:1.1; --tz-grit:2; --tz-radius:9; --tz-dent:1.5}
+.tz-well--boxed > .tz-shell .tz-fill{display:block;fill:var(--tz-paper);fill-opacity:.6}
+.tz-well--boxed > .tz-shell .tz-grain{display:block;opacity:.14}
+.tz-well--boxed > .tz-shell .tz-soak{display:none}
+.tz-well--boxed .tz-input{padding:11px 14px}
+
+/* 原稿用紙 : 面の中に罫が引かれている */
+.tz-well--ruled{--tz-form:ruled; --tz-amp:1.6; --tz-grit:3; --tz-radius:7; --tz-dent:0}
+.tz-well--ruled > .tz-shell .tz-fill{display:block;fill:var(--tz-paper);fill-opacity:.5}
+.tz-well--ruled > .tz-shell .tz-grain{display:block;opacity:.16}
+.tz-well--ruled > .tz-shell .tz-soak{display:none}
+.tz-lines path{fill:none;stroke:var(--tz-ink);stroke-width:.9px;stroke-linecap:round;opacity:.17}
+
+/* 書かれていない欄は、まだ紙が用意されていない */
+.tz-well.is-off > .tz-shell .tz-edge{stroke:var(--tz-ink-3);stroke-dasharray:2.5 6;
+  opacity:.7;stroke-width:1px}
+.tz-well.is-off > .tz-shell .tz-edge2,
+.tz-well.is-off > .tz-shell .tz-soak{display:none}
+.tz-well.is-off .tz-shell{animation:none}
+.tz-input:disabled,.tz-area:disabled{color:var(--tz-ink-3);cursor:not-allowed}
+
+.tz-field{display:block}
+.tz-field__label{display:block;font-size:11.5px;letter-spacing:.2em;
+  color:var(--tz-ink-2);margin:0 0 4px}
+.tz-field__note{display:block;font-size:11px;letter-spacing:.1em;
+  color:var(--tz-ink-3);margin:9px 0 0;line-height:1.6}
+.tz-field__need{color:var(--tz-shu);margin-left:.5em;font-size:13px;
+  vertical-align:-.1em}
+.fields{display:grid;gap:34px 30px;grid-template-columns:repeat(auto-fit,minmax(248px,1fr));
+  margin:0 0 30px}
+.fields--wide{grid-template-columns:1fr}
+
+/* =========================================================
+   SELECT — 書く場所ではなく、選ぶ場所。
+     重なり : 閉じていても、下に札が重なっているのが見えている
+     繰る   : 開くと札が一枚ずつ繰り出される。揃って並ばない
+     丸印   : 選ばれた札には、その場で丸が描かれる
+     写す   : 選んだ言葉は、欄の罫に墨として移る
+   ========================================================= */
+.tz-well--pick{--tz-stack:2}
+.tz-stack path{fill:none;stroke:var(--tz-ink);stroke-width:1px;stroke-linecap:round;
+  opacity:calc(.26 / var(--k));
+  transition:transform 380ms cubic-bezier(.2,1.1,.3,1),opacity 260ms ease}
+.tz-well--pick.is-open .tz-stack path{
+  transform:translateY(calc(var(--k) * 2.6px));opacity:calc(.4 / var(--k))}
+
+.tz-pick{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  width:100%;margin:0;padding:7px 3px 9px;border:0;background:none;
+  font:inherit;font-size:15px;letter-spacing:.05em;color:var(--tz-ink);
+  text-align:left;cursor:pointer;outline:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.tz-pick__val{display:block}
+.tz-pick.is-empty .tz-pick__val{color:var(--tz-ink-3)}
+/* 返し : 筆が下で止まって返る。開けば向きが変わる */
+.tz-pick__turn{flex:none;width:13px;height:13px;overflow:visible;
+  transition:rotate 380ms cubic-bezier(.2,1.25,.35,1);rotate:0deg}
+.tz-pick__turn path{fill:none;stroke:var(--tz-ink-2);stroke-linecap:round;
+  stroke-linejoin:round}
+.tz-well--pick.is-open .tz-pick__turn{rotate:180deg}
+
+/* 札束 : 開いた面は、札と同じ紙 */
+.tz-slips{
+  position:absolute;left:-4px;right:-4px;top:calc(100% + 11px);
+  z-index:30;padding:9px 7px;margin:0;
+}
+/* 浮いている紙は、机の上の紙と同じ調子には見えない */
+.tz-slips > .tz-shell .tz-fill{fill:var(--tz-paper-up);fill-opacity:1}
+.tz-slips > .tz-shell .tz-shade{opacity:1;transform:translateY(9px)}
+.tz-slips > .tz-shell .tz-edge{opacity:.38}
+.tz-slips[hidden]{display:none}
+.tz-slips__list{list-style:none;margin:0;padding:0}
+.tz-well--pick{z-index:1}
+.tz-well--pick.is-open{z-index:40}
+.tz-slips.is-up{top:auto;bottom:calc(100% + 11px)}
+
+.tz-slip{
+  position:relative;display:flex;align-items:center;gap:9px;
+  padding:8px 12px 8px 6px;font-size:14px;letter-spacing:.05em;
+  color:var(--tz-ink-2);cursor:pointer;
+  transform:translateX(var(--tz-sx,0)) rotate(var(--tz-sr,0deg));
+  transition:transform 260ms cubic-bezier(.2,1.1,.3,1),color 200ms ease;
+}
+/* 繰り出す : 見ている札は、束からわずかに押し出される */
+.tz-slip.is-active{color:var(--tz-ink);
+  transform:translateX(calc(var(--tz-sx,0px) + 6px)) rotate(var(--tz-sr,0deg))}
+.tz-slip::before{content:"";position:absolute;left:-4px;top:50%;
+  width:2px;height:15px;margin-top:-7.5px;border-radius:1.2px;
+  background:var(--tz-ink);opacity:0;rotate:-7deg;
+  transition:opacity 180ms ease}
+.tz-slip.is-active::before{opacity:.85}
+.tz-slip[aria-disabled="true"]{color:var(--tz-ink-3);cursor:not-allowed}
+.tz-slip[aria-disabled="true"] .tz-slip__label{text-decoration:line-through;
+  text-decoration-thickness:1px;text-decoration-color:var(--tz-ink-3)}
+
+/* 丸印 : 選ばれた札は、その場で丸をつけられる */
+.tz-slip__mark{flex:none;width:19px;height:19px;overflow:visible;opacity:0;
+  transition:opacity 200ms ease}
+.tz-slip__mark path{fill:none;stroke:var(--tz-ink);stroke-width:1.4;
+  stroke-linecap:round;stroke-dasharray:var(--mlen);stroke-dashoffset:0}
+.tz-slip[aria-selected="true"] .tz-slip__mark{opacity:.9}
+.tz-slip[aria-selected="true"] .tz-slip__mark path{
+  animation:tz-circle 460ms cubic-bezier(.45,.05,.2,1)}
+@keyframes tz-circle{from{stroke-dashoffset:var(--mlen)}}
+
+.tz-well--pick.is-open .tz-slip{
+  animation:tz-deal 320ms cubic-bezier(.2,.95,.3,1) calc(var(--tz-si,0) * 28ms) backwards}
+@keyframes tz-deal{
+  from{opacity:0;
+       transform:translate(calc(var(--tz-sx,0px) - 4px), 8px) rotate(calc(var(--tz-sr,0deg) + 1.4deg))}
+}
+
+/* =========================================================
+   生まれかた : 部品ごとに違う
+     ボタン : 一本の線として引かれる
+     札     : 紙として置かれる。内容は着地してから読める
+   ========================================================= */
+.tz.is-drawing .tz-edge{
+  stroke-dasharray:var(--tz-len);stroke-dashoffset:0;
+  animation:tz-draw var(--tz-draw-dur) cubic-bezier(.55,.06,.3,1) var(--tz-draw-delay) backwards;
+}
+.tz.is-drawing .tz-fill{
+  animation:tz-soak calc(var(--tz-draw-dur) * 1.25) ease-out
+            calc(var(--tz-draw-delay) + var(--tz-draw-dur) * .5) backwards;
+}
+.tz.is-drawing .tz-grain,.tz.is-drawing .tz-edge2{
+  animation:tz-fade calc(var(--tz-draw-dur) * .9) ease-out
+            calc(var(--tz-draw-delay) + var(--tz-draw-dur) * .6) backwards;
+}
+.tz.is-drawing .tz-label{
+  animation:tz-lift calc(var(--tz-draw-dur) * .8) cubic-bezier(.2,.9,.3,1)
+            calc(var(--tz-draw-delay) + var(--tz-draw-dur) * .55) backwards;
+}
+@keyframes tz-draw{from{stroke-dashoffset:var(--tz-len)}}
+@keyframes tz-soak{from{fill-opacity:0}}
+@keyframes tz-fade{from{opacity:0}}
+@keyframes tz-lift{from{opacity:0;transform:translateY(calc(var(--tz-baseline,0px) + 3px))}}
+
+.tz-well.is-drawing > .tz-shell .tz-edge{
+  stroke-dasharray:var(--tz-len);stroke-dashoffset:0;
+  animation:tz-draw var(--tz-draw-dur) cubic-bezier(.5,.05,.3,1) var(--tz-draw-delay) backwards;
+}
+.tz-card.is-drawing{
+  animation:tz-place calc(var(--tz-draw-dur) * 1.1) cubic-bezier(.16,.84,.26,1)
+            var(--tz-draw-delay) backwards;
+}
+.tz-card.is-drawing > *:not(.tz-shell){
+  animation:tz-settle calc(var(--tz-draw-dur) * .7) cubic-bezier(.2,.9,.3,1)
+            calc(var(--tz-draw-delay) + var(--tz-draw-dur) * .55 + var(--tz-ci,0) * 85ms) backwards;
+}
+@keyframes tz-place{from{opacity:0;--tz-lay:-9px;--tz-sc:1.014}}
+@keyframes tz-settle{from{opacity:0;transform:translateY(4px)}}
+
+@media (prefers-reduced-motion:reduce){
+  .tz,.tz-card{transition:none}
+  .tz-shell{animation:none}
+  .tz-press{transition-duration:160ms}
+  .tz.is-loading .tz-edge{animation-duration:3.2s}
+  .tz.is-drawing .tz-edge,.tz.is-drawing .tz-fill,
+  .tz.is-drawing .tz-grain,.tz.is-drawing .tz-edge2,
+  .tz.is-drawing .tz-label,
+  .tz-card.is-drawing,.tz-card.is-drawing > *,
+  .tz-well.is-drawing > .tz-shell .tz-edge,
+  .tz-well:focus-within > .tz-shell .tz-edge,
+  .tz-well:focus-within > .tz-shell .tz-hook,
+  .tz-field.is-error .tz-correct,
+  .tz-well--pick.is-open .tz-slip,
+  .tz-slip[aria-selected="true"] .tz-slip__mark path{animation:none}
+  .tz-well:focus-within .tz-nib{animation:none;opacity:.92}
+  .tz-nib{transition:none}
+}
+</style>
+</head>
+<body>
+
+<svg class="tz-defs" aria-hidden="true">
+  <filter id="tz-paper-grain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" seed="3"/>
+    <feColorMatrix type="matrix" values="1 0 0 0 0  1 0 0 0 0  1 0 0 0 0  0 0 0 0 1"/>
+  </filter>
+  <filter id="tz-fiber-g" x="-25%" y="-25%" width="150%" height="150%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="21" result="t"/>
+    <feDisplacementMap in="SourceGraphic" in2="t" scale="1.2" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+
+<svg class="paper" aria-hidden="true"><rect width="100%" height="100%" filter="url(#tz-paper-grain)"/></svg>
+
+<main class="stage">
+  <p class="title"><b>手触り</b>TEZAWARI</p>
+
+  <p class="sect">B U T T O N</p>
+
+  <p class="cap">三 態</p>
+  <div class="row">
+    <button class="tz tz--ink">仕立てる</button>
+    <button class="tz tz--contour">下ごしらえ</button>
+    <button class="tz tz--bare">やめておく</button>
+  </div>
+
+  <p class="cap">大 き さ</p>
+  <div class="row">
+    <button class="tz tz--contour tz--sm">小</button>
+    <button class="tz tz--contour">中</button>
+    <button class="tz tz--contour tz--lg">大</button>
+    <button class="tz tz--contour tz--icon" aria-label="足す">
+      <svg class="tz-ico" viewBox="0 0 16 16" aria-hidden="true" filter="url(#tz-fiber-g)">
+        <path d="M8 2.6 V13.4 M2.6 8 H13.4"/>
+      </svg>
+    </button>
+    <button class="tz tz--ink tz--icon" aria-label="送る">
+      <svg class="tz-ico" viewBox="0 0 16 16" aria-hidden="true" filter="url(#tz-fiber-g)">
+        <path d="M2.4 8 H13.2 M8.6 3.6 L13.3 8 L8.6 12.4"/>
+      </svg>
+    </button>
+  </div>
+
+  <p class="cap">個 体 差 — 同じ指定、同じ輪郭にはならない</p>
+  <div class="row">
+    <button class="tz tz--contour">湯呑</button>
+    <button class="tz tz--contour">湯呑</button>
+    <button class="tz tz--contour">湯呑</button>
+    <button class="tz tz--contour">湯呑</button>
+  </div>
+
+  <p class="cap">た わ み — 端を押すと、その端がへこむ</p>
+  <div class="row">
+    <button class="tz tz--contour tz--lg">端を押してみる</button>
+    <button class="tz tz--ink tz--lg">中央を押してみる</button>
+  </div>
+
+  <p class="cap">状 態</p>
+  <div class="row">
+    <button class="tz tz--ink is-loading" aria-busy="true">縫っています</button>
+    <button class="tz tz--contour" disabled>まだ焼けていない</button>
+    <button class="tz tz--bare" disabled>触れられない</button>
+  </div>
+
+  <p class="sect">C A R D</p>
+
+  <p class="cap">札 — 影も耳も、その一枚のかたちを持つ</p>
+  <div class="cards">
+    <article class="tz-card">
+      <div class="tz-panel tz-card__media" aria-hidden="true"></div>
+      <h3 class="tz-card__title">粉引の湯呑</h3>
+      <p class="tz-card__text">同じ土、同じ窯。それでも一客ずつ縁の厚みが違う。<br>持つ手の側が、少しだけ薄い。</p>
+      <div class="tz-card__foot">
+        <span class="tz-card__meta">窯 出 し 三 日 目</span>
+        <button class="tz tz--bare tz--sm">見る</button>
+      </div>
+    </article>
+
+    <article class="tz-card">
+      <h3 class="tz-card__title">手の記録</h3>
+      <p class="tz-card__text">轆轤の速さ、指の圧、土の水分。数値にならないものが形に残る。</p>
+      <div class="tz-rule" role="separator"></div>
+      <p class="tz-card__meta">四 代 目 / 窯 番 十 七</p>
+      <div class="tz-card__foot">
+        <span class="tz-card__meta">未 完</span>
+        <button class="tz tz--contour tz--sm">続ける</button>
+      </div>
+    </article>
+
+    <article class="tz-card tz-card--inlay">
+      <h3 class="tz-card__title">象嵌の札</h3>
+      <p class="tz-card__text">浮かない面。影を持たず、紙に沈んで区切るだけ。触れられないものは、応えない。</p>
+      <div class="tz-card__foot">
+        <span class="tz-card__meta">非 対 話</span>
+      </div>
+    </article>
+  </div>
+
+  <p class="cap">拾 い 上 げ る — 手が近づいた角が起きる</p>
+  <div class="cards" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
+    <a class="tz-card tz-card--pick" href="#">
+      <h3 class="tz-card__title">この一客を選ぶ
+        <svg class="tz-ico" viewBox="0 0 16 16" aria-hidden="true" filter="url(#tz-fiber-g)">
+          <path d="M2.4 8 H13.2 M8.6 3.6 L13.3 8 L8.6 12.4"/>
+        </svg>
+      </h3>
+      <p class="tz-card__text">角に手を近づけると、その角だけが持ち上がる。押せば紙は机に押しつけられ、影が縮む。</p>
+      <div class="tz-card__foot"><span class="tz-card__meta">四 隅 を 試 す</span></div>
+    </a>
+    <a class="tz-card tz-card--pick" href="#">
+      <h3 class="tz-card__title">もう一客
+        <svg class="tz-ico" viewBox="0 0 16 16" aria-hidden="true" filter="url(#tz-fiber-g)">
+          <path d="M2.4 8 H13.2 M8.6 3.6 L13.3 8 L8.6 12.4"/>
+        </svg>
+      </h3>
+      <p class="tz-card__text">同じ指定の札。耳の破れかたも、影のかたちも、揺れる周期も違う。</p>
+      <div class="tz-card__foot"><span class="tz-card__meta">別 の 個 体</span></div>
+    </a>
+  </div>
+
+  <p class="sect">I N P U T</p>
+
+  <p class="cap">記 入 — 枠ではなく罫。書いた分だけ墨が染みる</p>
+  <div class="fields">
+    <div class="tz-field">
+      <label class="tz-field__label" for="f-name">名 前<span class="tz-field__need" aria-hidden="true">•</span></label>
+      <span class="tz-well">
+        <input class="tz-input" id="f-name" type="text" placeholder="山田 太郎"
+               aria-describedby="n-name" required>
+        <span class="tz-nib" aria-hidden="true"></span>
+      </span>
+      <span class="tz-field__note" id="n-name">窯元まで届きます</span>
+    </div>
+
+    <div class="tz-field">
+      <label class="tz-field__label" for="f-kiln">窯 元</label>
+      <span class="tz-well">
+        <input class="tz-input" id="f-kiln" type="text" value="丹波 立杭"
+               aria-describedby="n-kiln">
+        <span class="tz-nib" aria-hidden="true"></span>
+      </span>
+      <span class="tz-field__note" id="n-kiln">書かれた分だけ、罫が濃くなっています</span>
+    </div>
+  </div>
+
+  <p class="cap">枡 と 朱 — 囲いが要るとき、訂正されるとき</p>
+  <div class="fields">
+    <div class="tz-field">
+      <label class="tz-field__label" for="f-count">客 数</label>
+      <span class="tz-well tz-well--boxed">
+        <input class="tz-input" id="f-count" type="text" inputmode="numeric" value="六"
+               aria-describedby="n-count">
+        <span class="tz-nib" aria-hidden="true"></span>
+      </span>
+      <span class="tz-field__note" id="n-count">短い記号は、罫より枡が読みやすい</span>
+    </div>
+
+    <div class="tz-field is-error">
+      <label class="tz-field__label" for="f-tel">電 話</label>
+      <span class="tz-well">
+        <input class="tz-input" id="f-tel" type="text" value="0797-xx"
+               aria-invalid="true" aria-describedby="n-tel">
+        <span class="tz-nib" aria-hidden="true"></span>
+      </span>
+      <span class="tz-field__note" id="n-tel">桁が足りません</span>
+    </div>
+
+    <div class="tz-field">
+      <label class="tz-field__label" for="f-off">窯 番</label>
+      <span class="tz-well">
+        <input class="tz-input" id="f-off" type="text" value="まだ焼いていない" disabled
+               aria-describedby="n-off">
+        <span class="tz-nib" aria-hidden="true"></span>
+      </span>
+      <span class="tz-field__note" id="n-off">紙がまだ用意されていない</span>
+    </div>
+  </div>
+
+  <p class="sect">S E L E C T</p>
+
+  <p class="cap">選 ぶ — 閉じていても、下に札が重なっている</p>
+  <div class="fields">
+    <div class="tz-field">
+      <span class="tz-field__label" id="l-soil">土</span>
+      <div class="tz-well tz-well--pick">
+        <button class="tz-pick" type="button" role="combobox"
+                aria-haspopup="listbox" aria-expanded="false" aria-controls="ls-soil"
+                aria-labelledby="l-soil v-soil" aria-describedby="n-soil">
+          <span class="tz-pick__val" id="v-soil">信楽</span>
+          <svg class="tz-pick__turn" viewBox="0 0 13 13" aria-hidden="true" filter="url(#tz-fiber-g)">
+            <path d="M1.5 4 C3.3 7.3 4.9 9.3 6.4 9.8 C8 9.3 9.7 7.2 11.5 4.1" stroke-width="1.5"/>
+          </svg>
+        </button>
+        <div class="tz-card tz-slips" hidden>
+          <ul class="tz-slips__list" role="listbox" id="ls-soil" aria-labelledby="l-soil">
+            <li class="tz-slip" role="option" aria-selected="true"><span class="tz-slip__label">信楽</span></li>
+            <li class="tz-slip" role="option" aria-selected="false"><span class="tz-slip__label">丹波</span></li>
+            <li class="tz-slip" role="option" aria-selected="false"><span class="tz-slip__label">備前</span></li>
+            <li class="tz-slip" role="option" aria-selected="false" aria-disabled="true"><span class="tz-slip__label">唐津</span></li>
+            <li class="tz-slip" role="option" aria-selected="false"><span class="tz-slip__label">萩</span></li>
+          </ul>
+        </div>
+      </div>
+      <span class="tz-field__note" id="n-soil">選んだ言葉は、そのまま罫の墨になります</span>
+    </div>
+
+    <div class="tz-field">
+      <span class="tz-field__label" id="l-fire">焼 成</span>
+      <div class="tz-well tz-well--pick">
+        <button class="tz-pick is-empty" type="button" role="combobox"
+                aria-haspopup="listbox" aria-expanded="false" aria-controls="ls-fire"
+                aria-labelledby="l-fire v-fire" aria-describedby="n-fire">
+          <span class="tz-pick__val" id="v-fire">まだ決めていない</span>
+          <svg class="tz-pick__turn" viewBox="0 0 13 13" aria-hidden="true" filter="url(#tz-fiber-g)">
+            <path d="M1.5 4 C3.3 7.3 4.9 9.3 6.4 9.8 C8 9.3 9.7 7.2 11.5 4.1" stroke-width="1.5"/>
+          </svg>
+        </button>
+        <div class="tz-card tz-slips" hidden>
+          <ul class="tz-slips__list" role="listbox" id="ls-fire" aria-labelledby="l-fire">
+            <li class="tz-slip" role="option" aria-selected="false"><span class="tz-slip__label">酸化</span></li>
+            <li class="tz-slip" role="option" aria-selected="false"><span class="tz-slip__label">還元</span></li>
+            <li class="tz-slip" role="option" aria-selected="false"><span class="tz-slip__label">焼締</span></li>
+          </ul>
+        </div>
+      </div>
+      <span class="tz-field__note" id="n-fire">未選択の欄には、まだ墨が乗っていない</span>
+    </div>
+  </div>
+
+  <p class="cap">原 稿 用 紙 — 面の中に行が引かれている</p>
+  <div class="fields fields--wide">
+    <div class="tz-field">
+      <label class="tz-field__label" for="f-memo">申 し 送 り</label>
+      <span class="tz-well tz-well--ruled">
+        <textarea class="tz-area" id="f-memo" rows="4" aria-describedby="n-memo"
+                  placeholder="轆轤の癖、土の産地、次の窯への覚え書き"></textarea>
+      </span>
+      <span class="tz-field__note" id="n-memo">行は紙に引かれているので、書いても動かない</span>
+    </div>
+  </div>
+
+  <p class="cap">窯 出 し</p>
+  <div class="row">
+    <button class="tz tz--contour" data-reseed>すべて焼き直す</button>
+  </div>
+</main>
+
+<script>
+(() => {
+  'use strict';
+  let uid = 0, salt = 0;
+
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+  const cssv = (el, p) => getComputedStyle(el).getPropertyValue(p).trim();
+  const num  = (el, p) => parseFloat(cssv(el, p));
+
+  /* ---------- deterministic randomness : 同じ個体は毎回同じ形 ---------- */
+  const fnv = s => { let h = 0x811c9dc5;
+    for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return h >>> 0; };
+  const mulberry32 = a => () => {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+  /* 周期的な1次元ノイズ。周波数は整数 : 閉じた輪郭が継ぎ目なくつながる。
+     grit を上げると細かい破れが混ざる (札の耳) */
+  const wobbler = (rand, grit = 1) => {
+    const g = Math.max(1, Math.round(grit));
+    const hs = [[1,1],[2,.58],[3,.34],[5,.2],[7,.12]]
+      .map(([f, a]) => ({ f: f * g, a, p: rand() * Math.PI * 2 }));
+    const norm = hs.reduce((s, h) => s + h.a, 0);
+    return t => hs.reduce((s, h) => s + h.a * Math.sin(h.f * 2 * Math.PI * t + h.p), 0) / norm;
+  };
+
+  /* ---------- geometry ---------- */
+  function basePoints(x0, y0, w, h, r, step) {
+    r = Math.max(0.5, Math.min(r, w / 2, h / 2));
+    const pts = [];
+    const arc = (cx, cy, a0, a1) => {
+      const n = Math.max(3, Math.round(Math.abs(a1 - a0) * Math.PI / 180 * r / step));
+      for (let i = 0; i < n; i++) {
+        const a = (a0 + (a1 - a0) * i / n) * Math.PI / 180;
+        pts.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]);
+      }
+    };
+    const seg = (ax, ay, bx, by) => {
+      const n = Math.max(1, Math.round(Math.hypot(bx - ax, by - ay) / step));
+      for (let i = 0; i < n; i++) pts.push([ax + (bx - ax) * i / n, ay + (by - ay) * i / n]);
+    };
+    const X = x0, Y = y0, W = x0 + w, H = y0 + h;
+    arc(X + r, Y + r, 180, 270);  seg(X + r, Y, W - r, Y);
+    arc(W - r, Y + r, 270, 360);  seg(W, Y + r, W, H - r);
+    arc(W - r, H - r, 0, 90);     seg(W - r, H, X + r, H);
+    arc(X + r, H - r, 90, 180);   seg(X, H - r, X, Y + r);
+    return pts;
+  }
+
+  /* 各点の外向き法線。開いた線では端を片側差分で見る */
+  function normals(pts, closed = true) {
+    const n = pts.length, out = [];
+    const at = i => pts[closed ? (i + n) % n : clamp(i, 0, n - 1)];
+    for (let i = 0; i < n; i++) {
+      const a = at(i - 1), b = at(i + 1);
+      const tx = b[0] - a[0], ty = b[1] - a[1], L = Math.hypot(tx, ty) || 1;
+      out.push([ty / L, -tx / L]);
+    }
+    return out;
+  }
+
+  const organic = (pts, nrm, wob, amp) =>
+    pts.map((p, i) => { const d = wob(i / pts.length) * amp;
+                        return [p[0] + nrm[i][0] * d, p[1] + nrm[i][1] * d]; });
+
+  function toPath(pts, closed = true) {
+    const n = pts.length, f = v => v.toFixed(2);
+    const at = i => pts[closed ? (i + n) % n : clamp(i, 0, n - 1)];
+    let d = `M${f(pts[0][0])},${f(pts[0][1])}`;
+    for (let i = 0, last = closed ? n : n - 1; i < last; i++) {
+      const p0 = at(i - 1), p1 = at(i), p2 = at(i + 1), p3 = at(i + 2);
+      d += `C${f(p1[0] + (p2[0] - p0[0]) / 6)},${f(p1[1] + (p2[1] - p0[1]) / 6)}`
+         + ` ${f(p2[0] - (p3[0] - p1[0]) / 6)},${f(p2[1] - (p3[1] - p1[1]) / 6)}`
+         + ` ${f(p2[0])},${f(p2[1])}`;
+    }
+    return d + (closed ? 'Z' : '');
+  }
+
+  /* =========================================================
+     塗師 : ボタンも札も織りも、この一つの関数が描く。
+     違いは要素に載った CSS トークンだけ。
+     ========================================================= */
+  function paint(el) {
+    const st = el.__tz;
+    const w = Math.round(el.offsetWidth), h = Math.round(el.offsetHeight);
+    if (!w || !h) return false;
+    if (st.w === w && st.h === h && st.salt === salt) return false;
+    st.w = w; st.h = h; st.salt = salt;
+
+    const seed = fnv(`${st.key}|${salt}`);
+    const rand = mulberry32(seed);
+    const pad = st.pad = num(el, '--tz-pad');
+    const W = w + pad * 2, H = h + pad * 2;
+
+    const grit  = num(el, '--tz-grit');
+    const amp   = num(el, '--tz-amp');
+    const fiber = cssv(el, '--tz-fiber');
+    const gfreq = cssv(el, '--tz-grain-freq');
+    const goct  = cssv(el, '--tz-grain-oct');
+    const roff  = num(el, '--tz-ring-off');
+    const step  = clamp(8 / Math.sqrt(grit), 3.2, 8);
+    const round = el.classList.contains('tz--icon')
+      ? Math.min(w, h) / 2
+      : num(el, '--tz-radius') * (0.88 + rand() * 0.24);
+
+    const form = cssv(el, '--tz-form') || 'box';
+    let corr = '', lines = '', hooks = '', stack = '';
+    if (form === 'rule') {
+      /* 罫 : 閉じた輪郭ではなく、下端を走る一本の線 */
+      const y = pad + h, x0 = pad - 4, x1 = pad + w + 4;
+      const n = Math.max(10, Math.round((x1 - x0) / step));
+      const wob = wobbler(rand, grit);
+      st.base = [];
+      for (let i = 0; i <= n; i++)
+        st.base.push([x0 + (x1 - x0) * i / n, y + wob(i / n / 2) * amp]);
+      st.closed = false;
+      /* かぎ : 罫の両端で、筆が上へ跳ねる */
+      const tick = (q, dir) => {
+        const j = (rand() - .5) * 1.1, up = 8.4 + rand() * 1.6;
+        return `M${q[0].toFixed(2)},${(q[1] + 1.2).toFixed(2)}`
+             + `C${(q[0] + dir * .5).toFixed(2)},${(q[1] - up * .38).toFixed(2)}`
+             + ` ${(q[0] + dir * (1.6 + j)).toFixed(2)},${(q[1] - up * .68).toFixed(2)}`
+             + ` ${(q[0] + dir * (3.1 + j)).toFixed(2)},${(q[1] - up).toFixed(2)}`;
+      };
+      hooks = tick(st.base[0], 1) + tick(st.base[st.base.length - 1], -1);
+
+      /* 重なり : 罫の下から、次の札の縁がのぞいている */
+      const deck = num(el, '--tz-stack') || 0;
+      if (deck) {
+        let sp = '';
+        for (let k = 1; k <= deck; k++) {
+          const wob2 = wobbler(rand, grit), inset = 8 * k, pts = [];
+          const a = st.base[0][0] + inset, b = st.base[st.base.length - 1][0] - inset;
+          const m = Math.max(6, Math.round((b - a) / step));
+          for (let i = 0; i <= m; i++)
+            pts.push([a + (b - a) * i / m, y + 3.4 * k + wob2(i / m / 2) * amp * .7]);
+          sp += `<path d="${toPath(pts, false)}" style="--k:${k}"/>`;
+        }
+        stack = `<g class="tz-stack">${sp}</g>`;
+      }
+
+      /* 朱の波線は、罫のすぐ下に引かれる */
+      const cyc = Math.max(3, Math.round(w / 13)), jit = wobbler(rand, 2);
+      corr = toPath(st.base.map((q, i) => {
+        const t = i / (st.base.length - 1);
+        return [q[0], q[1] + 5.5 + Math.sin(t * Math.PI * 2 * cyc) * 2.1 + jit(t / 2) * .6];
+      }), false);
+    } else {
+      const raw = basePoints(pad, pad, w, h, round, step);
+      st.base = organic(raw, normals(raw), wobbler(rand, grit), amp);
+      st.closed = true;
+    }
+    st.norm = normals(st.base, st.closed);
+    st.d0   = toPath(st.base, st.closed);
+
+    /* 原稿用紙 : 面の中に、行の数だけ罫を引く */
+    const ctl = el.querySelector('input, textarea');
+    if (form === 'ruled' && ctl) {
+      const cs = getComputedStyle(ctl);
+      const lh = parseFloat(cs.lineHeight) || 28;
+      const top = ctl.offsetTop + parseFloat(cs.paddingTop);
+      const x0 = pad + ctl.offsetLeft + parseFloat(cs.paddingLeft);
+      const x1 = pad + ctl.offsetLeft + ctl.offsetWidth - parseFloat(cs.paddingRight);
+      const wob = wobbler(rand, 3);
+      let out = '';
+      for (let r = 1; (top + lh * r) < h - 4; r++) {
+        const y = pad + top + lh * r - 4, n = Math.max(6, Math.round((x1 - x0) / 11)), pts = [];
+        for (let i = 0; i <= n; i++) pts.push([x0 + (x1 - x0) * i / n, y + wob((i / n + r * .37) / 2) * 1.1]);
+        out += `<path d="${toPath(pts, false)}"/>`;
+      }
+      lines = `<g class="tz-lines">${out}</g>`;
+    }
+
+    const rawR = basePoints(pad - roff, pad - roff, w + roff * 2, h + roff * 2, round + roff, step);
+    const ring = toPath(organic(rawR, normals(rawR), wobbler(rand, grit), amp * .9));
+
+    /* 筆圧 : 線の太さが一定でない */
+    const dash = [];
+    for (let acc = 0, per = 2 * (w + h) + 60; acc < per;) {
+      const d = 9 + rand() * 48, g = 7 + rand() * 34;
+      dash.push(d.toFixed(1), g.toFixed(1)); acc += d + g;
+    }
+
+    const id = st.id, s1 = seed % 991, s2 = (seed >>> 5) % 991;
+    const blur = (2 + Math.min(w, h) * .026).toFixed(1);
+    /* 耳 : 毛羽立ちは場所によって濃さが違う */
+    const fray = [];
+    for (let acc = 0, per = 2 * (w + h) + 80; acc < per;) {
+      const d = 18 + rand() * 90, g = 8 + rand() * 34;
+      fray.push(d.toFixed(1), g.toFixed(1)); acc += d + g;
+    }
+    el.style.setProperty('--tz-rot', ((rand() - .5) * (grit > 2 ? .34 : .7)).toFixed(3) + 'deg');
+    el.style.setProperty('--tz-baseline', ((rand() - .5) * 0.8).toFixed(2) + 'px');
+    /* 息 : 大きい物はゆっくり。周期も位相も個体ごとに違う */
+    const slow = Math.min(2.2, 1 + Math.min(w, h) / 260);
+    el.style.setProperty('--tz-breath-dur', ((13 + rand() * 9) * slow).toFixed(1) + 's');
+    el.style.setProperty('--tz-breath-delay', (-rand() * 30).toFixed(1) + 's');
+    st.drawDur = 540 + rand() * 420;
+    st.drawJit = rand() * 90;
+
+    st.shell.innerHTML =
+`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<filter id="tzf${id}" x="-20%" y="-20%" width="140%" height="140%">
+<feTurbulence type="fractalNoise" baseFrequency="${(0.015 * grit).toFixed(4)} ${(0.023 * grit).toFixed(4)}" numOctaves="2" seed="${s1}" result="t"/>
+<feDisplacementMap in="SourceGraphic" in2="t" scale="${fiber}" xChannelSelector="R" yChannelSelector="G"/>
+</filter>
+<filter id="tzg${id}" x="0" y="0" width="100%" height="100%">
+<feTurbulence type="fractalNoise" baseFrequency="${gfreq}" numOctaves="${goct}" seed="${s2}" result="n"/>
+<feColorMatrix in="n" type="matrix" values="1 0 0 0 0  1 0 0 0 0  1 0 0 0 0  0 0 0 0 1" result="m"/>
+<feComposite in="m" in2="SourceGraphic" operator="in"/>
+</filter>
+<filter id="tzs${id}" x="-30%" y="-30%" width="160%" height="160%">
+<feGaussianBlur stdDeviation="${blur}"/>
+</filter>
+<filter id="tzb${id}" x="-20%" y="-20%" width="140%" height="140%">
+<feGaussianBlur stdDeviation="1.15"/>
+</filter>
+<radialGradient id="tzp${id}" gradientUnits="userSpaceOnUse" cx="-999" cy="-999" r="${(Math.max(w, h) * .85).toFixed(0)}">
+<stop class="tz-s0" offset="0"/><stop class="tz-s1" offset="1"/>
+</radialGradient>
+<path id="tzd${id}" d="${st.d0}"/>
+<path id="tzq${id}" d="${ring}"/>
+${corr ? `<path id="tzc${id}" d="${corr}"/>` : ''}
+</defs>
+<use class="tz-shade" href="#tzd${id}" filter="url(#tzs${id})"/>
+<g filter="url(#tzf${id})">
+<use class="tz-fill" href="#tzd${id}"/>
+<use class="tz-press" href="#tzd${id}" fill="url(#tzp${id})"/>
+<use class="tz-grain" href="#tzd${id}" filter="url(#tzg${id})"/>
+<use class="tz-edge2" href="#tzd${id}" stroke-dasharray="${dash.join(' ')}" stroke-dashoffset="${(rand() * 160).toFixed(1)}"/>
+<use class="tz-soak" href="#tzd${id}"/>
+<use class="tz-edge" href="#tzd${id}"/>
+${corr ? `<use class="tz-correct" href="#tzc${id}"/>` : ''}
+${hooks ? `<path class="tz-hook" d="${hooks}"/>` : ''}
+${stack}
+${lines}
+<use class="tz-fringe" href="#tzd${id}" filter="url(#tzb${id})" stroke-dasharray="${fray.join(' ')}" stroke-dashoffset="${(rand() * 90).toFixed(1)}"/>
+<use class="tz-ring" href="#tzq${id}"/>
+</g></svg>`;
+
+    st.grad = st.shell.querySelector('radialGradient');
+    /* 輪郭は一本だけ持ち、七つの層が同じものを参照する。
+       変形は一箇所書き換えれば全層に伝わる */
+    st.silhouette = st.shell.querySelector('#tzd' + id);
+    st.len = Math.ceil(st.silhouette.getTotalLength());
+    el.style.setProperty('--tz-len', st.len);
+    const cp = st.shell.querySelector('#tzc' + id);
+    if (cp) el.style.setProperty('--tz-clen', Math.ceil(cp.getTotalLength()));
+    st.dkey = '';
+    return true;
+  }
+
+  /* 手で引いた罫 */
+  function paintRule(el) {
+    const w = Math.round(el.offsetWidth) || 200, h = Math.round(el.offsetHeight) || 9;
+    const rand = mulberry32(fnv(`rule${el.__ri}|${salt}`));
+    const wob = wobbler(rand, 2);
+    const n = Math.max(6, Math.round(w / 9)), f = v => v.toFixed(2), y = h / 2;
+    const pts = [];
+    for (let i = 0; i <= n; i++) pts.push([1 + (w - 2) * i / n, y + wob(i / n / 2) * (h / 2 - .8)]);
+    let d = `M${f(pts[0][0])},${f(pts[0][1])}`;
+    for (let i = 1; i < pts.length; i++) {
+      const p = pts[i - 1], q = pts[i], mx = (p[0] + q[0]) / 2;
+      d += `Q${f(mx)},${f(p[1])} ${f(q[0])},${f(q[1])}`;
+    }
+    el.innerHTML = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">`
+      + `<path d="${d}" stroke-dasharray="${(30 + rand() * 60).toFixed(0)} ${(2 + rand() * 4).toFixed(1)} `
+      + `${(40 + rand() * 80).toFixed(0)} ${(2 + rand() * 5).toFixed(1)}"/></svg>`;
+  }
+
+  /* ---------- 変形 : 押し込み(内向き) と 角起こし(外向き) を重ねる ---------- */
+  function deform(st) {
+    const pd = st.pressD || 0, ld = st.liftD || 0;
+    const key = Math.round(pd * 50) + ':' + Math.round(ld * 50);
+    if (key === st.dkey) return;
+    st.dkey = key;
+    let d = st.d0;
+    if (pd || ld) {
+      const b = st.base, n = st.norm, pw = st.pressW, lw = st.liftW, out = new Array(b.length);
+      for (let i = 0; i < b.length; i++) {
+        const k = (pw ? pw[i] * pd : 0) - (lw ? lw[i] * ld : 0);
+        out[i] = [b[i][0] - n[i][0] * k, b[i][1] - n[i][1] * k];
+      }
+      d = toPath(out);
+    }
+    st.silhouette.setAttribute('d', d);
+  }
+
+  const weights = (st, px, py, sigma) => {
+    const k = -1 / (2 * sigma * sigma);
+    return st.base.map(p => Math.exp(((p[0] - px) ** 2 + (p[1] - py) ** 2) * k));
+  };
+
+  const TAU = 0.145, OMEGA = 2 * Math.PI * 2.6;   /* 減衰 / 揺り戻し */
+
+  function tick(el) {
+    const st = el.__tz;
+    st.raf = 0;
+    const t = (performance.now() - st.t0) / 1000;
+    if (st.phase === 'press') {
+      if (t >= 0.16) { st.pressD = st.D; deform(st); return; }
+      st.pressD = st.D * (1 - Math.exp(-t / 0.032));
+    } else {
+      if (t >= 0.8) { st.pressD = 0; deform(st); return; }
+      st.pressD = st.d1 * Math.exp(-t / TAU) * Math.cos(OMEGA * t);
+    }
+    deform(st);
+    st.raf = requestAnimationFrame(() => tick(el));
+  }
+
+  /* ---------- 触れる ---------- */
+  function press(el, x, y) {
+    const st = el.__tz;
+    if (st.grad) { st.grad.setAttribute('cx', x + st.pad); st.grad.setAttribute('cy', y + st.pad); }
+    el.classList.add('is-press');
+    if (reduce.matches) return;
+
+    const nx = (x / st.w - .5) * 2, ny = (y / st.h - .5) * 2;
+    const tilt = el.classList.contains('tz-card') ? 1.1 : 2.1;
+    el.style.transformOrigin = `${x}px ${y}px`;
+    el.style.setProperty('--tz-rx', (-ny * tilt).toFixed(2) + 'deg');
+    el.style.setProperty('--tz-ry', (nx * tilt).toFixed(2) + 'deg');
+    el.style.setProperty('--tz-sc', '.988');
+    el.style.setProperty('--tz-ty', '0.5px');
+
+    /* 指の位置からの距離で変形を決める。広がりは部品ごとに違う :
+       ボタンは一点がへこみ、札は一枚がしなる */
+    const sigma = Math.max(num(el, '--tz-sigma-min'), Math.min(st.w, st.h) * num(el, '--tz-sigma'));
+    st.pressW = weights(st, x + st.pad, y + st.pad, sigma);
+    st.D = Math.min(num(el, '--tz-dent'), Math.min(st.w, st.h) * .1);
+    st.phase = 'press'; st.t0 = performance.now();
+    cancelAnimationFrame(st.raf); tick(el);
+  }
+
+  function release(el) {
+    if (!el.classList.contains('is-press')) return;
+    el.classList.remove('is-press');
+    ['--tz-rx', '--tz-ry', '--tz-sc', '--tz-ty'].forEach(p => el.style.removeProperty(p));
+    const st = el.__tz;
+    if (st.pressW) {
+      st.d1 = st.pressD || st.D; st.phase = 'release'; st.t0 = performance.now();
+      cancelAnimationFrame(st.raf); tick(el);
+      /* フレームが止まっても、へこんだままにはしない */
+      clearTimeout(st.settleTO);
+      st.settleTO = setTimeout(() => {
+        cancelAnimationFrame(st.raf); st.raf = 0; st.pressD = 0; deform(st);
+      }, 900);
+    }
+    /* 使い込み : 触れられるほど、輪郭と地肌がわずかに馴染む */
+    st.wear = Math.min(st.wear + 1, 12);
+    el.style.setProperty('--tz-wear', (st.wear / 12).toFixed(3));
+  }
+
+  /* ---------- 記入 : 書いた跡が罫に残り、穂先が文字に従う ---------- */
+  const mctx = document.createElement('canvas').getContext('2d');
+  function textWidth(ctl, str) {
+    if (!str) return 0;
+    const cs = getComputedStyle(ctl);
+    mctx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+    /* canvas は letter-spacing を見ない : 字間は自分で足す */
+    const ls = parseFloat(cs.letterSpacing) || 0;
+    return mctx.measureText(str).width + ls * [...str].length;
+  }
+
+  function ink(well) {
+    const ctl = well.__ctl, st = well.__tz;
+    if (!ctl || !st.base) return;
+    const cs = getComputedStyle(ctl);
+    const padL = parseFloat(cs.paddingLeft) || 0, padR = parseFloat(cs.paddingRight) || 0;
+    const inner = Math.max(0, ctl.clientWidth - padL - padR);
+    const left = st.pad + ctl.offsetLeft + padL;
+    const v = ctl.value;
+
+    well.classList.toggle('has-ink', v.length > 0);
+    if (ctl.tagName === 'INPUT') {
+      well.style.setProperty('--tz-ink-from', left.toFixed(1));
+      well.style.setProperty('--tz-ink-len', Math.min(textWidth(ctl, v), inner).toFixed(1));
+      let caret = v.length;
+      try { if (ctl.selectionStart !== null) caret = ctl.selectionStart; } catch (_) {}
+      const x = clamp(textWidth(ctl, v.slice(0, caret)) - ctl.scrollLeft, 0, inner);
+      well.style.setProperty('--tz-nib-x', (ctl.offsetLeft + padL + x).toFixed(1) + 'px');
+      well.style.setProperty('--tz-nib-b',
+        (parseFloat(cs.paddingBottom) - 1).toFixed(1) + 'px');
+    }
+  }
+
+  /* 選 : 書いた文字ではなく、選ばれた言葉の幅がそのまま墨になる */
+  function inkPick(well) {
+    const val = well.querySelector('.tz-pick__val');
+    if (!val || !well.__tz.base) return;
+    const r = val.getBoundingClientRect(), wr = well.getBoundingClientRect();
+    const empty = well.querySelector('.tz-pick').classList.contains('is-empty');
+    well.style.setProperty('--tz-ink-from', (well.__tz.pad + (r.left - wr.left)).toFixed(1));
+    well.style.setProperty('--tz-ink-len', (empty ? 0 : r.width).toFixed(1));
+  }
+
+  /* ---------- 生まれる ---------- */
+  function scribe(el, order) {
+    const st = el.__tz;
+    if (reduce.matches || !st.len) return;
+    el.style.setProperty('--tz-draw-dur', st.drawDur.toFixed(0) + 'ms');
+    el.style.setProperty('--tz-draw-delay', (Math.min(order, 11) * 46 + st.drawJit).toFixed(0) + 'ms');
+    el.classList.remove('is-drawing');
+    void el.offsetWidth;                       /* アニメーションを確実に巻き戻す */
+    el.classList.add('is-drawing');
+    clearTimeout(st.scribeTO);
+    st.scribeTO = setTimeout(() => el.classList.remove('is-drawing'),
+                             Math.min(order, 11) * 46 + st.drawJit + st.drawDur * 2.4);
+  }
+
+  /* ---------- 気配 : 触れる前から応える。触れられる物だけ ---------- */
+  const skins = [...document.querySelectorAll('.tz, .tz-card, .tz-panel, .tz-well')];
+  /* 押される物と、気配だけ感じる物は別 :
+     欄を押しても沈まない。ポインタを捕まえたら文字も選べなくなる */
+  const isPressable = el => !el.disabled &&
+    (el.matches('button, a[href]') || el.matches('[tabindex]:not([tabindex="-1"])'));
+  const isLive = el => isPressable(el) || el.classList.contains('tz-well') ||
+    !!el.querySelector('input:not([disabled]), textarea:not([disabled]), select:not([disabled])');
+  let pointer = null, nearRaf = 0;
+
+  function sense() {
+    nearRaf = 0;
+    for (const el of skins) {
+      const st = el.__tz;
+      if (!st.live) continue;
+      const R = num(el, '--tz-reach');
+      if (!R) continue;
+      const curl = num(el, '--tz-curl'), tilt = num(el, '--tz-tilt');
+      const arrive = num(el, '--tz-arrive');
+      let m = 0, ux = 0, uy = 0, px = 0, py = 0;
+      if (pointer) {
+        const r = el.getBoundingClientRect();
+        if (r.bottom > -R && r.top < innerHeight + R) {
+          const dx = Math.max(r.left - pointer.x, 0, pointer.x - r.right);
+          const dy = Math.max(r.top - pointer.y, 0, pointer.y - r.bottom);
+          const d = Math.hypot(dx, dy);
+          if (d < R) {
+            /* 近づくほど強く。arrive を持つ部品は、手が着いたら平らに戻る */
+            m = (1 - d / R) ** 2 * (arrive ? Math.min(1, d / arrive) : 1);
+            const ox = pointer.x - (r.left + r.width / 2);
+            const oy = pointer.y - (r.top + r.height / 2);
+            const L = Math.hypot(ox, oy) || 1;
+            ux = ox / L; uy = oy / L;
+            px = clamp(pointer.x - r.left, 0, r.width);
+            py = clamp(pointer.y - r.top, 0, r.height);
+          }
+        }
+      }
+      if (m === 0 && st.near === 0) continue;
+      st.near = m;
+      /* 近い辺が手の側へ持ち上がる。押したときの傾きとは逆向き */
+      el.style.setProperty('--tz-nx', (-ux * m * tilt).toFixed(2) + 'deg');
+      el.style.setProperty('--tz-ny', ( uy * m * tilt).toFixed(2) + 'deg');
+      el.style.setProperty('--tz-nz', (-m * (curl ? 2.6 : 2)).toFixed(2) + 'px');
+      el.style.setProperty('--tz-lift', m.toFixed(3));
+
+      /* 角が起きる : 手にいちばん近い角だけが、紙から離れる */
+      if (curl && st.base) {
+        if (m === 0) { st.liftD = 0; deform(st); continue; }
+        const c = [[0, 0], [st.w, 0], [st.w, st.h], [0, st.h]]
+          .reduce((best, p) => {
+            const d2 = (p[0] - px) ** 2 + (p[1] - py) ** 2;
+            return d2 < best.d2 ? { p, d2 } : best;
+          }, { p: null, d2: Infinity }).p;
+        const sigma = Math.max(70, Math.min(st.w, st.h) * .8);
+        if (st.corner !== c[0] + ',' + c[1]) {
+          st.corner = c[0] + ',' + c[1];
+          st.liftW = weights(st, c[0] + st.pad, c[1] + st.pad, sigma);
+        }
+        st.liftD = m * curl;
+        deform(st);
+      }
+    }
+  }
+  const schedule = () => { if (!nearRaf) nearRaf = requestAnimationFrame(sense); };
+
+  if (!reduce.matches && matchMedia('(hover:hover)').matches) {
+    addEventListener('pointermove', e => {
+      if (e.pointerType === 'touch') return;
+      pointer = { x: e.clientX, y: e.clientY }; schedule();
+    }, { passive: true });
+    addEventListener('pointerdown', schedule, { passive: true });
+    addEventListener('scroll', schedule, { passive: true });
+    document.addEventListener('pointerleave', () => { pointer = null; schedule(); });
+    addEventListener('blur', () => { pointer = null; schedule(); });
+  }
+
+  /* ---------- init ---------- */
+  const ro = new ResizeObserver(es => es.forEach(e => paint(e.target)));
+
+  skins.forEach((el, i) => {
+    const shell = document.createElement('span');
+    shell.className = 'tz-shell';
+    shell.setAttribute('aria-hidden', 'true');
+    el.prepend(shell);
+
+    /* ボタンだけは中身を一枚に包む。札は構造を持つので触らない */
+    if (el.classList.contains('tz')) {
+      const label = document.createElement('span');
+      label.className = 'tz-label';
+      while (shell.nextSibling) label.appendChild(shell.nextSibling);
+      el.appendChild(label);
+    } else {
+      [...el.children].filter(c => c !== shell)
+        .forEach((c, ci) => c.style.setProperty('--tz-ci', ci));
+    }
+
+    el.__tz = { id: ++uid, shell, wear: 0, w: 0, h: 0, salt: -1, near: 0, pad: 10,
+                pressD: 0, liftD: 0, raf: 0, live: isLive(el),
+                key: `${el.dataset.seed || el.className + el.textContent.trim().slice(0, 24)}#${i}` };
+    paint(el);
+    scribe(el, i);
+    ro.observe(el);
+
+    if (!isPressable(el)) return;
+
+    el.addEventListener('pointerdown', e => {
+      if (el.disabled) return;
+      const r = el.getBoundingClientRect();
+      press(el, e.clientX - r.left, e.clientY - r.top);
+      try { el.setPointerCapture(e.pointerId); } catch (_) {}
+    });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(t =>
+      el.addEventListener(t, () => release(el)));
+    el.addEventListener('keydown', e => {
+      const keys = el.tagName === 'BUTTON' ? [' ', 'Enter'] : ['Enter'];
+      if (e.repeat || !keys.includes(e.key)) return;
+      press(el, el.offsetWidth / 2, el.offsetHeight * .72);
+    });
+    el.addEventListener('keyup', () => release(el));
+    el.addEventListener('blur', () => release(el));
+  });
+
+  /* ---------- 欄を繋ぐ ---------- */
+  document.querySelectorAll('.tz-well').forEach(well => {
+    const ctl = well.querySelector('input, textarea');
+    if (!ctl) return;
+    well.__ctl = ctl;
+    well.classList.toggle('is-off', ctl.disabled);
+    const refresh = () => ink(well);
+    ['input', 'keyup', 'click', 'select', 'scroll'].forEach(t =>
+      ctl.addEventListener(t, refresh, { passive: true }));
+    ctl.addEventListener('focus', refresh);
+    /* 変換中は、まだ墨が定まっていない : 染みを点線にする */
+    ctl.addEventListener('compositionstart', () => well.classList.add('is-composing'));
+    ctl.addEventListener('compositionend',   () => { well.classList.remove('is-composing'); refresh(); });
+    refresh();
+  });
+
+  /* ---------- 選ぶ ---------- */
+  /* 手で描いた丸 : 一周を少し行き過ぎて、閉じきらない */
+  function circleMark(rand) {
+    const n = 30, pts = [], wob = wobbler(rand, 1), cx = 9.5, cy = 9.5;
+    const start = -2.1, sweep = Math.PI * 2 + .5;
+    for (let i = 0; i <= n; i++) {
+      const t = i / n, a = start + t * sweep;
+      pts.push([cx + Math.cos(a) * (7.4 + wob(t / 2) * 1.05),
+                cy + Math.sin(a) * (6.6 + wob((t + .31) / 2) * 1.05)]);
+    }
+    return toPath(pts, false);
+  }
+
+  document.querySelectorAll('.tz-well--pick').forEach((well, wi) => {
+    const btn   = well.querySelector('.tz-pick');
+    const panel = well.querySelector('.tz-slips');
+    const val   = well.querySelector('.tz-pick__val');
+    if (!btn || !panel) return;
+    const opts = [...panel.querySelectorAll('[role="option"]')];
+    const rand = mulberry32(fnv('pick|' + wi));
+    const usable = i => opts[i] && opts[i].getAttribute('aria-disabled') !== 'true';
+    let open = false, active = opts.findIndex(o => o.getAttribute('aria-selected') === 'true');
+    if (active < 0) active = opts.findIndex((_, i) => usable(i));
+
+    const mark = circleMark(rand);
+    opts.forEach((o, i) => {
+      o.id ||= `tz-slip-${wi}-${i}`;
+      /* 個体差 : 札は揃って並ばない */
+      o.style.setProperty('--tz-si', i);
+      o.style.setProperty('--tz-sr', ((rand() - .5) * .55).toFixed(2) + 'deg');
+      o.style.setProperty('--tz-sx', ((rand() - .5) * 1.8).toFixed(2) + 'px');
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('class', 'tz-slip__mark');
+      svg.setAttribute('viewBox', '0 0 19 19');
+      svg.setAttribute('aria-hidden', 'true');
+      svg.setAttribute('filter', 'url(#tz-fiber-g)');
+      svg.innerHTML = `<path d="${mark}"/>`;
+      o.prepend(svg);
+      const path = svg.querySelector('path');
+      o.style.setProperty('--mlen', Math.ceil(path.getTotalLength()));
+    });
+
+    const setActive = i => {
+      if (!usable(i)) return;
+      active = i;
+      opts.forEach((o, k) => o.classList.toggle('is-active', k === i));
+      btn.setAttribute('aria-activedescendant', opts[i].id);
+      opts[i].scrollIntoView({ block: 'nearest' });
+    };
+
+    const choose = i => {
+      if (!usable(i)) return;
+      opts.forEach((o, k) => o.setAttribute('aria-selected', String(k === i)));
+      val.textContent = opts[i].querySelector('.tz-slip__label').textContent;
+      btn.classList.remove('is-empty');
+      requestAnimationFrame(() => inkPick(well));   /* 選んだ言葉が罫に移る */
+    };
+
+    const place = () => {
+      panel.classList.remove('is-up');
+      const r = well.getBoundingClientRect();
+      if (r.bottom + panel.offsetHeight + 24 > innerHeight && r.top > panel.offsetHeight + 24)
+        panel.classList.add('is-up');
+    };
+
+    function openList(goTo) {
+      if (open) return;
+      open = true;
+      panel.hidden = false;
+      paint(panel);                   /* 隠れている間は測れない : 出した瞬間に漉く */
+      well.classList.add('is-open');
+      btn.setAttribute('aria-expanded', 'true');
+      place();
+      setActive(goTo ?? active);
+      addEventListener('pointerdown', onOutside, true);
+      addEventListener('resize', place, { passive: true });
+    }
+
+    function closeList(back) {
+      if (!open) return;
+      open = false;
+      well.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.removeAttribute('aria-activedescendant');
+      panel.hidden = true;
+      removeEventListener('pointerdown', onOutside, true);
+      removeEventListener('resize', place);
+      if (back) btn.focus();
+    }
+
+    const onOutside = e => { if (!well.contains(e.target)) closeList(false); };
+
+    const step = (from, dir) => {
+      for (let i = from + dir; i >= 0 && i < opts.length; i += dir) if (usable(i)) return i;
+      return from;
+    };
+    const edge = dir => {
+      for (let i = dir > 0 ? 0 : opts.length - 1; i >= 0 && i < opts.length; i += dir)
+        if (usable(i)) return i;
+      return active;
+    };
+
+    btn.addEventListener('click', () => open ? closeList(false) : openList());
+    btn.addEventListener('keydown', e => {
+      const k = e.key;
+      if (!open) {
+        if (k === 'ArrowDown' || k === 'ArrowUp' || k === 'Enter' || k === ' ') {
+          e.preventDefault(); openList(k === 'ArrowUp' ? edge(-1) : undefined);
+        }
+        return;
+      }
+      if (k === 'ArrowDown')      { e.preventDefault(); setActive(step(active, 1)); }
+      else if (k === 'ArrowUp')   { e.preventDefault(); setActive(step(active, -1)); }
+      else if (k === 'Home')      { e.preventDefault(); setActive(edge(1)); }
+      else if (k === 'End')       { e.preventDefault(); setActive(edge(-1)); }
+      else if (k === 'Enter' || k === ' ') { e.preventDefault(); choose(active); closeList(true); }
+      else if (k === 'Escape')    { e.preventDefault(); closeList(true); }
+      else if (k === 'Tab')       { closeList(false); }
+      else if (k.length === 1) {   /* 頭の一字で探す */
+        const at = opts.findIndex((o, i) =>
+          usable(i) && i !== active &&
+          o.querySelector('.tz-slip__label').textContent.trim().startsWith(k));
+        if (at >= 0) setActive(at);
+      }
+    });
+
+    opts.forEach((o, i) => {
+      o.addEventListener('pointerenter', () => open && setActive(i));
+      o.addEventListener('click', () => { choose(i); closeList(true); });
+    });
+
+    well.__inkPick = () => inkPick(well);
+    requestAnimationFrame(() => inkPick(well));
+  });
+
+  const rules = [...document.querySelectorAll('.tz-rule')];
+  rules.forEach((el, i) => { el.__ri = i; paintRule(el); });
+
+  /* 画面の外にある個体は息を止める : 見えないものを動かし続けない */
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      e.target.__tz.shell.style.animationPlayState = e.isIntersecting ? '' : 'paused';
+    }), { rootMargin: '80px' });
+    skins.forEach(el => io.observe(el));
+  }
+
+  /* タブが隠れている間に止まった動きを、戻った時点で片付ける */
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible') return;
+    for (const el of skins) {
+      const st = el.__tz;
+      if (st.pressD && !el.classList.contains('is-press')) {
+        cancelAnimationFrame(st.raf); st.raf = 0; st.pressD = 0; deform(st);
+      }
+    }
+  });
+
+  const reInk = () => document.querySelectorAll('.tz-well').forEach(w => {
+    if (w.__inkPick) w.__inkPick(); else ink(w);
+  });
+  new ResizeObserver(reInk).observe(document.body);
+
+  if (document.fonts) document.fonts.ready.then(() => {
+    skins.forEach(el => { el.__tz.w = 0; paint(el); });
+    rules.forEach(paintRule);
+    reInk();
+  });
+
+  document.querySelector('[data-reseed]')?.addEventListener('click', () => {
+    salt++;
+    skins.forEach((el, i) => { if (paint(el)) scribe(el, i); });
+    rules.forEach(paintRule);
+    reInk();
+  });
+})();
+</script>
+</body>
+</html>
