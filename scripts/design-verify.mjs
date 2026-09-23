@@ -149,8 +149,8 @@ try {
     try {
       await client.connect(
         new StdioClientTransport({
-          command: process.execPath,
-          args: [cli, 'mcp'],
+          command: 'npx',
+          args: ['mitame-design'],
           cwd: consumer,
           env: { ...process.env, ...env },
         }),

@@ -87,15 +87,14 @@ CLI/MCP startup. Do not point the checker at a server with side-effectful GETs.
 
 ### MCP and task skills
 
-A stdio client launches `node` with the absolute installed path to
-`harness/cli.mjs` and argument `mcp`. Set `TEZAWARI_PREVIEW_ORIGIN` in its environment.
-Resolve the package location with:
+A stdio client launches `npx mitame-design` from the consumer project root.
+Set `TEZAWARI_PREVIEW_ORIGIN` in its environment. The command uses the
+installed `@mitame-ai/design-system` package. To locate that package, run:
 
 ```sh
 node --input-type=module -e "console.log(import.meta.resolve('@mitame-ai/design-system/package.json'))"
 ```
 
-Use the sibling `harness/cli.mjs`; startup is independent of the working directory.
 Only protocol messages go to stdout. Tools are `search_design({query})`,
 `resolve_design_context({scenarioId})`, and `check_design({scenarioId, route})`.
 Resources use listed `tezawari://design/…` URIs. Unknown IDs and broken references

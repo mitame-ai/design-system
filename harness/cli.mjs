@@ -32,6 +32,7 @@ try {
       process.exitCode = result.mechanicalStatus === 'pass' ? 0 : 1
       break
     }
+    case undefined:
     case 'mcp':
       assert.equal(args.length, 0, 'Usage: tezawari-design mcp')
       await (await import('./mcp.mjs')).serve()

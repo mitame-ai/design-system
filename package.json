@@ -1,6 +1,6 @@
 {
   "name": "@mitame-ai/design-system",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mitame-ai/design-system.git"
@@ -100,6 +100,7 @@
     ]
   },
   "bin": {
+    "mitame-design": "./harness/cli.mjs",
     "tezawari-design": "./harness/cli.mjs"
   }
 }

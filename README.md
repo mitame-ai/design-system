@@ -33,7 +33,7 @@ GitHub Packages は公開パッケージの取得にも認証が必要です。`
 次に、**利用するアプリのディレクトリ**でインストールします。
 
 ```sh
-pnpm add @mitame-ai/design-system@0.1.0
+pnpm add @mitame-ai/design-system@0.3.0
 pnpm exec tezawari-design install-skills .
 pnpm exec tezawari-design resolve scenario.profile-edit
 ```
@@ -52,7 +52,7 @@ pnpm pack --pack-destination ./test-results/packages
 パスは実際の tarball の絶対パスに置き換えてください。
 
 ```sh
-pnpm add /path/to/mitame-ai-design-system-0.1.0.tgz
+pnpm add /path/to/mitame-ai-design-system-0.3.0.tgz
 pnpm exec tezawari-design install-skills .
 pnpm exec tezawari-design resolve scenario.profile-edit
 ```
