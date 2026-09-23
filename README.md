@@ -98,6 +98,29 @@ Tailwind CSS をお使いの場合は、テーマファイルを読み込むこ�
 <div className="tz-stage">…</div>
 ```
 
+### サーバーサイドレンダリング（SSR）
+
+コンポーネントはサーバーでも描画できます。`dist/index.js` は `'use client'` を宣言しているため、Next.js App Router などの Server Components からそのまま import できます。
+
+サーバーでは輪郭の描画（`paint()`）は行われません。実寸法の計測が必要なため、装飾はハイドレーション後に付け足されます。SSR の HTML には意味のあるマークアップ（ボタン、入力欄、選んだ値の言葉、開いている問いなど）が残り、形状の個体差・罫・印はクライアントで再現されます。
+
+```tsx
+// app/page.tsx（Server Component）
+import { Button, Field, FieldLabel, Input } from '@mitame-ai/design-system'
+
+export default function Page() {
+  return (
+    <Field>
+      <FieldLabel htmlFor="name">名前</FieldLabel>
+      <Input id="name" />
+      <Button variant="ink">保存する</Button>
+    </Field>
+  )
+}
+```
+
+SSR とクライアントで同じ HTML になるよう、個体差のある値はすべて `useId` と salt から決定論的に生成しています。`Math.random()` や計測値に依存する描画は初回レンダリングには使いません。
+
 ## コンポーネント一覧
 
 役割と API は shadcn/ui に倣い、見た目と動きは [DESIGN.md](DESIGN.md) に従います。

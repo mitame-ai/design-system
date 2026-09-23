@@ -1,5 +1,6 @@
-import { type ComponentPropsWithoutRef, useId, useMemo } from 'react'
+import { type ComponentPropsWithoutRef, useEffect, useId, useMemo } from 'react'
 import { useSalt } from '../hooks/useSalt'
+import { ensureDefs } from './tezawari/defs'
 import { circleMark, dashMark, dotMark, frameMark, strokeMark, tickMark } from './tezawari/geometry'
 import { fnv, mulberry32, type Rand } from './tezawari/random'
 import { cn } from './utils'
@@ -33,6 +34,8 @@ export interface MarkProps extends Omit<ComponentPropsWithoutRef<'svg'>, 'childr
 export function Mark({ kind, seed, className, ...props }: MarkProps) {
   const id = useId()
   const salt = useSalt()
+  /* 印は描画エンジンを通さないが繊維フィルターを参照する。登録される要素が無い画面でも用意する */
+  useEffect(ensureDefs, [])
   const d = useMemo(
     () => drawers[kind](mulberry32(fnv(`${kind}|${seed ?? id}|${salt}`))),
     [kind, seed, id, salt],
@@ -87,6 +90,7 @@ export interface GlyphProps extends Omit<ComponentPropsWithoutRef<'svg'>, 'child
 }
 
 export function Glyph({ name, className, ...props }: GlyphProps) {
+  useEffect(ensureDefs, [])
   return (
     <svg
       className={cn('tz-glyph', className)}

@@ -8,6 +8,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useId,
   useMemo,
   useState,
 } from 'react'
@@ -16,6 +17,7 @@ import { useSkin } from '../hooks/useSkin'
 import { useSlip } from '../hooks/useSlip'
 import { Glyph } from '../lib/marks'
 import { Shell } from '../lib/slot'
+import { fnv, mulberry32 } from '../lib/tezawari/random'
 import { cn } from '../lib/utils'
 import { Button, type ButtonProps } from './Button'
 import { Input, type InputProps } from './Input'
@@ -344,7 +346,9 @@ export function SidebarMenuSkeleton({
   showIcon = false,
   ...props
 }: ComponentPropsWithoutRef<'div'> & { showIcon?: boolean }) {
-  const [width] = useState(() => `${50 + Math.floor(Math.random() * 40)}%`)
+  const id = useId()
+  /* 幅は id を種に決定論的に作る : SSR とクライアントで同じ形にしないとハイドレーションがずれる */
+  const [width] = useState(() => `${50 + Math.floor(mulberry32(fnv(`sk|${id}`))() * 40)}%`)
   return (
     <div className={cn('tz-side__skeleton', className)} {...props}>
       {showIcon && <Skeleton className="tz-side__skeleton-icon" />}

@@ -33,6 +33,8 @@ export default defineConfig({
     rollupOptions: {
       external,
       output: {
+        /* Server Component (RSC) 環境から import できるよう、エントリをクライアント境界として明示 */
+        banner: `'use client';`,
         assetFileNames: (info) =>
           info.names?.some((n) => n.endsWith('.css')) ? 'tezawari.css' : '[name][extname]',
       },

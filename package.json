@@ -1,6 +1,6 @@
 {
   "name": "@mitame-ai/design-system",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mitame-ai/design-system.git"
@@ -33,7 +33,8 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     },
     "./styles.css": "./dist/tezawari.css",
     "./package.json": "./package.json",
@@ -52,7 +53,8 @@
     "design:generate": "node scripts/design-generate.mjs",
     "design:drift": "node scripts/design-generate.mjs --check",
     "design:check": "node scripts/design-verify.mjs",
-    "test:harness": "node --test test/harness.test.mjs"
+    "test:harness": "node --test test/harness.test.mjs",
+    "test:ssr": "node --test test/ssr.test.mjs"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",

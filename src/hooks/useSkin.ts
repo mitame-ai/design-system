@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { register, type SkinHandle } from '../lib/tezawari/registry'
 import type { TezawariOptions } from '../lib/tezawari/types'
-
-const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
+import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect'
 
 export interface UseSkinOptions extends TezawariOptions {
   /** false のあいだは描画エンジンに登録しない（variant によって面を持たない部品向け） */

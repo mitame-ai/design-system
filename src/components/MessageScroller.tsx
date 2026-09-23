@@ -6,12 +6,12 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
 } from 'react'
 import { useComposedRefs } from '../hooks/useComposedRefs'
+import { useIsomorphicLayoutEffect } from '../hooks/useIsomorphicLayoutEffect'
 import { Glyph } from '../lib/marks'
 import { prefersReducedMotion } from '../lib/tezawari/env'
 import { cn } from '../lib/utils'
@@ -116,7 +116,7 @@ export const MessageScrollerViewport = forwardRef<HTMLDivElement, ComponentProps
     }, [c.viewport, setEdges])
 
     /* 最初は末尾から読み始める */
-    useLayoutEffect(() => {
+    useIsomorphicLayoutEffect(() => {
       const el = c.viewport.current
       if (el) el.scrollTop = el.scrollHeight
       measure()

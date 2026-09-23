@@ -1,19 +1,21 @@
 import {
+  Children,
   type ComponentPropsWithoutRef,
   createContext,
   forwardRef,
+  isValidElement,
   type ReactNode,
   useCallback,
   useContext,
   useEffect,
   useId,
-  useLayoutEffect,
   useMemo,
   useReducer,
   useRef,
   useState,
 } from 'react'
 import { useComposedRefs } from '../hooks/useComposedRefs'
+import { useIsomorphicLayoutEffect } from '../hooks/useIsomorphicLayoutEffect'
 import { useTezawari } from '../hooks/useTezawari'
 import { Shell } from '../lib/slot'
 import { circleMark } from '../lib/tezawari/geometry'
@@ -96,6 +98,25 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(function Select(
   const items = useRef<ItemRec[]>([])
   const triggerRef = useRef<HTMLButtonElement>(null)
   const pending = useRef(-1)
+
+  /* 宣言された選択肢の言葉を子要素から読み取る。
+     項目の登録は効果でしか行われないため、SSR では選んだ値の言葉が分からない。宣言値をフォールバックに使う */
+  const declared = useMemo(() => {
+    const labels = new Map<string, string>()
+    const walk = (kids: ReactNode) => {
+      Children.forEach(kids, (c) => {
+        if (!isValidElement(c)) return
+        if (c.type === SelectItem) {
+          const p = c.props as SelectItemProps
+          if (typeof p.children === 'string') labels.set(p.value, p.children)
+        } else {
+          walk((c.props as { children?: ReactNode }).children)
+        }
+      })
+    }
+    walk(children)
+    return labels
+  }, [children])
 
   const registerItem = useCallback((rec: ItemRec) => {
     items.current.push(rec)
@@ -180,7 +201,7 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(function Select(
   }, [open, close, openList])
 
   /* 展開時の初期選択またはフォーカス位置を決定 */
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (!open) return
     setActive(pending.current)
   }, [open, setActive])
@@ -196,7 +217,7 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(function Select(
   }, [open, close])
 
   /* 個体差の付与：各選択肢の傾き・位置の微細なゆらぎと丸印のパスを生成 */
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     void version
     const rand = mulberry32(fnv(`pick|${key}`))
     const mark = circleMark(rand)
@@ -270,7 +291,7 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(function Select(
       valueId,
       open,
       value,
-      label: list.find((r) => r.value === value)?.label,
+      label: list.find((r) => r.value === value)?.label ?? declared.get(value ?? ''),
       activeId: list[activeIndex]?.id ?? null,
       items,
       registerItem,
@@ -297,6 +318,7 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(function Select(
     close,
     openList,
     onTriggerKeyDown,
+    declared,
   ])
 
   return (
@@ -388,7 +410,7 @@ export const SelectContent = forwardRef<HTMLDivElement, SelectContentProps>(func
   const labelledBy = props['aria-labelledby']
 
   /* 展開時に寸法を計測してシェルの描画を行う */
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (!s.open) return
     handle.current?.repaint(true)
     const place = () => {
@@ -434,7 +456,7 @@ export function SelectItem({
   const id = useId()
   const label = typeof children === 'string' ? children : ''
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const node = el.current
     if (!node) return
     const text = label || (node.querySelector('.tz-slip__label')?.textContent ?? '')

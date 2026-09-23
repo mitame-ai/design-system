@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "packageVersion": "0.1.0",
-  "contractRevision": "deb02502051b2009737d4c6b7b17a4a51b86cdd175adcb0bd315fb3e392829e6",
+  "packageVersion": "0.2.0",
+  "contractRevision": "faa6dd8b11c24a52a762526a8d7478b8bb18d653ac47896c72748d2d77a67edc",
   "resources": [
     {
       "id": "design.language",
@@ -34,7 +34,7 @@
       "path": "README.md",
       "refs": [],
       "uri": "tezawari://design/design.installation",
-      "digest": "01a36affd455ba2c75c6c8a287432fc0cc7e5e582fbcfce2d46656d7a8f102bf"
+      "digest": "8f55dabb67986f486e067e1cc1ad006fffd809a66d7cd3ea16b38e68292d012a"
     },
     {
       "id": "design.tokens",

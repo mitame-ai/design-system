@@ -1,5 +1,6 @@
-import { type ReactNode, useCallback, useLayoutEffect, useState } from 'react'
+import { type ReactNode, useCallback, useState } from 'react'
 import type { DateRange } from 'react-day-picker'
+import { useIsomorphicLayoutEffect } from '../hooks/useIsomorphicLayoutEffect'
 import { useSkin } from '../hooks/useSkin'
 import { Glyph } from '../lib/marks'
 import { Shell } from '../lib/slot'
@@ -145,7 +146,7 @@ function PickerWell({
   /* 選んだ日付の幅だけ、罫に墨を写す */
   const reink = useCallback(() => handle.current?.ink(), [handle])
   // biome-ignore lint/correctness/useExhaustiveDependencies: 書かれた日付が変わるたびに測り直す
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const raf = requestAnimationFrame(reink)
     return () => cancelAnimationFrame(raf)
   }, [text, reink])

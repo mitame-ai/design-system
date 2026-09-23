@@ -1,9 +1,7 @@
-import { type RefObject, useEffect, useLayoutEffect, useRef } from 'react'
+import { type RefObject, useRef } from 'react'
 import { register, type SkinHandle } from '../lib/tezawari/registry'
 import type { TezawariOptions } from '../lib/tezawari/types'
-
-/** SSR 環境では useLayoutEffect が実行できないため、フォールバックとして useEffect を使用 */
-const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
+import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect'
 
 /**
  * 対象の DOM 要素を Tezawari の描画エンジンに登録するフック。

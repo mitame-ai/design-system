@@ -1,19 +1,12 @@
-import {
-  type ComponentPropsWithoutRef,
-  forwardRef,
-  useEffect,
-  useId,
-  useLayoutEffect,
-  useRef,
-} from 'react'
+import { type ComponentPropsWithoutRef, forwardRef, useId, useRef } from 'react'
 import { useComposedRefs } from '../hooks/useComposedRefs'
+import { useIsomorphicLayoutEffect } from '../hooks/useIsomorphicLayoutEffect'
 import { useSalt } from '../hooks/useSalt'
+import { ensureDefs } from '../lib/tezawari/defs'
 import { toPath } from '../lib/tezawari/geometry'
 import { fnv, mulberry32, wobbler } from '../lib/tezawari/random'
 import type { Point } from '../lib/tezawari/types'
 import { cn } from '../lib/utils'
-
-const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
 
 /**
  * 表 — 行と行のあいだに、手で罫を引く。
@@ -34,6 +27,8 @@ export const Table = forwardRef<HTMLTableElement, ComponentPropsWithoutRef<'tabl
     const el = table.current
     const svg = sheet.current
     if (!el || !svg) return
+    /* 罫の SVG は #tz-fiber-g を参照する : 描画エンジンに登録される要素が無くてもフィルターを用意する */
+    ensureDefs()
     const draw = () => {
       const w = el.offsetWidth
       const h = el.offsetHeight

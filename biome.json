@@ -41,6 +41,20 @@
       "suspicious": {
         "noAssignInExpressions": "off"
       },
+      "correctness": {
+        "useExhaustiveDependencies": {
+          "level": "error",
+          "options": {
+            "hooks": [
+              {
+                "name": "useIsomorphicLayoutEffect",
+                "closureIndex": 0,
+                "dependenciesIndex": 1
+              }
+            ]
+          }
+        }
+      },
       "style": {
         "noNonNullAssertion": "off",
         "noParameterAssign": "off",

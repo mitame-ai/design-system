@@ -1,18 +1,21 @@
 import {
+  Children,
   type ComponentPropsWithoutRef,
   createContext,
   type FormEvent,
   forwardRef,
+  isValidElement,
   type ReactNode,
   useCallback,
   useContext,
   useEffect,
   useId,
-  useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
 import { useComposedRefs } from '../hooks/useComposedRefs'
+import { useIsomorphicLayoutEffect } from '../hooks/useIsomorphicLayoutEffect'
 import { useSkin } from '../hooks/useSkin'
 import { Mark } from '../lib/marks'
 import { Shell } from '../lib/slot'
@@ -82,7 +85,26 @@ export function Questionnaire({
   children,
   ...props
 }: QuestionnaireProps) {
-  const metas = useRef(new Map<string, ItemMeta>())
+  /* 宣言された問いを子要素から読み取る。登録が効果でしか行われないため、
+     SSR や初回描画では開いている問い・全問数が分からない。宣言順をフォールバックに使う */
+  const declared = useMemo(() => {
+    const items: ItemMeta[] = []
+    const walk = (kids: ReactNode) => {
+      Children.forEach(kids, (c) => {
+        if (!isValidElement(c)) return
+        if (c.type === QuestionnaireItem) {
+          const p = c.props as QuestionnaireItemProps
+          items.push({ name: p.name, required: !!p.required })
+        } else {
+          walk((c.props as { children?: ReactNode }).children)
+        }
+      })
+    }
+    walk(children)
+    return items
+  }, [children])
+
+  const metas = useRef(new Map<string, ItemMeta>(declared.map((m) => [m.name, m])))
   const [order, setOrder] = useState<string[]>([])
   const [index, setIndex] = useState(0)
   const [values, setValues] = useState<QuestionnaireValues>(defaultValues)
@@ -97,7 +119,9 @@ export function Questionnaire({
     }
   }, [])
 
-  const current = order[Math.min(index, order.length - 1)]
+  /* 登録済みの順序を優先し、未登録のあいだは宣言順に従う */
+  const names = order.length ? order : declared.map((m) => m.name)
+  const current = names[Math.min(index, names.length - 1)]
   useEffect(() => {
     if (current) onItemChange?.(current)
   }, [current, onItemChange])
@@ -116,17 +140,17 @@ export function Questionnaire({
 
   const next = () => {
     if (!check(current)) return
-    setIndex((i) => Math.min(i + 1, order.length - 1))
+    setIndex((i) => Math.min(i + 1, names.length - 1))
   }
   const prev = () => setIndex((i) => Math.max(0, i - 1))
-  const skip = () => setIndex((i) => Math.min(i + 1, order.length - 1))
+  const skip = () => setIndex((i) => Math.min(i + 1, names.length - 1))
   const submit = (e: FormEvent) => {
     e.preventDefault()
-    if (index < order.length - 1) return next()
+    if (index < names.length - 1) return next()
     if (!check(current)) return
-    const missing = order.find((n) => metas.current.get(n)?.required && !answered(n))
+    const missing = names.find((n) => metas.current.get(n)?.required && !answered(n))
     if (missing) {
-      setIndex(order.indexOf(missing))
+      setIndex(names.indexOf(missing))
       check(missing)
       return
     }
@@ -135,7 +159,7 @@ export function Questionnaire({
 
   const ctx: QCtx = {
     current,
-    order,
+    order: names,
     register,
     values,
     setValue: (name, v) => {
@@ -148,7 +172,7 @@ export function Questionnaire({
     skip,
     canSkip: !!current && !metas.current.get(current)?.required,
     first: index === 0,
-    last: index >= order.length - 1,
+    last: index >= names.length - 1,
     shortcuts,
   }
 
@@ -206,7 +230,7 @@ export function QuestionnaireItem({
   const q = useQ()
   const id = useId()
   const { register } = q
-  useLayoutEffect(() => register({ name, required }), [register, name, required])
+  useIsomorphicLayoutEffect(() => register({ name, required }), [register, name, required])
   if (q.current !== name) return null
   const invalid = !!q.errors[name]
   return (

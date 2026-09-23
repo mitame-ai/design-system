@@ -1,21 +1,23 @@
 import { Command as CommandPrimitive, useCommandState } from 'cmdk'
 import { Popover as PopoverPrimitive } from 'radix-ui'
 import {
+  Children,
   type ComponentPropsWithoutRef,
   createContext,
   forwardRef,
+  isValidElement,
   type ReactNode,
   useCallback,
   useContext,
   useEffect,
   useId,
-  useLayoutEffect,
   useMemo,
   useReducer,
   useRef,
   useState,
 } from 'react'
 import { useComposedRefs } from '../hooks/useComposedRefs'
+import { useIsomorphicLayoutEffect } from '../hooks/useIsomorphicLayoutEffect'
 import { useSkin } from '../hooks/useSkin'
 import { useSlip } from '../hooks/useSlip'
 import { Glyph, Mark } from '../lib/marks'
@@ -77,16 +79,38 @@ export function Combobox({
   const value = controlled !== undefined ? controlled : uncontrolled
   const [openState, setOpenState] = useState(false)
   const open = openProp ?? openState
-  const [search, setSearchState] = useState('')
-  const [dirty, setDirty] = useState(false)
   const labels = useRef(new Map<string, string>()).current
   const inputRef = useRef<HTMLInputElement>(null)
   const listId = useId()
 
+  /* 宣言された候補の言葉を子要素から読み取る。候補はポータルの中でしか描かれないため、
+     SSR では選んだ値の言葉が分からない。宣言値をフォールバックに使う */
+  const declared = useMemo(() => {
+    const found = new Map<string, string>()
+    const walk = (kids: ReactNode) => {
+      Children.forEach(kids, (c) => {
+        if (!isValidElement(c)) return
+        if (c.type === ComboboxItem) {
+          const p = c.props as ComboboxItemProps
+          const text = p.label ?? (typeof p.children === 'string' ? p.children : p.value)
+          found.set(p.value, text)
+        } else {
+          walk((c.props as { children?: ReactNode }).children)
+        }
+      })
+    }
+    walk(children)
+    return found
+  }, [children])
+
+  const label =
+    value !== undefined ? (labels.get(value) ?? declared.get(value) ?? value) : undefined
+  const [search, setSearchState] = useState(label ?? '')
+  const [dirty, setDirty] = useState(false)
+
   /* 候補の言葉は、候補が描かれたときに集まる。最初の描画のあとで一度だけ読み直す */
   const [, reread] = useReducer((n: number) => n + 1, 0)
-  useLayoutEffect(reread, [])
-  const label = value !== undefined ? (labels.get(value) ?? value) : undefined
+  useIsomorphicLayoutEffect(reread, [])
 
   const setOpen = useCallback(
     (v: boolean) => {
@@ -191,7 +215,7 @@ export const ComboboxInput = forwardRef<HTMLInputElement, ComboboxInputProps>(
 
     /* cmdk は入力欄の id と aria-labelledby を自前の値で上書きする。
        <label htmlFor> や外のラベルと結べるよう、描いた後で利用側の値に差し戻す（cmdk はこの値を以後変えない） */
-    useLayoutEffect(() => {
+    useIsomorphicLayoutEffect(() => {
       const el = c.inputRef.current
       if (!el) return
       if (id) el.id = id
@@ -199,7 +223,7 @@ export const ComboboxInput = forwardRef<HTMLInputElement, ComboboxInputProps>(
       else if (id) el.removeAttribute('aria-labelledby')
     }, [c.inputRef, id, labelledBy])
     // biome-ignore lint/correctness/useExhaustiveDependencies: 書かれた言葉が変わるたびに墨を測り直す
-    useLayoutEffect(() => {
+    useIsomorphicLayoutEffect(() => {
       refresh()
     }, [c.search, refresh])
 

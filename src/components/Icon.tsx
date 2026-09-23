@@ -1,4 +1,5 @@
-import type { ComponentPropsWithoutRef } from 'react'
+import { type ComponentPropsWithoutRef, useEffect } from 'react'
+import { ensureDefs } from '../lib/tezawari/defs'
 import { cn } from '../lib/utils'
 
 export interface IconProps extends ComponentPropsWithoutRef<'svg'> {}
@@ -11,6 +12,8 @@ export interface IconProps extends ComponentPropsWithoutRef<'svg'> {}
  * ```
  */
 export function Icon({ className, viewBox = '0 0 16 16', children, ...props }: IconProps) {
+  /* 繊維フィルターを参照する。描画エンジンに登録される要素が無い画面でも用意する */
+  useEffect(ensureDefs, [])
   return (
     <svg
       className={cn('tz-ico', className)}
