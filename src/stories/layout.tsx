@@ -2,6 +2,20 @@ import type { ReactNode } from 'react'
 import { Button } from '../components/Button'
 import { reseed } from '../lib/tezawari/registry'
 
+/** index.html の .title 相当。頁の頭に置く銘 */
+export const Title = ({ children }: { children: ReactNode }) => (
+  <p className="m-0 mb-16 text-[13px] font-medium tracking-[.34em] text-tz-ink-2 [&>b]:mr-[.8em] [&>b]:font-semibold [&>b]:tracking-[.2em] [&>b]:text-tz-ink">
+    {children}
+  </p>
+)
+
+/** index.html の .sect 相当。カタログの項目見出し */
+export const Sect = ({ children }: { children: ReactNode }) => (
+  <p className="m-0 mb-[30px] pt-[52px] text-[11px] font-semibold tracking-[.3em] text-tz-ink-2">
+    {children}
+  </p>
+)
+
 /** index.html の .cap 相当。各セクションのキャプション見出し */
 export const Cap = ({ children }: { children: ReactNode }) => (
   <p className="m-0 mb-[18px] text-[11px] tracking-[.18em] text-tz-ink-3">{children}</p>

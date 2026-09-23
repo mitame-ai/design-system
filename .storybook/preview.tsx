@@ -16,6 +16,12 @@ const preview: Preview = {
   decorators: [onPaper],
   parameters: {
     layout: 'fullscreen',
+    options: {
+      storySort: {
+        method: 'alphabetical',
+        order: ['手触り', ['目次', '*']],
+      },
+    },
     controls: { matchers: { color: /(background|color)$/i } },
     backgrounds: { disable: true },
   },
