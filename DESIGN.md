@@ -87,9 +87,20 @@ CLI/MCP startup. Do not point the checker at a server with side-effectful GETs.
 
 ### MCP and task skills
 
-A stdio client launches `npx mitame-design` from the consumer project root.
-Set `TEZAWARI_PREVIEW_ORIGIN` in its environment. The command uses the
-installed `@mitame-ai/design-system` package. To locate that package, run:
+A stdio client uses the installed `@mitame-ai/design-system` package. After
+installing it as described in README, register a project-local server in the
+client's existing MCP settings:
+
+| Setting | Value |
+| --- | --- |
+| Command | `npx` |
+| Arguments | `mitame-design` |
+| Working directory | Absolute path to the consumer project root |
+| Environment | `TEZAWARI_PREVIEW_ORIGIN=http://127.0.0.1:4173` when checking that preview |
+
+The resulting invocation is `npx mitame-design`. Connect with the client, list
+resources, and read a listed `tezawari://design/…` URI to confirm installation.
+To locate the installed package, run from the consumer project root:
 
 ```sh
 node --input-type=module -e "console.log(import.meta.resolve('@mitame-ai/design-system/package.json'))"

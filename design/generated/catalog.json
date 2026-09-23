@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "packageVersion": "0.3.0",
-  "contractRevision": "e84e8205a3cc858fef937bb4a97b8d5c1287dc8e866f9d913749dcf05916e222",
+  "packageVersion": "0.3.1",
+  "contractRevision": "a061a3b104f627de12277b20ae155fc0ae044252c36798232b3a0880586e2178",
   "resources": [
     {
       "id": "design.language",
@@ -11,7 +11,7 @@
       "path": "DESIGN.md",
       "refs": [],
       "uri": "tezawari://design/design.language",
-      "digest": "6d73afd4c208a59bef7e719650c039d25e9dfd773f6198c14170485a621db950"
+      "digest": "5d12a89eea7fcc3ae4c2e408cd3f9805bdd7cb2d0374675b8e311c41deb6cb0d"
     },
     {
       "id": "design.integration",
@@ -24,7 +24,7 @@
         "design.installation"
       ],
       "uri": "tezawari://design/design.integration",
-      "digest": "6d73afd4c208a59bef7e719650c039d25e9dfd773f6198c14170485a621db950"
+      "digest": "5d12a89eea7fcc3ae4c2e408cd3f9805bdd7cb2d0374675b8e311c41deb6cb0d"
     },
     {
       "id": "design.installation",
@@ -34,7 +34,7 @@
       "path": "README.md",
       "refs": [],
       "uri": "tezawari://design/design.installation",
-      "digest": "75933d0af9668fad9223483737e9f299fc9007d9bbd6b67e579a22e820cbbe15"
+      "digest": "51ff209a76f29acfb7b5087c6388c9a03fa9a92ada41df96c4195c750a62e2c4"
     },
     {
       "id": "design.tokens",

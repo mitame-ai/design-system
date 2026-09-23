@@ -39,7 +39,16 @@ The default check scenario is `scenario.profile-edit`. For another declared scen
 
 ## MCP connection
 
-The stdio server command is `node`, with the absolute path of this working copy's `mcp.mjs` as its only argument. `npm run mcp:start` is available for a terminal check; for a client configuration use `node` directly so npm banners cannot enter protocol stdout. The server root is its own directory, not the client's current directory.
+To connect from a consumer project, pack this working copy after the first run and install the resulting tarball in that project:
+
+```sh
+# In the harness working copy
+npm pack --pack-destination /absolute/output/directory
+# In the consumer project root
+npm install /absolute/output/directory/design-harness-starter-0.1.0.tgz
+```
+
+Configure its stdio client with command `npx`, argument `design-harness-mcp`, and the consumer project root as its working directory. The installed bin resolves its own contracts, independent of the client's source checkout. `npm run mcp:start` remains a source-checkout check; the client connection uses `npx design-harness-mcp`.
 
 1. Start the server through your client's existing MCP configuration mechanism.
 2. List resources and read `harness://design/design.entry`.

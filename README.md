@@ -33,7 +33,7 @@ GitHub Packages は公開パッケージの取得にも認証が必要です。`
 次に、**利用するアプリのディレクトリ**でインストールします。
 
 ```sh
-pnpm add @mitame-ai/design-system@0.3.0
+pnpm add @mitame-ai/design-system@0.3.1
 pnpm exec tezawari-design install-skills .
 pnpm exec tezawari-design resolve scenario.profile-edit
 ```
@@ -52,7 +52,7 @@ pnpm pack --pack-destination ./test-results/packages
 パスは実際の tarball の絶対パスに置き換えてください。
 
 ```sh
-pnpm add /path/to/mitame-ai-design-system-0.3.0.tgz
+pnpm add /path/to/mitame-ai-design-system-0.3.1.tgz
 pnpm exec tezawari-design install-skills .
 pnpm exec tezawari-design resolve scenario.profile-edit
 ```
@@ -63,7 +63,13 @@ tarball で導入する場合、GitHub Packages 用の `.npmrc` は不要です�
 `install-skills` は `tezawari-install`・`tezawari-build`・`tezawari-review`・`tezawari-improve` を
 プロジェクトの `.agents/skills/` に配置します。エージェントに導入を依頼する場合は
 [tezawari-install](.agents/skills/tezawari-install/SKILL.md) を使ってください。
-MCP、更新・削除、検証範囲の詳細は [DESIGN.md](DESIGN.md) にあります。
+### MCP サーバーの接続
+
+パッケージ導入後、利用するアプリのディレクトリを作業ディレクトリとして、MCP
+クライアントに stdio サーバーを登録します。コマンドは `npx`、引数は
+`mitame-design` です。プレビューを検証する場合は環境変数
+`TEZAWARI_PREVIEW_ORIGIN` にローカルのプレビュー URL を設定します。
+接続確認と更新・削除の手順は [DESIGN.md](DESIGN.md#mcp-and-task-skills) にあります。
 
 ### パッケージの公開
 

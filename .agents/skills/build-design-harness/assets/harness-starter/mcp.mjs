@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { fileURLToPath } from 'node:url';
 import { McpServer } from '@modelcontextprotocol/server';
 import { StdioServerTransport } from '@modelcontextprotocol/server/stdio';
