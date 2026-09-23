@@ -1,0 +1,15 @@
+{
+  "id": "component.paper-grain",
+  "kind": "component",
+  "title": "PaperGrain",
+  "description": "Tezawari PaperGrain integration contract",
+  "refs": ["design.language", "design.tokens"],
+  "exports": ["PaperGrain"],
+  "variants": {},
+  "behavior": [
+    "Optional page decoration, aria-hidden and pointer-transparent.",
+    "Use tz-stage for the material background; individual controls do not require PaperGrain."
+  ],
+  "verification": "Pilot composition and typed examples; not exhaustive coverage of every prop combination.",
+  "example": "examples/consumer/src/App.tsx"
+}

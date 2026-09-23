@@ -3,3 +3,6 @@ dist
 storybook-static
 *.log
 .DS_Store
+
+test-results
+*.tgz

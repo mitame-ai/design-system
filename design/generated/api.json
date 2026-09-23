@@ -1,0 +1,3257 @@
+[
+  {
+    "name": "Accordion",
+    "typeOnly": false,
+    "source": "src/components/Accordion.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AccordionContent",
+    "typeOnly": false,
+    "source": "src/components/Accordion.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AccordionItem",
+    "typeOnly": false,
+    "source": "src/components/Accordion.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AccordionTrigger",
+    "typeOnly": false,
+    "source": "src/components/Accordion.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Alert",
+    "typeOnly": false,
+    "source": "src/components/Alert.tsx",
+    "contract": "component.alert",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "AlertAction",
+    "typeOnly": false,
+    "source": "src/components/Alert.tsx",
+    "contract": "component.alert",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "AlertDescription",
+    "typeOnly": false,
+    "source": "src/components/Alert.tsx",
+    "contract": "component.alert",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "AlertDialog",
+    "typeOnly": false,
+    "source": "src/components/AlertDialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AlertDialogAction",
+    "typeOnly": false,
+    "source": "src/components/AlertDialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AlertDialogCancel",
+    "typeOnly": false,
+    "source": "src/components/AlertDialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AlertDialogContent",
+    "typeOnly": false,
+    "source": "src/components/AlertDialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AlertDialogContentProps",
+    "typeOnly": true,
+    "source": "src/components/AlertDialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AlertDialogDescription",
+    "typeOnly": false,
+    "source": "src/components/AlertDialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AlertDialogFooter",
+    "typeOnly": false,
+    "source": "src/components/AlertDialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AlertDialogHeader",
+    "typeOnly": false,
+    "source": "src/components/AlertDialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AlertDialogMedia",
+    "typeOnly": false,
+    "source": "src/components/AlertDialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AlertDialogOverlay",
+    "typeOnly": false,
+    "source": "src/components/AlertDialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AlertDialogPortal",
+    "typeOnly": false,
+    "source": "src/components/AlertDialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AlertDialogTitle",
+    "typeOnly": false,
+    "source": "src/components/AlertDialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AlertDialogTrigger",
+    "typeOnly": false,
+    "source": "src/components/AlertDialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AlertProps",
+    "typeOnly": true,
+    "source": "src/components/Alert.tsx",
+    "contract": "component.alert",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "AlertTitle",
+    "typeOnly": false,
+    "source": "src/components/Alert.tsx",
+    "contract": "component.alert",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "alertVariants",
+    "typeOnly": false,
+    "source": "src/components/Alert.tsx",
+    "contract": "component.alert",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "AspectRatio",
+    "typeOnly": false,
+    "source": "src/components/AspectRatio.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AspectRatioProps",
+    "typeOnly": true,
+    "source": "src/components/AspectRatio.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Attachment",
+    "typeOnly": false,
+    "source": "src/components/Attachment.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AttachmentAction",
+    "typeOnly": false,
+    "source": "src/components/Attachment.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AttachmentActions",
+    "typeOnly": false,
+    "source": "src/components/Attachment.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AttachmentContent",
+    "typeOnly": false,
+    "source": "src/components/Attachment.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AttachmentDescription",
+    "typeOnly": false,
+    "source": "src/components/Attachment.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AttachmentGroup",
+    "typeOnly": false,
+    "source": "src/components/Attachment.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AttachmentMedia",
+    "typeOnly": false,
+    "source": "src/components/Attachment.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "attachmentMediaVariants",
+    "typeOnly": false,
+    "source": "src/components/Attachment.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AttachmentProps",
+    "typeOnly": true,
+    "source": "src/components/Attachment.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AttachmentState",
+    "typeOnly": true,
+    "source": "src/components/Attachment.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AttachmentTitle",
+    "typeOnly": false,
+    "source": "src/components/Attachment.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AttachmentTrigger",
+    "typeOnly": false,
+    "source": "src/components/Attachment.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "attachmentVariants",
+    "typeOnly": false,
+    "source": "src/components/Attachment.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Avatar",
+    "typeOnly": false,
+    "source": "src/components/Avatar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AvatarBadge",
+    "typeOnly": false,
+    "source": "src/components/Avatar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AvatarFallback",
+    "typeOnly": false,
+    "source": "src/components/Avatar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AvatarGroup",
+    "typeOnly": false,
+    "source": "src/components/Avatar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AvatarGroupCount",
+    "typeOnly": false,
+    "source": "src/components/Avatar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AvatarImage",
+    "typeOnly": false,
+    "source": "src/components/Avatar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "AvatarProps",
+    "typeOnly": true,
+    "source": "src/components/Avatar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Badge",
+    "typeOnly": false,
+    "source": "src/components/Badge.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "BadgeProps",
+    "typeOnly": true,
+    "source": "src/components/Badge.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "badgeVariants",
+    "typeOnly": false,
+    "source": "src/components/Badge.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Breadcrumb",
+    "typeOnly": false,
+    "source": "src/components/Breadcrumb.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "BreadcrumbEllipsis",
+    "typeOnly": false,
+    "source": "src/components/Breadcrumb.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "BreadcrumbItem",
+    "typeOnly": false,
+    "source": "src/components/Breadcrumb.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "BreadcrumbLink",
+    "typeOnly": false,
+    "source": "src/components/Breadcrumb.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "BreadcrumbList",
+    "typeOnly": false,
+    "source": "src/components/Breadcrumb.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "BreadcrumbPage",
+    "typeOnly": false,
+    "source": "src/components/Breadcrumb.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "BreadcrumbSeparator",
+    "typeOnly": false,
+    "source": "src/components/Breadcrumb.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Bubble",
+    "typeOnly": false,
+    "source": "src/components/Bubble.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "BubbleContent",
+    "typeOnly": false,
+    "source": "src/components/Bubble.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "BubbleContentProps",
+    "typeOnly": true,
+    "source": "src/components/Bubble.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "BubbleGroup",
+    "typeOnly": false,
+    "source": "src/components/Bubble.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "BubbleProps",
+    "typeOnly": true,
+    "source": "src/components/Bubble.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "BubbleReactions",
+    "typeOnly": false,
+    "source": "src/components/Bubble.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "bubbleVariants",
+    "typeOnly": false,
+    "source": "src/components/Bubble.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Button",
+    "typeOnly": false,
+    "source": "src/components/Button.tsx",
+    "contract": "component.button",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "ButtonGroup",
+    "typeOnly": false,
+    "source": "src/components/ButtonGroup.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ButtonGroupProps",
+    "typeOnly": true,
+    "source": "src/components/ButtonGroup.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ButtonGroupSeparator",
+    "typeOnly": false,
+    "source": "src/components/ButtonGroup.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ButtonGroupText",
+    "typeOnly": false,
+    "source": "src/components/ButtonGroup.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ButtonProps",
+    "typeOnly": true,
+    "source": "src/components/Button.tsx",
+    "contract": "component.button",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "buttonVariants",
+    "typeOnly": false,
+    "source": "src/components/Button.tsx",
+    "contract": "component.button",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "Calendar",
+    "typeOnly": false,
+    "source": "src/components/Calendar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "CalendarDayButton",
+    "typeOnly": false,
+    "source": "src/components/Calendar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "CalendarProps",
+    "typeOnly": true,
+    "source": "src/components/Calendar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Card",
+    "typeOnly": false,
+    "source": "src/components/Card.tsx",
+    "contract": "component.card",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "CardAction",
+    "typeOnly": false,
+    "source": "src/components/Card.tsx",
+    "contract": "component.card",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "CardContent",
+    "typeOnly": false,
+    "source": "src/components/Card.tsx",
+    "contract": "component.card",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "CardDescription",
+    "typeOnly": false,
+    "source": "src/components/Card.tsx",
+    "contract": "component.card",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "CardFooter",
+    "typeOnly": false,
+    "source": "src/components/Card.tsx",
+    "contract": "component.card",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "CardHeader",
+    "typeOnly": false,
+    "source": "src/components/Card.tsx",
+    "contract": "component.card",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "CardMedia",
+    "typeOnly": false,
+    "source": "src/components/Card.tsx",
+    "contract": "component.card",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "CardMeta",
+    "typeOnly": false,
+    "source": "src/components/Card.tsx",
+    "contract": "component.card",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "CardProps",
+    "typeOnly": true,
+    "source": "src/components/Card.tsx",
+    "contract": "component.card",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "CardText",
+    "typeOnly": false,
+    "source": "src/components/Card.tsx",
+    "contract": "component.card",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "CardTitle",
+    "typeOnly": false,
+    "source": "src/components/Card.tsx",
+    "contract": "component.card",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "cardVariants",
+    "typeOnly": false,
+    "source": "src/components/Card.tsx",
+    "contract": "component.card",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "Carousel",
+    "typeOnly": false,
+    "source": "src/components/Carousel.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "CarouselApi",
+    "typeOnly": true,
+    "source": "src/components/Carousel.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "CarouselContent",
+    "typeOnly": false,
+    "source": "src/components/Carousel.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "CarouselItem",
+    "typeOnly": false,
+    "source": "src/components/Carousel.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "CarouselNext",
+    "typeOnly": false,
+    "source": "src/components/Carousel.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "CarouselPrevious",
+    "typeOnly": false,
+    "source": "src/components/Carousel.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "CarouselProps",
+    "typeOnly": true,
+    "source": "src/components/Carousel.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ChartConfig",
+    "typeOnly": true,
+    "source": "src/components/Chart.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ChartContainer",
+    "typeOnly": false,
+    "source": "src/components/Chart.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ChartContainerProps",
+    "typeOnly": true,
+    "source": "src/components/Chart.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ChartLegend",
+    "typeOnly": false,
+    "source": "src/components/Chart.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ChartLegendContent",
+    "typeOnly": false,
+    "source": "src/components/Chart.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ChartLegendContentProps",
+    "typeOnly": true,
+    "source": "src/components/Chart.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ChartStyle",
+    "typeOnly": false,
+    "source": "src/components/Chart.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ChartTooltip",
+    "typeOnly": false,
+    "source": "src/components/Chart.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ChartTooltipContent",
+    "typeOnly": false,
+    "source": "src/components/Chart.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ChartTooltipContentProps",
+    "typeOnly": true,
+    "source": "src/components/Chart.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Checkbox",
+    "typeOnly": false,
+    "source": "src/components/Checkbox.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "CheckboxProps",
+    "typeOnly": true,
+    "source": "src/components/Checkbox.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "cn",
+    "typeOnly": false,
+    "source": "src/lib/utils.ts",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Collapsible",
+    "typeOnly": false,
+    "source": "src/components/Collapsible.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "CollapsibleContent",
+    "typeOnly": false,
+    "source": "src/components/Collapsible.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "CollapsibleTrigger",
+    "typeOnly": false,
+    "source": "src/components/Collapsible.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Combobox",
+    "typeOnly": false,
+    "source": "src/components/Combobox.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ComboboxContent",
+    "typeOnly": false,
+    "source": "src/components/Combobox.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ComboboxContentProps",
+    "typeOnly": true,
+    "source": "src/components/Combobox.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ComboboxEmpty",
+    "typeOnly": false,
+    "source": "src/components/Combobox.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ComboboxGroup",
+    "typeOnly": false,
+    "source": "src/components/Combobox.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ComboboxInput",
+    "typeOnly": false,
+    "source": "src/components/Combobox.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ComboboxInputProps",
+    "typeOnly": true,
+    "source": "src/components/Combobox.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ComboboxItem",
+    "typeOnly": false,
+    "source": "src/components/Combobox.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ComboboxItemProps",
+    "typeOnly": true,
+    "source": "src/components/Combobox.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ComboboxProps",
+    "typeOnly": true,
+    "source": "src/components/Combobox.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ComboboxSeparator",
+    "typeOnly": false,
+    "source": "src/components/Combobox.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Command",
+    "typeOnly": false,
+    "source": "src/components/Command.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "CommandDialog",
+    "typeOnly": false,
+    "source": "src/components/Command.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "CommandDialogProps",
+    "typeOnly": true,
+    "source": "src/components/Command.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "CommandEmpty",
+    "typeOnly": false,
+    "source": "src/components/Command.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "CommandGroup",
+    "typeOnly": false,
+    "source": "src/components/Command.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "CommandInput",
+    "typeOnly": false,
+    "source": "src/components/Command.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "CommandItem",
+    "typeOnly": false,
+    "source": "src/components/Command.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "CommandList",
+    "typeOnly": false,
+    "source": "src/components/Command.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "CommandLoading",
+    "typeOnly": false,
+    "source": "src/components/Command.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "CommandSeparator",
+    "typeOnly": false,
+    "source": "src/components/Command.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "CommandShortcut",
+    "typeOnly": false,
+    "source": "src/components/Command.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ContextMenu",
+    "typeOnly": false,
+    "source": "src/components/ContextMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ContextMenuCheckboxItem",
+    "typeOnly": false,
+    "source": "src/components/ContextMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ContextMenuContent",
+    "typeOnly": false,
+    "source": "src/components/ContextMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ContextMenuGroup",
+    "typeOnly": false,
+    "source": "src/components/ContextMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ContextMenuItem",
+    "typeOnly": false,
+    "source": "src/components/ContextMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ContextMenuLabel",
+    "typeOnly": false,
+    "source": "src/components/ContextMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ContextMenuPortal",
+    "typeOnly": false,
+    "source": "src/components/ContextMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ContextMenuRadioGroup",
+    "typeOnly": false,
+    "source": "src/components/ContextMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ContextMenuRadioItem",
+    "typeOnly": false,
+    "source": "src/components/ContextMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ContextMenuSeparator",
+    "typeOnly": false,
+    "source": "src/components/ContextMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ContextMenuShortcut",
+    "typeOnly": false,
+    "source": "src/components/ContextMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ContextMenuSub",
+    "typeOnly": false,
+    "source": "src/components/ContextMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ContextMenuSubContent",
+    "typeOnly": false,
+    "source": "src/components/ContextMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ContextMenuSubTrigger",
+    "typeOnly": false,
+    "source": "src/components/ContextMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ContextMenuTrigger",
+    "typeOnly": false,
+    "source": "src/components/ContextMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DataTable",
+    "typeOnly": false,
+    "source": "src/components/DataTable.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DataTableColumn",
+    "typeOnly": true,
+    "source": "src/components/DataTable.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DataTableProps",
+    "typeOnly": true,
+    "source": "src/components/DataTable.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DatePicker",
+    "typeOnly": false,
+    "source": "src/components/DatePicker.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DatePickerProps",
+    "typeOnly": true,
+    "source": "src/components/DatePicker.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DateRangePicker",
+    "typeOnly": false,
+    "source": "src/components/DatePicker.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DateRangePickerProps",
+    "typeOnly": true,
+    "source": "src/components/DatePicker.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Dialog",
+    "typeOnly": false,
+    "source": "src/components/Dialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DialogClose",
+    "typeOnly": false,
+    "source": "src/components/Dialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DialogContent",
+    "typeOnly": false,
+    "source": "src/components/Dialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DialogContentProps",
+    "typeOnly": true,
+    "source": "src/components/Dialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DialogDescription",
+    "typeOnly": false,
+    "source": "src/components/Dialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DialogFooter",
+    "typeOnly": false,
+    "source": "src/components/Dialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DialogHeader",
+    "typeOnly": false,
+    "source": "src/components/Dialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DialogOverlay",
+    "typeOnly": false,
+    "source": "src/components/Dialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DialogPortal",
+    "typeOnly": false,
+    "source": "src/components/Dialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DialogTitle",
+    "typeOnly": false,
+    "source": "src/components/Dialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DialogTrigger",
+    "typeOnly": false,
+    "source": "src/components/Dialog.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DirectionProvider",
+    "typeOnly": false,
+    "source": "src/components/Direction.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DirectionProviderProps",
+    "typeOnly": true,
+    "source": "src/components/Direction.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Drawer",
+    "typeOnly": false,
+    "source": "src/components/Drawer.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DrawerClose",
+    "typeOnly": false,
+    "source": "src/components/Drawer.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DrawerContent",
+    "typeOnly": false,
+    "source": "src/components/Drawer.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DrawerDescription",
+    "typeOnly": false,
+    "source": "src/components/Drawer.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DrawerFooter",
+    "typeOnly": false,
+    "source": "src/components/Drawer.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DrawerHeader",
+    "typeOnly": false,
+    "source": "src/components/Drawer.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DrawerOverlay",
+    "typeOnly": false,
+    "source": "src/components/Drawer.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DrawerPortal",
+    "typeOnly": false,
+    "source": "src/components/Drawer.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DrawerProps",
+    "typeOnly": true,
+    "source": "src/components/Drawer.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DrawerTitle",
+    "typeOnly": false,
+    "source": "src/components/Drawer.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DrawerTrigger",
+    "typeOnly": false,
+    "source": "src/components/Drawer.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DropdownMenu",
+    "typeOnly": false,
+    "source": "src/components/DropdownMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DropdownMenuCheckboxItem",
+    "typeOnly": false,
+    "source": "src/components/DropdownMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DropdownMenuContent",
+    "typeOnly": false,
+    "source": "src/components/DropdownMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DropdownMenuGroup",
+    "typeOnly": false,
+    "source": "src/components/DropdownMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DropdownMenuItem",
+    "typeOnly": false,
+    "source": "src/components/DropdownMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DropdownMenuItemProps",
+    "typeOnly": true,
+    "source": "src/components/DropdownMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DropdownMenuLabel",
+    "typeOnly": false,
+    "source": "src/components/DropdownMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DropdownMenuPortal",
+    "typeOnly": false,
+    "source": "src/components/DropdownMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DropdownMenuRadioGroup",
+    "typeOnly": false,
+    "source": "src/components/DropdownMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DropdownMenuRadioItem",
+    "typeOnly": false,
+    "source": "src/components/DropdownMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DropdownMenuSeparator",
+    "typeOnly": false,
+    "source": "src/components/DropdownMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DropdownMenuShortcut",
+    "typeOnly": false,
+    "source": "src/components/DropdownMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DropdownMenuSub",
+    "typeOnly": false,
+    "source": "src/components/DropdownMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DropdownMenuSubContent",
+    "typeOnly": false,
+    "source": "src/components/DropdownMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DropdownMenuSubTrigger",
+    "typeOnly": false,
+    "source": "src/components/DropdownMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "DropdownMenuTrigger",
+    "typeOnly": false,
+    "source": "src/components/DropdownMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Empty",
+    "typeOnly": false,
+    "source": "src/components/Empty.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "EmptyContent",
+    "typeOnly": false,
+    "source": "src/components/Empty.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "EmptyDescription",
+    "typeOnly": false,
+    "source": "src/components/Empty.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "EmptyHeader",
+    "typeOnly": false,
+    "source": "src/components/Empty.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "EmptyMedia",
+    "typeOnly": false,
+    "source": "src/components/Empty.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "emptyMediaVariants",
+    "typeOnly": false,
+    "source": "src/components/Empty.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "EmptyProps",
+    "typeOnly": true,
+    "source": "src/components/Empty.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "EmptyTitle",
+    "typeOnly": false,
+    "source": "src/components/Empty.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Field",
+    "typeOnly": false,
+    "source": "src/components/Field.tsx",
+    "contract": "component.field",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "FieldContent",
+    "typeOnly": false,
+    "source": "src/components/Field.tsx",
+    "contract": "component.field",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "FieldDescription",
+    "typeOnly": false,
+    "source": "src/components/Field.tsx",
+    "contract": "component.field",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "FieldError",
+    "typeOnly": false,
+    "source": "src/components/Field.tsx",
+    "contract": "component.field",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "FieldErrorProps",
+    "typeOnly": true,
+    "source": "src/components/Field.tsx",
+    "contract": "component.field",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "FieldGroup",
+    "typeOnly": false,
+    "source": "src/components/Field.tsx",
+    "contract": "component.field",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "FieldLabel",
+    "typeOnly": false,
+    "source": "src/components/Field.tsx",
+    "contract": "component.field",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "FieldLabelProps",
+    "typeOnly": true,
+    "source": "src/components/Field.tsx",
+    "contract": "component.field",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "FieldLegend",
+    "typeOnly": false,
+    "source": "src/components/Field.tsx",
+    "contract": "component.field",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "FieldNote",
+    "typeOnly": false,
+    "source": "src/components/Field.tsx",
+    "contract": "component.field",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "FieldProps",
+    "typeOnly": true,
+    "source": "src/components/Field.tsx",
+    "contract": "component.field",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "FieldSeparator",
+    "typeOnly": false,
+    "source": "src/components/Field.tsx",
+    "contract": "component.field",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "FieldSet",
+    "typeOnly": false,
+    "source": "src/components/Field.tsx",
+    "contract": "component.field",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "FieldTitle",
+    "typeOnly": false,
+    "source": "src/components/Field.tsx",
+    "contract": "component.field",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "Glyph",
+    "typeOnly": false,
+    "source": "src/lib/marks.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "GlyphName",
+    "typeOnly": true,
+    "source": "src/lib/marks.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "GlyphProps",
+    "typeOnly": true,
+    "source": "src/lib/marks.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "HoverCard",
+    "typeOnly": false,
+    "source": "src/components/HoverCard.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "HoverCardContent",
+    "typeOnly": false,
+    "source": "src/components/HoverCard.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "HoverCardTrigger",
+    "typeOnly": false,
+    "source": "src/components/HoverCard.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Icon",
+    "typeOnly": false,
+    "source": "src/components/Icon.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "IconProps",
+    "typeOnly": true,
+    "source": "src/components/Icon.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Input",
+    "typeOnly": false,
+    "source": "src/components/Input.tsx",
+    "contract": "component.input",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "InputGroup",
+    "typeOnly": false,
+    "source": "src/components/InputGroup.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "InputGroupAddon",
+    "typeOnly": false,
+    "source": "src/components/InputGroup.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "inputGroupAddonVariants",
+    "typeOnly": false,
+    "source": "src/components/InputGroup.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "InputGroupButton",
+    "typeOnly": false,
+    "source": "src/components/InputGroup.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "InputGroupInput",
+    "typeOnly": false,
+    "source": "src/components/InputGroup.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "InputGroupProps",
+    "typeOnly": true,
+    "source": "src/components/InputGroup.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "InputGroupText",
+    "typeOnly": false,
+    "source": "src/components/InputGroup.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "InputGroupTextarea",
+    "typeOnly": false,
+    "source": "src/components/InputGroup.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "inputGroupVariants",
+    "typeOnly": false,
+    "source": "src/components/InputGroup.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "InputOTP",
+    "typeOnly": false,
+    "source": "src/components/InputOTP.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "InputOTPGroup",
+    "typeOnly": false,
+    "source": "src/components/InputOTP.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "InputOTPSeparator",
+    "typeOnly": false,
+    "source": "src/components/InputOTP.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "InputOTPSlot",
+    "typeOnly": false,
+    "source": "src/components/InputOTP.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "InputOTPSlotProps",
+    "typeOnly": true,
+    "source": "src/components/InputOTP.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "InputProps",
+    "typeOnly": true,
+    "source": "src/components/Input.tsx",
+    "contract": "component.input",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "inputVariants",
+    "typeOnly": false,
+    "source": "src/components/Input.tsx",
+    "contract": "component.input",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "Item",
+    "typeOnly": false,
+    "source": "src/components/Item.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ItemActions",
+    "typeOnly": false,
+    "source": "src/components/Item.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ItemContent",
+    "typeOnly": false,
+    "source": "src/components/Item.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ItemDescription",
+    "typeOnly": false,
+    "source": "src/components/Item.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ItemFooter",
+    "typeOnly": false,
+    "source": "src/components/Item.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ItemGroup",
+    "typeOnly": false,
+    "source": "src/components/Item.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ItemHeader",
+    "typeOnly": false,
+    "source": "src/components/Item.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ItemMedia",
+    "typeOnly": false,
+    "source": "src/components/Item.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "itemMediaVariants",
+    "typeOnly": false,
+    "source": "src/components/Item.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ItemProps",
+    "typeOnly": true,
+    "source": "src/components/Item.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ItemSeparator",
+    "typeOnly": false,
+    "source": "src/components/Item.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ItemTitle",
+    "typeOnly": false,
+    "source": "src/components/Item.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "itemVariants",
+    "typeOnly": false,
+    "source": "src/components/Item.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Kbd",
+    "typeOnly": false,
+    "source": "src/components/Kbd.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "KbdGroup",
+    "typeOnly": false,
+    "source": "src/components/Kbd.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "KbdProps",
+    "typeOnly": true,
+    "source": "src/components/Kbd.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Label",
+    "typeOnly": false,
+    "source": "src/components/Label.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "LabelProps",
+    "typeOnly": true,
+    "source": "src/components/Label.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Mark",
+    "typeOnly": false,
+    "source": "src/lib/marks.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Marker",
+    "typeOnly": false,
+    "source": "src/components/Marker.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MarkerContent",
+    "typeOnly": false,
+    "source": "src/components/Marker.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MarkerIcon",
+    "typeOnly": false,
+    "source": "src/components/Marker.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MarkerProps",
+    "typeOnly": true,
+    "source": "src/components/Marker.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "markerVariants",
+    "typeOnly": false,
+    "source": "src/components/Marker.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MarkKind",
+    "typeOnly": true,
+    "source": "src/lib/marks.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MarkProps",
+    "typeOnly": true,
+    "source": "src/lib/marks.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Menubar",
+    "typeOnly": false,
+    "source": "src/components/Menubar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MenubarCheckboxItem",
+    "typeOnly": false,
+    "source": "src/components/Menubar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MenubarContent",
+    "typeOnly": false,
+    "source": "src/components/Menubar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MenubarGroup",
+    "typeOnly": false,
+    "source": "src/components/Menubar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MenubarItem",
+    "typeOnly": false,
+    "source": "src/components/Menubar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MenubarLabel",
+    "typeOnly": false,
+    "source": "src/components/Menubar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MenubarMenu",
+    "typeOnly": false,
+    "source": "src/components/Menubar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MenubarPortal",
+    "typeOnly": false,
+    "source": "src/components/Menubar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MenubarRadioGroup",
+    "typeOnly": false,
+    "source": "src/components/Menubar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MenubarRadioItem",
+    "typeOnly": false,
+    "source": "src/components/Menubar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MenubarSeparator",
+    "typeOnly": false,
+    "source": "src/components/Menubar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MenubarShortcut",
+    "typeOnly": false,
+    "source": "src/components/Menubar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MenubarSub",
+    "typeOnly": false,
+    "source": "src/components/Menubar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MenubarSubContent",
+    "typeOnly": false,
+    "source": "src/components/Menubar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MenubarSubTrigger",
+    "typeOnly": false,
+    "source": "src/components/Menubar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MenubarTrigger",
+    "typeOnly": false,
+    "source": "src/components/Menubar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Message",
+    "typeOnly": false,
+    "source": "src/components/Message.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MessageAvatar",
+    "typeOnly": false,
+    "source": "src/components/Message.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MessageContent",
+    "typeOnly": false,
+    "source": "src/components/Message.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MessageFooter",
+    "typeOnly": false,
+    "source": "src/components/Message.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MessageGroup",
+    "typeOnly": false,
+    "source": "src/components/Message.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MessageHeader",
+    "typeOnly": false,
+    "source": "src/components/Message.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MessageScroller",
+    "typeOnly": false,
+    "source": "src/components/MessageScroller.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MessageScrollerButton",
+    "typeOnly": false,
+    "source": "src/components/MessageScroller.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MessageScrollerButtonProps",
+    "typeOnly": true,
+    "source": "src/components/MessageScroller.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MessageScrollerContent",
+    "typeOnly": false,
+    "source": "src/components/MessageScroller.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MessageScrollerItem",
+    "typeOnly": false,
+    "source": "src/components/MessageScroller.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MessageScrollerItemProps",
+    "typeOnly": true,
+    "source": "src/components/MessageScroller.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "MessageScrollerViewport",
+    "typeOnly": false,
+    "source": "src/components/MessageScroller.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "NativeSelect",
+    "typeOnly": false,
+    "source": "src/components/NativeSelect.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "NativeSelectOptGroup",
+    "typeOnly": false,
+    "source": "src/components/NativeSelect.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "NativeSelectOption",
+    "typeOnly": false,
+    "source": "src/components/NativeSelect.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "NativeSelectProps",
+    "typeOnly": true,
+    "source": "src/components/NativeSelect.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "NavigationMenu",
+    "typeOnly": false,
+    "source": "src/components/NavigationMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "NavigationMenuContent",
+    "typeOnly": false,
+    "source": "src/components/NavigationMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "NavigationMenuIndicator",
+    "typeOnly": false,
+    "source": "src/components/NavigationMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "NavigationMenuItem",
+    "typeOnly": false,
+    "source": "src/components/NavigationMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "NavigationMenuLink",
+    "typeOnly": false,
+    "source": "src/components/NavigationMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "NavigationMenuList",
+    "typeOnly": false,
+    "source": "src/components/NavigationMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "NavigationMenuTrigger",
+    "typeOnly": false,
+    "source": "src/components/NavigationMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "navigationMenuTriggerStyle",
+    "typeOnly": false,
+    "source": "src/components/NavigationMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "NavigationMenuViewport",
+    "typeOnly": false,
+    "source": "src/components/NavigationMenu.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "onReseed",
+    "typeOnly": false,
+    "source": "src/lib/tezawari/registry.ts",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Pagination",
+    "typeOnly": false,
+    "source": "src/components/Pagination.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "PaginationContent",
+    "typeOnly": false,
+    "source": "src/components/Pagination.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "PaginationEllipsis",
+    "typeOnly": false,
+    "source": "src/components/Pagination.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "PaginationItem",
+    "typeOnly": false,
+    "source": "src/components/Pagination.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "PaginationLink",
+    "typeOnly": false,
+    "source": "src/components/Pagination.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "PaginationLinkProps",
+    "typeOnly": true,
+    "source": "src/components/Pagination.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "PaginationNext",
+    "typeOnly": false,
+    "source": "src/components/Pagination.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "PaginationPrevious",
+    "typeOnly": false,
+    "source": "src/components/Pagination.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Panel",
+    "typeOnly": false,
+    "source": "src/components/Panel.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "PanelProps",
+    "typeOnly": true,
+    "source": "src/components/Panel.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "PaperGrain",
+    "typeOnly": false,
+    "source": "src/components/PaperGrain.tsx",
+    "contract": "component.paper-grain",
+    "coverage": "pilot; see contract limits"
+  },
+  {
+    "name": "Popover",
+    "typeOnly": false,
+    "source": "src/components/Popover.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "PopoverAnchor",
+    "typeOnly": false,
+    "source": "src/components/Popover.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "PopoverClose",
+    "typeOnly": false,
+    "source": "src/components/Popover.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "PopoverContent",
+    "typeOnly": false,
+    "source": "src/components/Popover.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "PopoverContentProps",
+    "typeOnly": true,
+    "source": "src/components/Popover.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "PopoverDescription",
+    "typeOnly": false,
+    "source": "src/components/Popover.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "PopoverHeader",
+    "typeOnly": false,
+    "source": "src/components/Popover.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "PopoverTitle",
+    "typeOnly": false,
+    "source": "src/components/Popover.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "PopoverTrigger",
+    "typeOnly": false,
+    "source": "src/components/Popover.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Progress",
+    "typeOnly": false,
+    "source": "src/components/Progress.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ProgressProps",
+    "typeOnly": true,
+    "source": "src/components/Progress.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Questionnaire",
+    "typeOnly": false,
+    "source": "src/components/Questionnaire.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "QuestionnaireActions",
+    "typeOnly": false,
+    "source": "src/components/Questionnaire.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "QuestionnaireChoice",
+    "typeOnly": false,
+    "source": "src/components/Questionnaire.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "QuestionnaireChoiceDescription",
+    "typeOnly": false,
+    "source": "src/components/Questionnaire.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "QuestionnaireChoiceProps",
+    "typeOnly": true,
+    "source": "src/components/Questionnaire.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "QuestionnaireChoices",
+    "typeOnly": false,
+    "source": "src/components/Questionnaire.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "QuestionnaireDescription",
+    "typeOnly": false,
+    "source": "src/components/Questionnaire.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "QuestionnaireError",
+    "typeOnly": false,
+    "source": "src/components/Questionnaire.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "QuestionnaireInput",
+    "typeOnly": false,
+    "source": "src/components/Questionnaire.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "QuestionnaireItem",
+    "typeOnly": false,
+    "source": "src/components/Questionnaire.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "QuestionnaireItemProps",
+    "typeOnly": true,
+    "source": "src/components/Questionnaire.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "QuestionnaireNext",
+    "typeOnly": false,
+    "source": "src/components/Questionnaire.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "QuestionnairePrevious",
+    "typeOnly": false,
+    "source": "src/components/Questionnaire.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "QuestionnaireProgress",
+    "typeOnly": false,
+    "source": "src/components/Questionnaire.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "QuestionnaireProps",
+    "typeOnly": true,
+    "source": "src/components/Questionnaire.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "QuestionnaireSkip",
+    "typeOnly": false,
+    "source": "src/components/Questionnaire.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "QuestionnaireSubmit",
+    "typeOnly": false,
+    "source": "src/components/Questionnaire.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "QuestionnaireTitle",
+    "typeOnly": false,
+    "source": "src/components/Questionnaire.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "QuestionnaireValues",
+    "typeOnly": true,
+    "source": "src/components/Questionnaire.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "RadioGroup",
+    "typeOnly": false,
+    "source": "src/components/RadioGroup.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "RadioGroupItem",
+    "typeOnly": false,
+    "source": "src/components/RadioGroup.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "RadioGroupItemProps",
+    "typeOnly": true,
+    "source": "src/components/RadioGroup.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "repaintAll",
+    "typeOnly": false,
+    "source": "src/lib/tezawari/registry.ts",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "reseed",
+    "typeOnly": false,
+    "source": "src/lib/tezawari/registry.ts",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ResizableHandle",
+    "typeOnly": false,
+    "source": "src/components/Resizable.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ResizableHandleProps",
+    "typeOnly": true,
+    "source": "src/components/Resizable.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ResizablePanel",
+    "typeOnly": false,
+    "source": "src/components/Resizable.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ResizablePanelGroup",
+    "typeOnly": false,
+    "source": "src/components/Resizable.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Rule",
+    "typeOnly": false,
+    "source": "src/components/Rule.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "RuleProps",
+    "typeOnly": true,
+    "source": "src/components/Rule.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ScrollArea",
+    "typeOnly": false,
+    "source": "src/components/ScrollArea.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ScrollBar",
+    "typeOnly": false,
+    "source": "src/components/ScrollArea.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Select",
+    "typeOnly": false,
+    "source": "src/components/Select.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SelectContent",
+    "typeOnly": false,
+    "source": "src/components/Select.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SelectContentProps",
+    "typeOnly": true,
+    "source": "src/components/Select.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SelectGroup",
+    "typeOnly": false,
+    "source": "src/components/Select.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SelectItem",
+    "typeOnly": false,
+    "source": "src/components/Select.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SelectItemProps",
+    "typeOnly": true,
+    "source": "src/components/Select.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SelectLabel",
+    "typeOnly": false,
+    "source": "src/components/Select.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SelectProps",
+    "typeOnly": true,
+    "source": "src/components/Select.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SelectSeparator",
+    "typeOnly": false,
+    "source": "src/components/Select.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SelectTrigger",
+    "typeOnly": false,
+    "source": "src/components/Select.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SelectTriggerProps",
+    "typeOnly": true,
+    "source": "src/components/Select.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SelectValue",
+    "typeOnly": false,
+    "source": "src/components/Select.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SelectValueProps",
+    "typeOnly": true,
+    "source": "src/components/Select.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Separator",
+    "typeOnly": false,
+    "source": "src/components/Separator.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SeparatorProps",
+    "typeOnly": true,
+    "source": "src/components/Separator.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Sheet",
+    "typeOnly": false,
+    "source": "src/components/Sheet.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SheetClose",
+    "typeOnly": false,
+    "source": "src/components/Sheet.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SheetContent",
+    "typeOnly": false,
+    "source": "src/components/Sheet.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SheetContentProps",
+    "typeOnly": true,
+    "source": "src/components/Sheet.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SheetDescription",
+    "typeOnly": false,
+    "source": "src/components/Sheet.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SheetFooter",
+    "typeOnly": false,
+    "source": "src/components/Sheet.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SheetHeader",
+    "typeOnly": false,
+    "source": "src/components/Sheet.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SheetPortal",
+    "typeOnly": false,
+    "source": "src/components/Sheet.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SheetTitle",
+    "typeOnly": false,
+    "source": "src/components/Sheet.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SheetTrigger",
+    "typeOnly": false,
+    "source": "src/components/Sheet.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Sidebar",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarContent",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarFooter",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarGroup",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarGroupAction",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarGroupContent",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarGroupLabel",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarHeader",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarInput",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarInset",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarMenu",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarMenuAction",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarMenuBadge",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarMenuButton",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarMenuButtonProps",
+    "typeOnly": true,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarMenuItem",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarMenuSkeleton",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarMenuSub",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarMenuSubButton",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarMenuSubItem",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarProps",
+    "typeOnly": true,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarProvider",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarProviderProps",
+    "typeOnly": true,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarRail",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarSeparator",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SidebarTrigger",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Skeleton",
+    "typeOnly": false,
+    "source": "src/components/Skeleton.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SkeletonProps",
+    "typeOnly": true,
+    "source": "src/components/Skeleton.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Skin",
+    "typeOnly": true,
+    "source": "src/lib/tezawari/types.ts",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SkinHandle",
+    "typeOnly": true,
+    "source": "src/lib/tezawari/registry.ts",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Slider",
+    "typeOnly": false,
+    "source": "src/components/Slider.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SliderProps",
+    "typeOnly": true,
+    "source": "src/components/Slider.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Spinner",
+    "typeOnly": false,
+    "source": "src/components/Spinner.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SpinnerProps",
+    "typeOnly": true,
+    "source": "src/components/Spinner.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Switch",
+    "typeOnly": false,
+    "source": "src/components/Switch.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "SwitchProps",
+    "typeOnly": true,
+    "source": "src/components/Switch.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Table",
+    "typeOnly": false,
+    "source": "src/components/Table.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "TableBody",
+    "typeOnly": false,
+    "source": "src/components/Table.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "TableCaption",
+    "typeOnly": false,
+    "source": "src/components/Table.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "TableCell",
+    "typeOnly": false,
+    "source": "src/components/Table.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "TableFooter",
+    "typeOnly": false,
+    "source": "src/components/Table.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "TableHead",
+    "typeOnly": false,
+    "source": "src/components/Table.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "TableHeader",
+    "typeOnly": false,
+    "source": "src/components/Table.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "TableRow",
+    "typeOnly": false,
+    "source": "src/components/Table.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Tabs",
+    "typeOnly": false,
+    "source": "src/components/Tabs.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "TabsContent",
+    "typeOnly": false,
+    "source": "src/components/Tabs.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "TabsList",
+    "typeOnly": false,
+    "source": "src/components/Tabs.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "TabsListProps",
+    "typeOnly": true,
+    "source": "src/components/Tabs.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "TabsTrigger",
+    "typeOnly": false,
+    "source": "src/components/Tabs.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Textarea",
+    "typeOnly": false,
+    "source": "src/components/TextArea.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "TextArea",
+    "typeOnly": false,
+    "source": "src/components/TextArea.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "TextareaProps",
+    "typeOnly": true,
+    "source": "src/components/TextArea.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "TextAreaProps",
+    "typeOnly": true,
+    "source": "src/components/TextArea.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "TezawariOptions",
+    "typeOnly": true,
+    "source": "src/lib/tezawari/types.ts",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "toast",
+    "typeOnly": false,
+    "source": "src/components/Toast.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Toaster",
+    "typeOnly": false,
+    "source": "src/components/Toast.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ToasterProps",
+    "typeOnly": true,
+    "source": "src/components/Toast.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ToastOptions",
+    "typeOnly": true,
+    "source": "src/components/Toast.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ToastType",
+    "typeOnly": true,
+    "source": "src/components/Toast.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Toggle",
+    "typeOnly": false,
+    "source": "src/components/Toggle.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ToggleGroup",
+    "typeOnly": false,
+    "source": "src/components/ToggleGroup.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ToggleGroupItem",
+    "typeOnly": false,
+    "source": "src/components/ToggleGroup.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ToggleGroupItemProps",
+    "typeOnly": true,
+    "source": "src/components/ToggleGroup.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ToggleGroupProps",
+    "typeOnly": true,
+    "source": "src/components/ToggleGroup.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "ToggleProps",
+    "typeOnly": true,
+    "source": "src/components/Toggle.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "toggleVariants",
+    "typeOnly": false,
+    "source": "src/components/Toggle.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "Tooltip",
+    "typeOnly": false,
+    "source": "src/components/Tooltip.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "TooltipContent",
+    "typeOnly": false,
+    "source": "src/components/Tooltip.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "TooltipProvider",
+    "typeOnly": false,
+    "source": "src/components/Tooltip.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "TooltipTrigger",
+    "typeOnly": false,
+    "source": "src/components/Tooltip.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "useCarousel",
+    "typeOnly": false,
+    "source": "src/components/Carousel.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "useChart",
+    "typeOnly": false,
+    "source": "src/components/Chart.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "useDirection",
+    "typeOnly": false,
+    "source": "src/components/Direction.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "useIsMobile",
+    "typeOnly": false,
+    "source": "src/hooks/useIsMobile.ts",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "useMessageScroller",
+    "typeOnly": false,
+    "source": "src/components/MessageScroller.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "useSidebar",
+    "typeOnly": false,
+    "source": "src/components/Sidebar.tsx",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "useSkin",
+    "typeOnly": false,
+    "source": "src/hooks/useSkin.ts",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "UseSkinOptions",
+    "typeOnly": true,
+    "source": "src/hooks/useSkin.ts",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  },
+  {
+    "name": "useTezawari",
+    "typeOnly": false,
+    "source": "src/hooks/useTezawari.ts",
+    "contract": null,
+    "coverage": "indexed; not-evaluated"
+  }
+]

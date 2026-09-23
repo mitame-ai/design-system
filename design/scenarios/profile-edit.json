@@ -1,0 +1,53 @@
+{
+  "id": "scenario.profile-edit",
+  "kind": "scenario",
+  "title": "プロフィールを編集",
+  "description": "A member changes their display name and retries a failed save without retyping.",
+  "refs": [
+    "pattern.edit-form",
+    "design.rules",
+    "skill.tezawari-build",
+    "skill.tezawari-review",
+    "skill.tezawari-improve",
+    "skill.tezawari-install"
+  ],
+  "pattern": "pattern.edit-form",
+  "rules": [
+    "FORM-LABEL",
+    "FORM-INVALID",
+    "FORM-PENDING",
+    "FORM-RECOVERY",
+    "FORM-KEYBOARD",
+    "LAYOUT-OVERFLOW",
+    "THEME-TOKENS",
+    "MOTION-REDUCED",
+    "COMPONENT-EXAMPLES",
+    "COMPOSITION-FIT"
+  ],
+  "states": ["default", "invalid", "pending", "server-error", "success"],
+  "viewports": [
+    {
+      "width": 390,
+      "height": 844
+    },
+    {
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "themes": ["light", "dark"],
+  "motion": ["no-preference", "reduce"],
+  "fixture": {
+    "label": "表示名",
+    "save": "保存する",
+    "initial": "山田 花子",
+    "edited": "山田 はな",
+    "long": "長い表示名でも入力内容を失わずに保存できる利用者",
+    "endpoint": "/api/profile",
+    "error": "保存できませんでした。入力内容を確認して、もう一度お試しください。",
+    "success": "保存しました。",
+    "instructionId": "name-help",
+    "instructionToken": "--tz-ink-2"
+  },
+  "boundary": "Local test scenario. These labels, endpoint and viewport dimensions are not global product policy."
+}

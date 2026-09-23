@@ -1,0 +1,63 @@
+body {
+  margin: 0;
+  background: var(--tz-paper);
+  color: var(--tz-ink);
+}
+.page,
+.examples {
+  box-sizing: border-box;
+  width: min(100%, 760px);
+  margin: auto;
+  padding: 48px 28px;
+}
+.page {
+  min-height: 100vh;
+}
+h1 {
+  margin: 12px 0;
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  font-weight: 500;
+}
+header {
+  margin-bottom: 40px;
+}
+.eyebrow {
+  color: var(--tz-ink-2);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+}
+form,
+.examples {
+  display: grid;
+  gap: 24px;
+}
+form {
+  min-width: 0;
+}
+.actions,
+.example-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+.actions [role="status"] {
+  color: var(--tz-ink-2);
+}
+.examples {
+  border-top: 1px solid var(--tz-ink-3);
+}
+.example-input {
+  max-width: 100%;
+}
+@media (max-width: 480px) {
+  .page,
+  .examples {
+    padding: 32px;
+  }
+}
+
+/* The instruction is readable content, not a decorative/pale annotation. */
+#name-help {
+  color: var(--tz-ink-2);
+}

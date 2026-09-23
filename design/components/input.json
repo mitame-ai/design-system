@@ -1,0 +1,18 @@
+{
+  "id": "component.input",
+  "kind": "component",
+  "title": "Input",
+  "description": "Tezawari Input integration contract",
+  "refs": ["design.language", "design.tokens"],
+  "exports": ["Input", "InputProps", "inputVariants"],
+  "variants": {
+    "variant": ["rule", "boxed"]
+  },
+  "behavior": [
+    "The ref and native input props belong to the inner input; wrapperClassName styles the shell.",
+    "Connect id to FieldLabel htmlFor. Connect error text with aria-describedby and aria-invalid.",
+    "IME composition is supported; do not submit while composing."
+  ],
+  "verification": "Pilot composition and typed examples; not exhaustive coverage of every prop combination.",
+  "example": "examples/consumer/src/App.tsx"
+}

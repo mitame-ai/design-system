@@ -1,8 +1,21 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.5.14/schema.json",
-  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
   "files": {
-    "includes": ["**", "!dist", "!storybook-static", "!index.html"]
+    "includes": [
+      "**",
+      "!dist",
+      "!storybook-static",
+      "!index.html",
+      "!.agents/skills/build-design-harness/assets",
+      "!.agents/skills/build-design-harness/scripts",
+      "!test-results",
+      "!design/generated"
+    ]
   },
   "formatter": {
     "enabled": true,
@@ -11,31 +24,49 @@
     "lineWidth": 100
   },
   "css": {
-    "parser": { "tailwindDirectives": true }
+    "parser": {
+      "tailwindDirectives": true
+    }
   },
   "javascript": {
-    "formatter": { "quoteStyle": "single", "semicolons": "asNeeded" }
+    "formatter": {
+      "quoteStyle": "single",
+      "semicolons": "asNeeded"
+    }
   },
   "linter": {
     "enabled": true,
     "rules": {
       "preset": "recommended",
-      "suspicious": { "noAssignInExpressions": "off" },
+      "suspicious": {
+        "noAssignInExpressions": "off"
+      },
       "style": {
         "noNonNullAssertion": "off",
         "noParameterAssign": "off",
-        "useConsistentArrayType": { "level": "error", "options": { "syntax": "shorthand" } }
+        "useConsistentArrayType": {
+          "level": "error",
+          "options": {
+            "syntax": "shorthand"
+          }
+        }
       }
     }
   },
   "overrides": [
     {
       "includes": ["src/styles/**"],
-      "formatter": { "enabled": false },
+      "formatter": {
+        "enabled": false
+      },
       "linter": {
         "rules": {
-          "style": { "noDescendingSpecificity": "off" },
-          "correctness": { "noUnknownProperty": "off" }
+          "style": {
+            "noDescendingSpecificity": "off"
+          },
+          "correctness": {
+            "noUnknownProperty": "off"
+          }
         }
       }
     },
@@ -43,9 +74,15 @@
       "includes": ["src/lib/tezawari/**"],
       "linter": {
         "rules": {
-          "security": { "noDangerouslySetInnerHtml": "off" },
-          "suspicious": { "noBitwiseOperators": "off" },
-          "complexity": { "noExcessiveCognitiveComplexity": "off" }
+          "security": {
+            "noDangerouslySetInnerHtml": "off"
+          },
+          "suspicious": {
+            "noBitwiseOperators": "off"
+          },
+          "complexity": {
+            "noExcessiveCognitiveComplexity": "off"
+          }
         }
       }
     },
@@ -63,14 +100,24 @@
     },
     {
       "includes": ["src/components/Rule.tsx"],
-      "linter": { "rules": { "a11y": { "useSemanticElements": "off" } } }
+      "linter": {
+        "rules": {
+          "a11y": {
+            "useSemanticElements": "off"
+          }
+        }
+      }
     },
     {
       "includes": ["**/*.stories.tsx"],
       "linter": {
         "rules": {
-          "suspicious": { "noArrayIndexKey": "off" },
-          "a11y": { "noLabelWithoutControl": "off" }
+          "suspicious": {
+            "noArrayIndexKey": "off"
+          },
+          "a11y": {
+            "noLabelWithoutControl": "off"
+          }
         }
       }
     }

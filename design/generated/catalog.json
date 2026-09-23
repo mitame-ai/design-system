@@ -1,0 +1,247 @@
+{
+  "schemaVersion": 1,
+  "packageVersion": "0.1.0",
+  "contractRevision": "deb02502051b2009737d4c6b7b17a4a51b86cdd175adcb0bd315fb3e392829e6",
+  "resources": [
+    {
+      "id": "design.language",
+      "kind": "reference",
+      "title": "Tezawari consumer design principles",
+      "description": "Public material principles and component usage guidance for consuming apps.",
+      "path": "DESIGN.md",
+      "refs": [],
+      "uri": "tezawari://design/design.language",
+      "digest": "2a8edd8233285dcfa789e34c31ced2069e92158d57e1909a0d45849fa7aca6fa"
+    },
+    {
+      "id": "design.integration",
+      "kind": "reference",
+      "title": "Portable design harness",
+      "description": "Installation, consumer setup, verification, updates and MCP instructions.",
+      "path": "DESIGN.md",
+      "refs": [
+        "design.language",
+        "design.installation"
+      ],
+      "uri": "tezawari://design/design.integration",
+      "digest": "2a8edd8233285dcfa789e34c31ced2069e92158d57e1909a0d45849fa7aca6fa"
+    },
+    {
+      "id": "design.installation",
+      "kind": "reference",
+      "title": "Library installation and usage",
+      "description": "Build and pack Tezawari, install it in a React app, and import styles and components.",
+      "path": "README.md",
+      "refs": [],
+      "uri": "tezawari://design/design.installation",
+      "digest": "01a36affd455ba2c75c6c8a287432fc0cc7e5e582fbcfce2d46656d7a8f102bf"
+    },
+    {
+      "id": "design.tokens",
+      "kind": "tokens",
+      "title": "CSS token reference",
+      "description": "CSS-derived declarations with selector and media context.",
+      "path": "design/generated/tokens.json",
+      "refs": [],
+      "uri": "tezawari://design/design.tokens",
+      "digest": "0f89f092765a349acfb3e665e7c50eab0a18127c2fc5fd31c7687782c475ca66"
+    },
+    {
+      "id": "design.api",
+      "kind": "api",
+      "title": "Public API index",
+      "description": "Every public TypeScript export and its verification coverage.",
+      "path": "design/generated/api.json",
+      "refs": [],
+      "uri": "tezawari://design/design.api",
+      "digest": "9739d7577420a0910b7da88625e6317bf3cf73f21edcf73d84ee1c61c68bc958"
+    },
+    {
+      "id": "design.reference",
+      "kind": "reference",
+      "title": "Human reference",
+      "description": "Generated API and token tables.",
+      "path": "design/generated/reference.md",
+      "refs": [
+        "design.api",
+        "design.tokens"
+      ],
+      "uri": "tezawari://design/design.reference",
+      "digest": "79a1f2450e02a3d56f74fe0b2ed55fca3c09d50239120a332687a055f760d5c7"
+    },
+    {
+      "id": "component.alert",
+      "kind": "component",
+      "title": "Alert",
+      "description": "Tezawari Alert integration contract",
+      "refs": [
+        "design.language",
+        "design.tokens"
+      ],
+      "path": "design/components/alert.json",
+      "uri": "tezawari://design/component.alert",
+      "digest": "469e04870977d9495e21916bd81cc7119dd026d1f25722f316fdb82f466e0e01"
+    },
+    {
+      "id": "component.button",
+      "kind": "component",
+      "title": "Button",
+      "description": "Tezawari Button integration contract",
+      "refs": [
+        "design.language",
+        "design.tokens"
+      ],
+      "path": "design/components/button.json",
+      "uri": "tezawari://design/component.button",
+      "digest": "fd11ca5b4b90d807a99bea8ce3ef598cfcf3acea20821de6ad5a144342759cf7"
+    },
+    {
+      "id": "component.card",
+      "kind": "component",
+      "title": "Card",
+      "description": "Tezawari Card integration contract",
+      "refs": [
+        "design.language",
+        "design.tokens"
+      ],
+      "path": "design/components/card.json",
+      "uri": "tezawari://design/component.card",
+      "digest": "39e1a2d46c23970930d993d808cf829a2d705117723fea059533be06f8198c40"
+    },
+    {
+      "id": "component.field",
+      "kind": "component",
+      "title": "Field",
+      "description": "Tezawari Field integration contract",
+      "refs": [
+        "design.language",
+        "design.tokens"
+      ],
+      "path": "design/components/field.json",
+      "uri": "tezawari://design/component.field",
+      "digest": "20fb008d86e7eea5f4efcd7dd31cbee8315e6fe8cd0333759c26ece7d4e70180"
+    },
+    {
+      "id": "component.input",
+      "kind": "component",
+      "title": "Input",
+      "description": "Tezawari Input integration contract",
+      "refs": [
+        "design.language",
+        "design.tokens"
+      ],
+      "path": "design/components/input.json",
+      "uri": "tezawari://design/component.input",
+      "digest": "fda58a1b3def47cd5ae27cf57db6e84aae1a89f0b312b49d7a524b5e6159f983"
+    },
+    {
+      "id": "component.paper-grain",
+      "kind": "component",
+      "title": "PaperGrain",
+      "description": "Tezawari PaperGrain integration contract",
+      "refs": [
+        "design.language",
+        "design.tokens"
+      ],
+      "path": "design/components/paper-grain.json",
+      "uri": "tezawari://design/component.paper-grain",
+      "digest": "603581abfc77dbe09eba821126391460f45be4b2e8d8dca33edda683dff74929"
+    },
+    {
+      "id": "pattern.edit-form",
+      "kind": "pattern",
+      "title": "Recoverable edit form",
+      "description": "Edit a value without losing work when saving fails.",
+      "refs": [
+        "component.button",
+        "component.input",
+        "component.field",
+        "component.card",
+        "component.alert",
+        "component.paper-grain"
+      ],
+      "path": "design/patterns/edit-form.json",
+      "uri": "tezawari://design/pattern.edit-form",
+      "digest": "e82f1b187f6215eb71e6f057333d5178beaf56fb1d0ed8acefbf935f8c4b0e00"
+    },
+    {
+      "id": "scenario.profile-edit",
+      "kind": "scenario",
+      "title": "プロフィールを編集",
+      "description": "A member changes their display name and retries a failed save without retyping.",
+      "refs": [
+        "pattern.edit-form",
+        "design.rules",
+        "skill.tezawari-build",
+        "skill.tezawari-review",
+        "skill.tezawari-improve",
+        "skill.tezawari-install"
+      ],
+      "path": "design/scenarios/profile-edit.json",
+      "uri": "tezawari://design/scenario.profile-edit",
+      "digest": "edd10b2ef9f02e8badf56ed37947a13a674f5b06ad0ea3bdb3ecb1c8f79fc2c1"
+    },
+    {
+      "id": "design.rules",
+      "kind": "rules",
+      "title": "Executable pilot rules",
+      "description": "Mechanical rule mappings and separate contextual review.",
+      "refs": [],
+      "path": "design/rules.json",
+      "uri": "tezawari://design/design.rules",
+      "digest": "a8b3b84def97d7a658bfdcce473283ef5313793ac257c6bc22b92f96f7f14090"
+    },
+    {
+      "id": "skill.tezawari-install",
+      "kind": "skill",
+      "title": "Tezawari install",
+      "description": "Installed task workflow: install.",
+      "path": ".agents/skills/tezawari-install/SKILL.md",
+      "refs": [
+        "design.language",
+        "design.integration"
+      ],
+      "uri": "tezawari://design/skill.tezawari-install",
+      "digest": "738459ca787336ad6ba2b392c0293ee95bf15297ea80ccb8b222376612b381da"
+    },
+    {
+      "id": "skill.tezawari-build",
+      "kind": "skill",
+      "title": "Tezawari build",
+      "description": "Installed task workflow: build.",
+      "path": ".agents/skills/tezawari-build/SKILL.md",
+      "refs": [
+        "design.language",
+        "design.integration"
+      ],
+      "uri": "tezawari://design/skill.tezawari-build",
+      "digest": "f3c0fe816fd6f3058bf0f688f3dca2424925f77c673d20b69b3f475a77b285e2"
+    },
+    {
+      "id": "skill.tezawari-review",
+      "kind": "skill",
+      "title": "Tezawari review",
+      "description": "Installed task workflow: review.",
+      "path": ".agents/skills/tezawari-review/SKILL.md",
+      "refs": [
+        "design.language",
+        "design.integration"
+      ],
+      "uri": "tezawari://design/skill.tezawari-review",
+      "digest": "3436e929693120ec256f47bef21500ab09455fb054e2450f8ea1fc44e25c0d90"
+    },
+    {
+      "id": "skill.tezawari-improve",
+      "kind": "skill",
+      "title": "Tezawari improve",
+      "description": "Installed task workflow: improve.",
+      "path": ".agents/skills/tezawari-improve/SKILL.md",
+      "refs": [
+        "design.language",
+        "design.integration"
+      ],
+      "uri": "tezawari://design/skill.tezawari-improve",
+      "digest": "e0bafe930a45bec32ac906a07500df90dd4028e8679e498c8f7c90a382995d86"
+    }
+  ]
+}

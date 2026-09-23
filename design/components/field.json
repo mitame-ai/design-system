@@ -1,0 +1,35 @@
+{
+  "id": "component.field",
+  "kind": "component",
+  "title": "Field",
+  "description": "Tezawari Field integration contract",
+  "refs": ["design.language", "design.tokens"],
+  "exports": [
+    "Field",
+    "FieldProps",
+    "FieldLabel",
+    "FieldLabelProps",
+    "FieldNote",
+    "FieldDescription",
+    "FieldError",
+    "FieldErrorProps",
+    "FieldContent",
+    "FieldGroup",
+    "FieldSet",
+    "FieldLegend",
+    "FieldSeparator",
+    "FieldTitle"
+  ],
+  "variants": {
+    "orientation": ["vertical", "horizontal", "responsive"]
+  },
+  "behavior": [
+    "Field invalid controls visual error styling; set aria-invalid on the input separately.",
+    "FieldLabel required is a visual mark; set required on the input.",
+    "FieldError has role=alert; its id must be associated with the input.",
+    "FieldSet and FieldLegend group related controls semantically.",
+    "For browser automation, locate the textbox by role and accessible name, then verify its native label association. The aria-hidden required mark may appear in exact label-text queries; do not put it in the accessible name."
+  ],
+  "verification": "Pilot composition and typed examples; not exhaustive coverage of every prop combination.",
+  "example": "examples/consumer/src/App.tsx"
+}

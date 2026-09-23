@@ -1,0 +1,24 @@
+{
+  "id": "component.alert",
+  "kind": "component",
+  "title": "Alert",
+  "description": "Tezawari Alert integration contract",
+  "refs": ["design.language", "design.tokens"],
+  "exports": [
+    "Alert",
+    "AlertProps",
+    "alertVariants",
+    "AlertTitle",
+    "AlertDescription",
+    "AlertAction"
+  ],
+  "variants": {
+    "variant": ["plain", "shu"]
+  },
+  "behavior": [
+    "Alert defaults to role=alert; use role=status for a nonurgent success.",
+    "Use shu for correction or caution, not general emphasis."
+  ],
+  "verification": "Pilot composition and typed examples; not exhaustive coverage of every prop combination.",
+  "example": "examples/consumer/src/App.tsx"
+}

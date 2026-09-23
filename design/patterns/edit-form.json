@@ -1,0 +1,30 @@
+{
+  "id": "pattern.edit-form",
+  "kind": "pattern",
+  "title": "Recoverable edit form",
+  "description": "Edit a value without losing work when saving fails.",
+  "refs": [
+    "component.button",
+    "component.input",
+    "component.field",
+    "component.card",
+    "component.alert",
+    "component.paper-grain"
+  ],
+  "regions": [
+    "Heading and purpose",
+    "Labeled fields and associated errors",
+    "Status and recovery",
+    "Primary submit action"
+  ],
+  "requirements": [
+    "Keep entered values after a failed save.",
+    "Prevent duplicate submission while pending.",
+    "Keep controls reachable by keyboard and at narrow widths.",
+    "Reserve outer layout space for the material shell (--tz-pad) and its animated contour. Verify page overflow with normal motion; do not hide overflowing decoration to silence the check."
+  ],
+  "review": [
+    "Is the next action clear in every state?",
+    "Does material decoration preserve readable content and hierarchy?"
+  ]
+}

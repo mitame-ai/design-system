@@ -1,0 +1,31 @@
+{
+  "id": "component.card",
+  "kind": "component",
+  "title": "Card",
+  "description": "Tezawari Card integration contract",
+  "refs": ["design.language", "design.tokens"],
+  "exports": [
+    "Card",
+    "CardProps",
+    "cardVariants",
+    "CardHeader",
+    "CardTitle",
+    "CardDescription",
+    "CardText",
+    "CardAction",
+    "CardContent",
+    "CardMeta",
+    "CardFooter",
+    "CardMedia"
+  ],
+  "variants": {
+    "variant": ["plain", "pick", "inlay"]
+  },
+  "behavior": [
+    "Card is a div by default; asChild can preserve a supplied semantic element.",
+    "Decorative shells must be scoped to the direct child so nested buttons retain their own styling.",
+    "CardTitle renders h3; provide the page heading separately."
+  ],
+  "verification": "Pilot composition and typed examples; not exhaustive coverage of every prop combination.",
+  "example": "examples/consumer/src/App.tsx"
+}

@@ -1,7 +1,8 @@
 # 手触り / Tezawari
 
-[DESIGN.md](DESIGN.md) で定義されたデザイン言語に基づく React コンポーネントライブラリです。
-単一ファイルによる参照実装（[index.html](index.html)）も同梱しています。
+手触りのデザイン言語に基づく React コンポーネントライブラリです。
+利用側のデザイン原則とハーネスの手順は [DESIGN.md](DESIGN.md) を参照してください。
+ソースリポジトリには単一ファイルの参照実装 `index.html` と、保守者向け設計資料 `DESIGN.local.md` があります。これらはパッケージの配布対象外です。
 
 ```bash
 pnpm install
@@ -15,11 +16,66 @@ pnpm storybook   # http://localhost:6006
 | `pnpm check` / `pnpm fix` | Biome による静的解析と自動修正 |
 | `pnpm storybook` / `pnpm build-storybook` | Storybook の開発サーバー起動 / 静的ビルド |
 
+## 他のアプリにインストール
+
+利用側には React 18 または 19 が必要です。ハーネスの CLI / MCP には Node.js 22 以上を使います。
+
+GitHub Packages から導入する場合は、利用側のプロジェクトに次の `.npmrc` を置きます。
+GitHub Packages は公開パッケージの取得にも認証が必要です。`GITHUB_PACKAGES_TOKEN` には
+`read:packages` 権限のある GitHub personal access token (classic) を環境変数として渡し、
+トークンの値をファイルや Git に保存しないでください。
+
+```ini
+@mitame-ai:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_TOKEN}
+```
+
+次に、**利用するアプリのディレクトリ**でインストールします。
+
+```sh
+pnpm add @mitame-ai/design-system@0.1.0
+pnpm exec tezawari-design install-skills .
+pnpm exec tezawari-design resolve scenario.profile-edit
+```
+
+既存アプリのパッケージマネージャーと lockfile を継続して使ってください。
+ローカルのソースから導入する場合は、このリポジトリで配布用の tarball を作成します。
+
+```sh
+pnpm install --frozen-lockfile
+pnpm design:generate
+pnpm build
+pnpm pack --pack-destination ./test-results/packages
+```
+
+次に、**利用するアプリのディレクトリ**で生成されたファイルをインストールします。
+パスは実際の tarball の絶対パスに置き換えてください。
+
+```sh
+pnpm add /path/to/mitame-ai-design-system-0.1.0.tgz
+pnpm exec tezawari-design install-skills .
+pnpm exec tezawari-design resolve scenario.profile-edit
+```
+
+tarball で導入する場合、GitHub Packages 用の `.npmrc` は不要です。
+
+次の「使い方」に従って CSS とコンポーネントを読み込み、利用側のビルドとプレビューで確認します。
+`install-skills` は `tezawari-install`・`tezawari-build`・`tezawari-review`・`tezawari-improve` を
+プロジェクトの `.agents/skills/` に配置します。エージェントに導入を依頼する場合は
+[tezawari-install](.agents/skills/tezawari-install/SKILL.md) を使ってください。
+MCP、更新・削除、検証範囲の詳細は [DESIGN.md](DESIGN.md) にあります。
+
+### パッケージの公開
+
+保守側は `package.json` のバージョンを更新して検証し、同じ番号の `v<version>` タグから
+GitHub Release を公開します。Release の公開時に GitHub Actions が `pnpm design:check` を実行し、
+成功した版を GitHub Packages に公開します。既存のバージョンは再公開できません。
+
 ## 使い方
 
 ```tsx
-import '@mitame-ai/tezawari/styles.css'
-import { Button, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@mitame-ai/tezawari'
+import '@mitame-ai/design-system/styles.css'
+import { Button, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@mitame-ai/design-system'
 
 <Button variant="ink">仕立てる</Button>
 ```
@@ -31,8 +87,8 @@ Tailwind CSS をお使いの場合は、テーマファイルを読み込むこ�
 
 ```css
 @import 'tailwindcss';
-@import '@mitame-ai/tezawari/theme.css';
-@import '@mitame-ai/tezawari/styles.css';
+@import '@mitame-ai/design-system/theme.css';
+@import '@mitame-ai/design-system/styles.css';
 ```
 
 画面全体で Tezawari の世界観を再現する場合は、背景用のテクスチャ `<PaperGrain />` を配置し、コンテナ要素に `.tz-stage` クラスを指定します。個別のコンポーネントを単体で使用する場合は必須ではありません。
@@ -45,7 +101,7 @@ Tailwind CSS をお使いの場合は、テーマファイルを読み込むこ�
 ## コンポーネント一覧
 
 役割と API は shadcn/ui に倣い、見た目と動きは [DESIGN.md](DESIGN.md) に従います。
-各部品の描き方（面、印、罫）は DESIGN.md の「拡張部品」の節を参照してください。
+各部品の描画実装（面、印、罫）の詳細は、ソースリポジトリの `DESIGN.local.md` の「拡張部品」を参照してください。
 
 ### 基本の四部品とその周り
 
@@ -165,3 +221,17 @@ src/
 - 各レイヤーのスタイルは `> .tz-shell` のように直下の子セレクタで限定してください（子孫セレクタを使うと、ネストされた子コンポーネントにスタイルが漏れてしまいます）。
 - CSS カスタムプロパティは親要素から継承されるため、各コンポーネントでスタイル用トークンを明示的に定義してください（親要素の値が予期せず適用されるのを防ぐため）。
 - `src/styles/components.css` は `index.html` との差分を追跡しやすくするため、あえてフォーマットを行っていません（Biome のフォーマッタ対象から除外されています）。
+
+## 他のアプリで使うデザインハーネス
+
+コンポーネントと同じバージョンで、デザイン契約・検索カタログ・CLI・MCP・タスク用 Skill を配布します。
+導入と検証の手順は [DESIGN.md](DESIGN.md) を参照してください。
+
+```sh
+pnpm exec tezawari-design install-skills .
+pnpm exec tezawari-design resolve scenario.profile-edit
+```
+
+保守側では `pnpm design:generate` で参照情報を更新し、`pnpm design:check` で
+実際の配布パッケージを使う別アプリ、ブラウザー、MCP、失敗と修正の経路を検証します。
+全公開 API を索引化していますが、詳細な動作検証はプロフィール編集のパイロットが対象です。

@@ -1,0 +1,79 @@
+{
+  "id": "design.rules",
+  "kind": "rules",
+  "title": "Executable pilot rules",
+  "description": "Mechanical rule mappings and separate contextual review.",
+  "refs": [],
+  "rules": [
+    {
+      "id": "FORM-LABEL",
+      "detector": "labels",
+      "requirement": "Inputs have associated labels and required semantics.",
+      "scope": "scenario.profile-edit",
+      "strength": "required"
+    },
+    {
+      "id": "FORM-INVALID",
+      "detector": "invalid",
+      "requirement": "Invalid input has associated error text and aria-invalid.",
+      "scope": "scenario.profile-edit",
+      "strength": "required"
+    },
+    {
+      "id": "FORM-PENDING",
+      "detector": "pending",
+      "requirement": "Pending saves keep the submitted draft stable, prevent a second request and communicate busy state.",
+      "scope": "scenario.profile-edit",
+      "strength": "required"
+    },
+    {
+      "id": "FORM-RECOVERY",
+      "detector": "recovery",
+      "requirement": "Rejected saves retain the edit and a retry reaches success.",
+      "scope": "scenario.profile-edit",
+      "strength": "required"
+    },
+    {
+      "id": "FORM-KEYBOARD",
+      "detector": "keyboard",
+      "requirement": "Keyboard focus is visible and form submission works without a pointer.",
+      "scope": "scenario.profile-edit",
+      "strength": "required"
+    },
+    {
+      "id": "LAYOUT-OVERFLOW",
+      "detector": "layout",
+      "requirement": "Pilot controls remain within the viewport without horizontal overflow.",
+      "scope": "scenario.profile-edit",
+      "strength": "required"
+    },
+    {
+      "id": "THEME-TOKENS",
+      "detector": "theme",
+      "requirement": "Rendered colors and nested component tokens come from the CSS authority.",
+      "scope": "scenario.profile-edit",
+      "strength": "required"
+    },
+    {
+      "id": "MOTION-REDUCED",
+      "detector": "motion",
+      "requirement": "Reduced motion stops dynamic decoration while retaining static SVG material.",
+      "scope": "scenario.profile-edit",
+      "strength": "required"
+    },
+    {
+      "id": "COMPONENT-EXAMPLES",
+      "detector": "examples",
+      "requirement": "Declared variants are rendered in typed consumer examples.",
+      "scope": "scenario.profile-edit",
+      "strength": "required"
+    },
+    {
+      "id": "COMPOSITION-FIT",
+      "detector": "review",
+      "requirement": "Review reading order, action priority, and task fit in the captured states.",
+      "scope": "scenario.profile-edit",
+      "strength": "review"
+    }
+  ]
+}

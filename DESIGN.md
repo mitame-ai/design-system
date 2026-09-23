@@ -1,540 +1,161 @@
-# 手触り / Tezawari
+## Portable design harness
 
-画一的で無機質な UI を避け、有機的な温かみを持たせるためのデザイン言語である。
-温かみを安易な色使いに頼るのではなく、形の不揃いさ、反応の局所性、そして時間の非対称性に宿らせる。
+### Design principles for consumers
 
-参照実装は [index.html](index.html) の単一ファイルに含まれている。
-外部依存はなく、ボタン、カード、入力欄、パネルの4つの基本コンポーネントで構成される。
-React 版（`src/`）は、この四つを土台に shadcn/ui と同じ範囲の部品を揃えている。
-四つから広げた部品の描き方は「拡張部品」の節にまとめた。
+Use the public components and semantic CSS tokens to preserve Tezawari's material
+language: quiet paper and ink colors, individual contours, and local responses to
+interaction. Reserve shu (朱) for correction or caution rather than general emphasis.
+Leave enough layout space for the components' decorative shells and focus indicators.
+Keep labels, readable instructions, keyboard operation and failure recovery clear;
+decoration must not replace these functions. Respect reduced-motion preferences.
 
-## 温かみの置き場所
+Implementation details belong to the maintainer-only `DESIGN.local.md` in the source
+repository. That file is not distributed or required by the installed harness.
+Consumer contracts and this guide are the packaged knowledge surface.
 
-手仕事で作られた器が工業製品と違って見えるのは、色ではなくその造形に理由がある。
-一客ごとに縁の厚みが異なり、線の太さは一定でなく、表面には素材の繊維が走っている。
-手に取ったときの応え方も異なる。
-押した場所がわずかにへこみ、指を離せばしなやかに揺れ戻る。
+### Authority and coverage
 
-本デザイン言語では、その差異を3つの要素に落とし込んでいる。
-輪郭の幾何学、線の描かれ方、そして反応の時間変化である。
-色はあえて静けさを保ち、紙と墨に近い落ち着いた階調のみを用いる。
-彩度を持つ色は朱色の一色のみに絞り、誤りの訂正や注意の印としてのみ用いる。
+| Responsibility                                              | Authority                                                                 | Consumer                                                     |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Design intent and material principles                       | [Consumer principles](#design-principles-for-consumers)                                | Build/review skills and contextual review                    |
+| Values, selectors, media conditions and component overrides | `src/styles/*.css` and `src/styles/kit/*.css`                             | Vite CSS build; generated token reference                    |
+| Component behavior and public types                         | `src/components/` and `src/index.ts`                                      | Package build, generated API index, compiled consumer        |
+| Pilot integration guidance                                  | `design/components/*.json`                                                | Resolver and typed/rendered examples                         |
+| Composition and task requirements                           | `design/patterns/edit-form.json`, `design/scenarios/profile-edit.json`    | Consumer form and browser checker                            |
+| Mechanical criteria                                         | `design/rules.json` with `harness/browser.mjs`                            | Shared CLI/MCP verification                                  |
+| Proposed changes and adoption                               | Maintainer `feedback/`; accepted authority changes use normal code review | Maintainers only; proposals never enter production retrieval |
 
-## 個体の不変性
+The harness reuses the existing CSS and TypeScript authorities. It generates a
+catalog and reference views; it does not replace the token pipeline or duplicate
+values in a second source. The existing Vite build produces distributed CSS.
+`index.html` remains a historical visual reference, not a second runtime authority.
+Every public export is indexed. Detailed contracts cover Button, Input, Field,
+Card, Alert, PaperGrain and their declared helpers. Verification covers the pilot
+composition and examples, not every prop combination or every library component.
 
-不揃いであることと、毎回形が変わってしまうことは本質的に異なる。
-手仕事の器は一つひとつ異なる表情を持つが、特定のひとつの器は昨日も今日も同じ形をしている。
-画面が描画されるたびに形が揺れ動いては、手仕事の味ではなく単に粗雑な作りに見えてしまう。
+Gap resolution: reuse CSS, exports, components and Storybook; connect them to the
+catalog and packed consumer; create shared checks, MCP and task skills; keep
+contextual judgments explicit. The pilot helps a member edit a display name and
+recover from a failed save. Its Japanese copy, endpoint and viewport sizes are
+fixture requirements, not global Tezawari product policy.
 
-そこで輪郭のゆらぎは疑似乱数によって生成し、そのシード値をラベル文字列と DOM 上の出現順から決定する。
-同一の指定を持つ4つのボタンであってもそれぞれ異なる輪郭を持ち、ページを再読み込みしても各要素は同じ形状を再現する。
-輪郭を一新したい場合に限り、グローバルな salt（シード値）を進めることで全コンポーネントを再生成する。
+### Install in another app
 
-## 素材の原則
+Follow [README.md](README.md#他のアプリにインストール) to install the intended version
+of `@mitame-ai/design-system` (a local tarball is supported).
+GitHub Packages requires the consumer's `@mitame-ai` registry mapping and a
+`read:packages` token, including for public packages. Keep the token in an
+environment variable as shown in README; do not commit its value.
+For agent-assisted installation or upgrades, use
+[tezawari-install](.agents/skills/tezawari-install/SKILL.md).
+Keep existing imports:
 
-- **個体差**：同じ指定であっても二度と同じ形にはならない。ただし、生成された一つの個体は常に不変である。
-- **筆圧**：線の太さは均一ではない。同一の輪郭に太い破線を重ねることで、手描きの墨だまりを表現する。
-- **地肌**：面には紙や布の繊維が感じられる。異方性を持たせることで織物のような質感を生み出す。
-- **耳**：面積の大きい紙ほど縁のゆらぎが大きくなる。裁断されていない手漉き和紙の縁には自然な毛羽立ちが生まれる。
-
-## 動きの原則
-
-- **気配**：触れる前であっても、ポインタが近づいた時点で素材がわずかに応える。
-- **たわみ**：触れた一点が変形し、離すと減衰振動を伴いながら元の形状に戻る。
-- **息**：静止しているときも完全には静止せず、呼吸のような微細な揺らぎを持つ。
-- **質量**：質量の大きい（面積の広い）物体ほど緩やかに動き、バネの戻りも穏やかになる。
-- **節度**：物理的な反応を示すのは、実際にインタラクション可能な要素のみに限る。
-
-「節度」の原則は、他の4つの原則を律する役割を持つ。
-静的なカードや入力欄は、カーソルが近づいても不必要に傾いたり沈み込んだりしない。
-動きそのものが「これは触れる対象である」というシグナルとなるため、操作できない要素が過剰に反応するとユーザーを惑わせることになる。
-
-## 単一の描画エンジン
-
-ボタン、カード、入力欄、パネルは、すべて同一の描画関数 `paint()` によって描かれる。
-コンポーネントごとの違いは、要素に付与された CSS トークンのみである。
-
-`paint()` は要素の実寸法を計測し、シード値から輪郭パスを生成して、シェル要素（`.tz-shell`）内に SVG を書き込む。
-シェルは要素の外側 `--tz-pad` ピクセルまで拡張できるため、影や耳、フォーカスリングなども要素の境界ボックスの外側に自然に描画できる。
-
-### レイヤーの重なり順
-
-すべてのコンポーネントは共通の順序でレイヤーが重ねられる。
-不要なレイヤーは CSS で `display: none` として非表示にする。
-
-| レイヤー | 役割 | 適用コンポーネント |
-|---|---|---|
-| `tz-shade` | 接地影。ぼかしを加えた同一輪郭 | カード |
-| `tz-fill` | 面の塗り（素地） | ボタン、ボックス型、パネル |
-| `tz-press` | 指で押した位置から広がるへこみの陰影 | ボタン、カード |
-| `tz-grain` | 地肌の繊維テクスチャ | ボタン、カード、パネル |
-| `tz-edge2` | 筆圧の表現。太い破線を輪郭線に重ねる | ボタン、カード |
-| `tz-soak` | 記入された文字の墨の染み込み | 入力欄 |
-| `tz-edge` | 輪郭線そのもの | 全コンポーネント |
-| `tz-correct` | 朱色の訂正波線 | 入力欄 |
-| `tz-hook` | かぎ（書ける範囲の両端を示す跳ね） | 入力欄 |
-| `tz-fringe` | 紙の耳（毛羽立ち） | カード |
-| `tz-ring` | フォーカスリング | ボタン、カード |
-
-輪郭のパス定義は `<defs>` 内に1本だけ配置し、各レイヤーは `<use>` 要素でこれを参照する。
-形状を変形させる際は、参照元であるパスの `d` 属性を1度書き換えるだけで全レイヤーに反映される。
-ただしフォーカスリングのみは独立した輪郭を参照する。
-押下によって要素がたわんだ際にフォーカス枠まで連動して歪むと、現在位置の視認性が損なわれるためである。
-
-### 二段階のゆらぎ
-
-輪郭には2つの異なるスケールでゆらぎを与える。
-
-幾何学的なゆらぎは、角丸矩形の外周を等間隔でサンプリングし、各頂点を法線方向に周期ノイズで押し出して生成する。
-ノイズの周波数は整数倍に保つ。
-閉じた輪郭が継ぎ目なく一周するためには、周期が外周一周でちょうど割り切れる必要があるためである。
-`--tz-grit` はこの周波数の倍率であり、値を大きくするほど細かな破れや凹凸が加わる。
-
-繊維レベルの細かなゆらぎは、SVG の変位フィルター（`feDisplacementMap`）によって付与する。
-乱数シードは要素ごとに異なるため、同じ寸法のコンポーネントが並んでも同一の歪み方にはならない。
-
-幾何学的な処理が個体固有の歪みを担い、フィルター処理が紙の繊維の質感を担う。
-この二重のスケール設計によって、単なる歪んだ矩形ではなく、手漉き和紙のような豊かな風合いが生まれる。
-
-## 設計トークン
-
-デフォルト値は `:root` に定義されているが、各コンポーネントは必ず独自に値を上書きして定義する。
-CSS カスタムプロパティは子孫要素に継承されるため、カードの中に配置したボタンがカードの粗さ設定を引き継いでしまうのを防ぐためである。
-
-### 造形トークン（形状の定義）
-
-| トークン | 意味 | ボタン | カード | 入力欄 | パネル |
-|---|---|---|---|---|---|
-| `--tz-pad` | 輪郭が要素外にはみ出せる余白 (px) | 10 | 24 | 12 | 8 |
-| `--tz-amp` | 個体差による輪郭の振れ幅 (px) | 1.05 | 2.05 | 0.85 | 1.7 |
-| `--tz-grit` | 縁の粗さ（空間周波数の倍率、整数） | 1 | 3 | 2 | 4 |
-| `--tz-fiber` | 繊維レベルのゆらぎの強さ | 1.15 | 2.1 | 0.9 | 1.6 |
-| `--tz-radius` | 角丸の半径 (px) | 13 | 7 | 6 | 5 |
-| `--tz-grain-freq` | 地肌のテクスチャ周波数 | 0.85 | 0.7 | 0.8 | 0.02 0.62 |
-| `--tz-form` | 輪郭の形状種別 | box | box | rule | box |
-
-パネルコンポーネントの `--tz-grain-freq` のみ、横方向と縦方向の2つの値を指定する。
-横方向の周波数を低く、縦方向の周波数を高く設定することで、等方的な粒子が横向きの繊維へと変化し、織布のような表情が現れる。
-
-`--tz-form` は輪郭の描画形式を指定する。
-`box` は閉じた矩形輪郭、`rule` は下端を走る1本の開いた罫線、`ruled` は領域内に行数分の罫線を引く原稿用紙形式を表す。
-
-サンプリング間隔は `--tz-grit` から動的に算出する（`clamp(8 / √grit, 3.2, 8)`）。
-粗い縁ほど高い周波数成分を含むため、それらを正確に解像できるよう細かくサンプリングを行う必要がある。
-
-### 動的トークン（インタラクションの定義）
-
-| トークン | 意味 | ボタン | カード | 浮き上がるカード | 入力欄 |
-|---|---|---|---|---|---|
-| `--tz-dent` | 押下時のたわみの深さ (px) | 3.6 | 2.3 | 2.3 | 0 |
-| `--tz-sigma` | たわみの影響範囲（短辺に対する比率） | 0.55 | 1.7 | 1.7 | 1 |
-| `--tz-sigma-min` | 影響範囲の下限値 (px) | 26 | 120 | 120 | 40 |
-| `--tz-curl` | カーソル接近時の角のめくれ上がり (px) | 0 | 0 | 3.4 | 0 |
-| `--tz-tilt` | 気配による傾き角度 (deg) | 1.9 | 0 | 1.1 | 0 |
-| `--tz-reach` | 気配が届く検知距離 (px) | 160 | 0 | 150 | 130 |
-| `--tz-arrive` | ポインタ到達時に水平へ戻る距離 (px) | 26 | 0 | 0 | 0 |
-| `--tz-release-dur` | 離したときの復元時間 | 540ms | 760ms | 760ms | 420ms |
-
-`--tz-sigma` の値が、ボタンとカードの挙動の違いを決定付ける。
-ボタンは短辺の 0.55 倍に設定されているため、押下された局所的な一点のみがへこむ。
-一方のカードは 1.7 倍と広く取られており、一点がへこむのではなく紙一枚全体がしなるように変形する。
-実測値として、幅 668px のカードの左端を押したとき、手前の縁が 2.29px、対向する縁が 1.72px 変位する。
-同一の操作をボタンに行った場合、手前は 3.5px 沈み込むが、対向側は 0.0px で静止を保つ。
-
-## 各コンポーネントの特徴
-
-### ボタン
-
-手作業で形づくられた温かみのある造形を思わせるコンポーネントである。
-塗り（`--ink`）、輪郭（`--contour`）、素地（`--bare`）の3つのバリアントを持つ。
-素地はカーソルを近づけたときに初めて線が引かれ、それまでは輪郭線を持たない。
-
-押下すると、ポインタ位置を中心としたガウス減衰の重み付けに従い、輪郭線が内側へ沈み込む。
-同時に押下された辺が奥へと傾き（最大 2.1 度）、変形の原点が指の位置へとシフトする。
-
-状態は色だけでなく造形の変化で表現する。
-`disabled` 状態は点線の下書き、すなわち墨がまだ入っていない未完成の状態を表す。
-読み込み中（loading）は手縫いの針目が進むような表現となる。
-一定の等速運動ではなく、針を引き、止め、また引くという手縫いの拍（リズム）を再現している。
-
-### カード
-
-手漉きの一枚の和紙を思わせるコンポーネントである。
-縁は機械的に裁断されておらず、影も画一的な矩形ぼかしではなく、その個体固有の不規則な輪郭に合わせて投影される。
-
-`--pick` バリアントは浮き上がるカードであり、カーソルに最も近い角が机からふわりと浮き上がる。
-右上にカーソルを寄せた場合、右上の角が 3.47px、隣接する右下が 1.87px、対角の左下が 0.23px 持ち上がる。
-押下すると紙が机に押し付けられ、影のオフセットが 9.6px から 1px に縮まって影の濃度が増す。
-
-`--inlay` バリアントは浮き上がらないインレイ（象嵌）カードである。
-影も毛羽立ちも持たず、紙の中に埋め込まれて領域を静かに区切るため、カーソルが近づいても一切反応しない。
-
-### 入力欄（入力フィールド）
-
-文字を書き込むための場所である。
-触れる対象ではなく印を刻む場であるため、クリックしても沈み込みや傾きは発生しない。
-
-要素自体にポインタ押下の変形イベントを付与していない。
-ラッパー要素でポインタ入力を過剰に捕捉してしまうと、入力テキストをドラッグ選択できなくなるためである。
-実装上も「押下される要素」と「気配だけを検知する要素」を明確に区別して判定している。
-
-標準スタイルは矩形枠ではなく1本の罫線である。
-枠で囲む必要があるのは短い記号や数値を扱う場合のみであり、その際はボックス型（`--boxed`）を用いる。
-複数行の入力には原稿用紙形式（`--ruled`）を用い、領域内に行数分の罫線を描画する。
-
-#### 記入の染み
-
-入力欄は、文字が書かれたという履歴を視覚的に保持する。
-文字が入力されるたびに入力幅を Canvas API で実測し、文字が存在する区間だけ罫線に墨が染み込んだように濃くする。
-
-```
-""        染み 0px
-"山"       15.8px
-"山田"      31.5px
-"山田 太"    53.0px
-"山田 太郎"   68.7px
+```tsx
+import "@mitame-ai/design-system/styles.css";
+import { Button, Field, FieldLabel, Input } from "@mitame-ai/design-system";
 ```
 
-カーソルを行頭に戻しても、一度染みた墨は引っ込まない。
-紙に染み込んだ墨が消えることはないためである。
+Node-side knowledge is available from `@mitame-ai/design-system/harness`:
+`loadHarness()`, `readResource(harness, uri)`, `searchDesign(harness, query)`,
+`resolveContext(harness, scenarioId)`, and
+`checkDesign(harness, {scenarioId, route}, {origin, outputDir})`.
+The catalog is exported as `@mitame-ai/design-system/design/catalog.json`.
+Node tools are separate from the browser entrypoint. Use Node 22+.
 
-Canvas の `measureText` は `letter-spacing` を考慮しないため、文字間隔分は文字数に基づいて補正計算を行う。
+From the consumer project root:
 
-#### 穂先（キャレット）
-
-一般的な 1px の縦棒が矩形波で点滅する表現は、デジタル UI の中でも特に無機質な部分である。
-Tezawari では、わずかに傾いた先端の丸い「穂先」に置き換え、明滅のリズムも非対称に設計している。
-表示時間の 70% は可視状態を保ち、10% の時間ですっと消え、24% の時間をかけてゆっくりと復元する。
-文字間を移動する際も、瞬間移動するのではなく 80ms かけて滑らかに滑るように移動する。
-
-#### IME 変換中
-
-日本語入力に特化した状態表現である。
-`compositionstart` から `compositionend` までの入力変換中は、染みの線が破線になる。
-まだ墨が定まりきっていない状態を視覚的に伝える。
-
-#### 朱入れ（エラー表現）
-
-誤りの状態は、赤い境界枠ではなく、後から引かれる朱色の波線によって表現する。
-校正における朱入れと同じ思想である。
-
-罫線そのものは墨色のまま維持される。
-朱色は後から添えられる印であり、土台となる紙を塗りつぶすものではないためである。
-
-### パネル
-
-一定の方向性を持つ繊維の面である。
-カード内で画像の代わりとして使用する。
-異方性のノイズ生成のみで構成されているため、外部画像ファイルを読み込む必要がない。
-
-## 拡張部品
-
-React 版では、四つの基本部品と同じ規則で、shadcn/ui が揃える部品の全体（アコーディオンからツールチップまで）を描いている。
-部品の役割と API は shadcn に倣い、見た目と動きはこの文書の原則に従う。
-部品が増えても、描き方は次の三通りに限られる。
-
-- **面**：`paint()` が描く輪郭を持つ部品。浮き紙、差し込み紙、つまみ、札、貼り紙などがこれに当たる。
-- **印**：描画エンジンを通さない、19×19 の手描きの記号。チェック、丸印、墨の点などがこれに当たる。
-- **罫**：手で引いた一本の線。区切り、表の行、折りの境目などがこれに当たる。
-
-どれで描くかは、その要素が「置かれた紙」なのか「紙に書き込まれたもの」なのかで決める。
-メニューの項目に付くチェックを面で描くと、紙の上にさらに小さな紙を貼ったように見えてしまう。
-チェックは書き込まれるものなので、印で描く。
-
-### 浮き紙と差し込み紙
-
-ポップオーバー、メニュー、ダイアログ、ツールチップ、トーストは、机の上のカードより光を多く受ける**浮き紙**（`.tz-leaf`）として描く。
-塗りは `--tz-paper-up` を使い、影はその個体の輪郭からぼかして落とす。
-開くときは、その紙が出てくる側から滑りこみ、わずかに傾いて着地する。
-閉じるときは、持ち上げられるように薄れて消える。
-
-シート、引き出し、サイドバーは、画面の端に差し込む大判の**差し込み紙**（`.tz-sheet`）として描く。
-要素の外側 40px まで紙を広げ、画面の外に出た三辺を見えなくする。
-見えるのは内側の一辺だけで、その辺には手漉きの耳（毛羽立ち）が残る。
-
-モーダルの背後は黒い幕で覆わない。
-紙と同じ色の半透明の層を一枚かぶせ、背後をわずかにぼかす（`.tz-veil`）。
-画面全体を暗くすると、紙と墨の階調から外れた強い色面が画面の大半を占めてしまうためである。
-
-浮き紙の中身は、開くたびに DOM に現れる。
-そのため `useSkin`（コールバック ref 版の登録フック）で、要素が付いた瞬間に登録し、外れた瞬間に解除する。
-登場アニメーションの順番は、前回の登録から 400ms 以上空いたら 0 番から数え直す。
-数え直さないと、ページを開いてしばらく後に開いたメニューが、46ms × 11 の遅れを背負って現れる。
-
-### つまみと札
-
-チェックボックス、ラジオ、スイッチ、スライダーの玉は、押せる小さな面である**つまみ**（`.tz-knob`）として描く。
-ボタンと同じたわみと気配を持つが、小さい物ほど速く戻るという質量の原則に従い、戻りは 420ms、傾きは 1.4 度に抑える。
-
-| トークン | 浮き紙 | 差し込み紙 | つまみ | 札 |
-|---|---|---|---|---|
-| `--tz-pad` | 18 | 28 | 7 | 6 |
-| `--tz-amp` | 1.45 | 2.4 | 0.55 | 0.6 |
-| `--tz-grit` | 2 | 3 | 1 | 1 |
-| `--tz-radius` | 8 | 4 | 5（丸いものは 999） | 9 |
-| `--tz-dent` | 0 | 0 | 1.6 | 1.4 |
-| `--tz-reach` | 0 | 0 | 90 | 80（リンクのときだけ効く） |
-
-札（`Badge`）とキー（`Kbd`）は小さな紙片である。
-置かれているだけの札は応えない。
-リンクとして置いた札だけが気配を持つ。
-キーは押されるのが本物のキーボードなので、札そのものは応えない。
-
-角丸の半径に 999 を与えると、輪郭は短辺の半分で丸められ、手で描いた円になる。
-顔（`Avatar`）、ラジオ、スイッチの溝はこの方法で描く。
-
-### 印
-
-印は、`useId` と salt から作るシードで形が決まる。
-同じ個体はいつも同じ形をしており、`reseed()` を呼ぶと描き直される。
-パスには `pathLength="1"` を与えてあるので、線の長さを測らずに CSS だけで「書かれる」動きを付けられる。
-
-| 印 | 形 | 使う部品 |
-|---|---|---|
-| `tick` | 短い払いから長い払いへ折り返す一筆 | チェック、メニューのチェック項目、成功の知らせ |
-| `circle` | 始点を行き過ぎて閉じきらない丸 | 選んだ日、開いている頁、選んだ候補 |
-| `dot` / `pip` | いびつな墨の点 | ラジオ、スイッチの玉、今日の印、在席の印 |
-| `dash` | 入りと抜きで高さの違う横の一画 | 不確定のチェック、枡の区切り |
-| `stroke` | 横に引いた一筆 | タブの下線、引き出しのつまみ |
-| `ring` / `frame` | 閉じたいびつな円と四角 | 問いの選択肢の枡 |
-
-チェックの印は枡からわずかにはみ出す。
-紙に書いた印は、枠の内側に行儀よく収まらないためである。
-
-`stroke` は `preserveAspectRatio="none"` で幅いっぱいに伸ばす。
-このとき `vector-effect: non-scaling-stroke` は使わない。
-この指定は破線の長さを画面の座標で数えるので、`pathLength` による正規化が崩れ、線の途中に隙間が空く。
-代わりに、縦の縮尺の逆数を掛けた線幅で書く。
-
-### 罫
-
-区切り（`Separator`）、折り（`Accordion`）の境目、目印（`Marker`）は、`Rule` と同じ手描きの罫で引く。
-高さが幅を上回る要素には、上から下へ縦の罫を引く。
-罫の揺れ幅は、長さが 120px を下回ると長さに比例して小さくする。
-短い罫を長い罫と同じ振れ幅で揺らすと、罫ではなく斜線に見えるためである。
-
-表（`Table`）の罫は、行ごとの部品として描かない。
-表全体を一枚の紙とみなし、一つの SVG にすべての行の罫を引く。
-行が百あっても SVG は一つで、フィルターも一つで済む。
-見出しの下の罫だけ筆圧を強くし、合計行の上には二重の罫を引く。
-
-`paint()` には縦の罫の形状 `vrule` を加えた。
-要素の中央を上から下へ走る一本の線で、縦のスライダーに使う。
-
-### 選ぶ作法
-
-選択肢を並べる部品（メニュー、コマンド、コンボボックス、サイドバーの項目）は、セレクトの選択肢と同じ作法で描く。
-一行ごとにわずかな傾きと横のずれを与え、定規で揃えたようには並べない。
-見ている項目は右へ押し出され、行頭に墨の縦線が立つ。
-面を塗り替えて示すことはしない。
-
-選ばれたものには、その場で丸印を付ける。
-暦で選んだ日、頁送りの今の頁、コンボボックスで選んだ候補が、同じ丸印を持つ。
-期間を選ぶ暦では、両端の日に丸を付け、そのあいだに薄く墨を刷く。
-
-タブは二通りに描く。
-`line` は、選ばれた見出しの下にその場で一筆引く。
-`inlay` は、紙に沈めた溝の中で、選ばれた見出しだけが一枚の紙として浮く。
-
-押し込み（`Toggle`）の入った状態は、色ではなく「へこみ」で示す。
-面が一段沈み、縁の墨が濃くなる。
-
-### 罫に写す
-
-入力欄の「記入」（書いた分だけ罫に墨が染みる層）は、書く場所以外でも使う。
-
-- **進み**（`Progress`）：進んだ割合の分だけ、罫に墨が染みる。値が決まらないあいだは、手縫いの針目が罫の上を進む。
-- **目盛り**（`Slider`）：選んだ範囲だけ、罫に墨が染みる。右から左の文脈では、染みも右端から始まる。
-- **日付**（`DatePicker`）と**素のセレクト**（`NativeSelect`）：選んだ言葉の幅だけ、罫に墨を写す。
-- **枡の罫**（`InputOTP`）：書いた枡の罫に墨が染みる。今書く枡の罫だけが引き直され、両端にかぎが立つ。
-
-### 状態の示し方
-
-状態は色だけに頼らず、造形の違いで示すという原則を、拡張部品にもそのまま当てはめる。
-
-- **下書き**：点線の当たり線。使えない部品のほか、中身が届く前の仮の形（`Skeleton`）、まだ何もない場所（`Empty`）、まだ添えていない書類（`Attachment` の idle）に使う。
-- **縫い**：手縫いの拍で進む破線。読み込み中のボタン、待ち（`Spinner`）、送信中の添え物に使う。
-- **朱の傍線**：左に一本引く朱の線。朱の貼り紙（`Alert`）、失敗の知らせ（`Toast`）、送れなかった添え物に使う。校正で、直すべき行の脇に線を引くのと同じ作法である。
-
-朱の傍線を持つ部品でも、面や輪郭は墨のまま残す。
-入力欄の朱入れと同じく、朱は後から添えられる印であり、土台の紙を塗りつぶすものではない。
-
-### 図の色
-
-図（`Chart`）の系列の色は、墨の濃淡だけで作る（`--tz-chart-1` から `--tz-chart-5`）。
-系列の見分けは、色の差よりも線の種類（実線と破線）と面の濃さに頼る。
-朱（`--tz-chart-attention`）は、目標を割った線など、注意を促す一系列にだけ使う。
-朱をただの五色目として使うと、朱が「注意の印」である意味が薄れてしまうためである。
-
-線、面、格子には繊維のフィルターを通し、筆で引いたように揺らす。
-軸の文字には通さない。
-文字まで揺らすと、読み取りやすさが損なわれるためである。
-
-### 引き出しの払い
-
-引き出し（`Drawer`）は、指で払って閉じられる。
-紙の長さの 1/3 を超えて引くか、0.55px/ms より速く払うと閉じる。
-それに届かなければ、紙はボタンの解放と同じ曲線で揺れ戻り、行き過ぎてから止まる。
-閉じる向きと逆へ引いたときは、紙の張りで抵抗し、指の動きの 18% しか動かない。
-
-## 動きの実装設計
-
-### CSS 変数（var()）による transform の補間には @property 登録が必要
-
-`transform` を CSS カスタムプロパティ（変数）で動的に組み立てる場合、宣言なしでは値の変更時にスムーズに補間されない。
-型登録されていないカスタムプロパティはブラウザにとって補間可能な型情報を持たないため、トランジションが効かずに値が瞬間移動してしまう。
-
-CSS の `@property` 規則を用いて型と初期値を明示的に登録することで、滑らかな補間が実現される。
-実測で確認したスプリング（バネ）応答の推移を以下に示す。
-
-```
-押下  1 → 0.9867 (45ms) → 0.982 (125ms)
-解放  0.982 → 0.9874 (60ms) → 0.9997 (240ms) → 1.00076 (420ms) → 1 (700ms)
+```sh
+pnpm exec tezawari-design install-skills .
+pnpm exec tezawari-design search form
+pnpm exec tezawari-design resolve scenario.profile-edit
+pnpm exec playwright install chromium
+TEZAWARI_PREVIEW_ORIGIN=http://127.0.0.1:4173 pnpm exec tezawari-design check scenario.profile-edit / test-results/tezawari
 ```
 
-解放の途中で一時的に 1 を超えて 1.00076 に達し、そこから定常値へと戻る。
-この微細なオーバーシュートが、自然に緩んで戻る弾力感を生み出している。
+If pnpm does not expose the transitive Playwright executable, use
+`pnpm dlx playwright@1.63.0 install chromium`, matching this package's pinned runtime.
+The preview must implement the selected scenario. The sample in `examples/consumer`
+is the reproducible integration; the maintainer verification command copies it to
+an isolated directory and installs the packed library with no source aliases.
+Other app flows reuse contracts and need their own interaction tests; the pilot
+checker does not automatically verify an arbitrary application.
 
-### 押し込みは速く、戻りは緩やかに（非対称な時間変化）
+The check browser intercepts the pilot POST endpoint and blocks unmocked writes
+and requests outside the configured origin. It checks the loaded preview build,
+not a live backend. Routes must remain within a loopback origin configured before
+CLI/MCP startup. Do not point the checker at a server with side-effectful GETs.
 
-押下アニメーションは 90ms、解放アニメーションは 540ms から 760ms の時間をかける。
-現実の物質を押して離したときの弾性力学が、非対称な時間特性を持っているためである。
+### MCP and task skills
 
-たわみの深さは時間の関数として定義する。
-押下時は `D × (1 − e^(−t/0.032))` により 160ms 以内に完全に沈み込む。
-解放時は `D × e^(−t/0.145) × cos(2π × 2.6t)` の減衰振動を描き、約 800ms で静止する。
+A stdio client launches `node` with the absolute installed path to
+`harness/cli.mjs` and argument `mcp`. Set `TEZAWARI_PREVIEW_ORIGIN` in its environment.
+Resolve the package location with:
 
-深さ 3.6px における極値の推移は以下の通りである。
-
-```
-3.6px → −1.04px (167ms) → +0.27px (350ms) → −0.07px (533ms) → 0.02px (800ms)
-```
-
-負の値は外側へのわずかな膨らみを意味する。
-元の位置を一度超えて外側に揺れ戻り、2回ほどの微小な振動を経て穏やかに収束する。
-
-### 気配の強さの計算
-
-ポインタと要素の境界矩形との最短距離 `d` から、反応強度 `m` を算出する。
-
-```
-m = (1 − d / reach)² × (arrive ? min(1, d / arrive) : 1)
+```sh
+node --input-type=module -e "console.log(import.meta.resolve('@mitame-ai/design-system/package.json'))"
 ```
 
-前半の項は、距離が近づくほど2次関数的に強くなる度合いを表す。
-後半の項は、実際に手が触れた（到達した）際に平らへ戻すための補正項であり、`--tz-arrive` が 0 の要素では適用されない。
+Use the sibling `harness/cli.mjs`; startup is independent of the working directory.
+Only protocol messages go to stdout. Tools are `search_design({query})`,
+`resolve_design_context({scenarioId})`, and `check_design({scenarioId, route})`.
+Resources use listed `tezawari://design/…` URIs. Unknown IDs and broken references
+fail. Every response identifies the package and/or contract snapshot. Restart the
+server after updating the package. The repository tests a real subprocess client;
+no global client registration is installed by the harness.
 
-ボタンには `arrive` を 26px に設定している。
-「近づく」「触れる」「沈む」という3段階の挙動となり、傾きは接触直前の手前で最大となる。
+The four task skills (`tezawari-install`, `tezawari-build`, `tezawari-review`, and
+`tezawari-improve`) install into the consumer's `.agents/skills/`. They resolve
+knowledge from its installed package. Re-run `install-skills .` after updating the
+package: only unchanged managed files are replaced; local edits stop installation
+before writes. `install-skills . --remove` removes unchanged managed skill files
+and the installation receipt, preserving unrelated files and authored contracts.
+Disconnect the MCP client separately. No global settings are modified.
 
+### Commands and task sequence
+
+From this maintainer repository:
+
+```sh
+pnpm design:generate   # Refresh CSS token/API/catalog/reference views
+pnpm design:drift      # Non-mutating freshness and API-contract validation
+pnpm test:harness     # Integrity, installation, transport and learning tests
+pnpm design:check     # Full packed consumer, browser, transport and correction proof
 ```
-d = 160px : 0.00度
-d = 100px : 0.27度
-d = 60px  : 0.74度
-d = 26px  : 1.33度（最大傾斜）
-d = 10px  : 0.64度
-d = 0px   : 0.00度（接触完了・水平復帰）
-```
 
-浮き上がるカード（`--pick`）では `arrive` を 0 としている。
-角が持ち上がった状態を維持し、触れた後も持ち上がっているという手応えを保つためである。
+1. Read the brief; resolve the scenario and read its pattern, components and tokens.
+2. Implement required states using public imports. Set `disabled` as well as
+   `loading` while saving; `Button loading` alone does not block submission.
+3. Run checks and inspect current screenshots and reports.
+4. Correct specific violations and rerun against the changed artifact. The task
+   skills allow at most two automatic correction attempts, stopping sooner on
+   stalled progress, unavailable tools, or a new product decision. Preserve the
+   last verified result; never lower the acceptance bar.
+5. Review hierarchy, readability, action priority and task fit against the brief.
+   Mechanical success does not resolve contextual judgment.
+6. Capture a scoped observation, record its decision, update accepted authority,
+   regenerate views and prove a fresh task retrieves and uses the correction.
 
-入力欄は `--tz-tilt` が 0 であるため傾斜はせず、カーソル接近に伴って罫線の濃度のみが変化する。
-同一の計算式から、コンポーネントごとの性質に応じた異なる表情を引き出している。
+Reports under `test-results/design/` include content-based artifact and contract
+identities, tool/command metadata, rule IDs, observations and images. The source
+of the browser artifact is the served HTML/JS/CSS bytes, including dirty builds.
+`pass`, `fail`, `needs-review`, `not-evaluated`, and `not-applicable` remain distinct.
+Required mechanical failures, missing required execution and errors return nonzero.
+CLI exits 0 for mechanical success, 1 for check failure, and 2 for invalid invocation
+or configuration. MCP returns identical check semantics; tool errors are explicit.
 
-### 息（微細なゆらぎ）
+### Maintenance and compatibility
 
-静止状態にあっても、要素は完全に硬直していない。
-シェル要素のみが 13秒〜22秒の長周期、振幅 0.085度・0.38% の微小なゆらぎで呼吸するように動く。
-周期と位相には個体ごとの乱数が割り振られているため、複数の要素が揃って同時に息をすることはない。
+Package maintainers own contracts/checks. Revalidate on component, token, contract,
+SDK/browser/tooling changes and repeated integration failures. Retain the package
+version, contract revision, origin revision and any local modifications in consuming
+app lockfiles and reports. Tezawari is MIT licensed (see package metadata).
+This release adds harness interfaces without changing component/CSS imports.
+Removed resource IDs, exports, skill paths, required states, stronger rules or tool
+schemas require an explicit compatibility note and a packed-consumer rerun.
 
-寸法の大きい要素ほどゆっくりと動くよう設計されている。
-短辺の長さから倍率（最大 2.2倍）を算出し、周期に乗算している。
-
-呼吸アニメーションは外枠のシェルのみを動かし、内部の文字ラベルは動かさない。
-変形処理は CSS の `transform` のみで行われるため、GPU 合成のみで完結し、不要な再ラスタライズは発生しない。
-
-### 描画の立ち上がり（登場アニメーション）
-
-画面表示時の立ち上がり演出もコンポーネントごとに異なる。
-ボタンは1本の線が引かれるように現れ、カードは机の上に紙が置かれるように着地し、入力欄は罫線が引かれるように出現する。
-所要時間は個体ごとに 540ms〜960ms の間で分散させ、46ms ずつ開始タイミングをずらしている。
-
-カードのテキスト内容は、紙が着地した後に初めて読み取れるようになる。
-子要素にインデックスを付与し、読む順序に合わせて 85ms ずつ遅延させて表示する。
-
-### 経年変化（使い込みによる馴染み）
-
-ユーザーが触れるたびに、地肌の粒子感と輪郭の太さがごくわずかに増していく。
-最大 12回で頭打ちになるよう設定されているため、一度の操作で急激に変化することはない。
-使い込まれたコンポーネントだけが、次第に画面に馴染んでいく感覚を生み出す。
-
-## フォーカス（焦点）の表現
-
-ボタンとカードは、輪郭の外側に手描き風の環（フォーカスリング）を描く。
-
-入力欄は枠で囲まない。
-薄い下書きの罫線が、その場で引き直されてくっきりとした本式の罫線へと変化することでフォーカスを示す。
-
-| 状態 | 未フォーカス時 | フォーカス時 |
-|---|---|---|
-| 罫線（rule） | 線幅 1.15px / 不透明度 0.38 | 線幅 2.2px / 不透明度 1.0 |
-| ボックス型および原稿用紙（複数行） | 線幅 1.15px / 不透明度 0.38 | 線幅 1.9px / 不透明度 1.0 |
-
-線幅が 91% 増加し、不透明度は 163% 向上する。
-入力領域の全幅にわたる変化であるため、面積としては外枠リングよりも十分に目立つ。
-
-罫線スタイルのフォーカス時には、両端に**かぎ**（上向きの跳ね）が立ち上がる。
-入力可能な有効範囲を示す 8px〜10px の跳ねであり、四方を囲むことなく両端の位置を明示する。
-外枠が果たす実用的な役割は「入力範囲の境界を示すこと」に尽きるため、その機能のみを最小限に残している。
-
-ボックス型はフォーカス時に線を引き直さない。
-すでに枠線が存在しているため、線の濃度を濃くするだけで十分に伝わる。
-閉じた輪郭を動的に引き直すと、アニメーション途中の数フレームが破線に見えてしまうという視覚的ノイズを避ける意図もある。
-
-## アクセシビリティ
-
-不完全さやゆらぎは、輪郭や地肌のテクスチャといった装飾層にのみ適用する。
-文字の可読性、ヒットテスト（当たり判定）、コントラスト比、フォーカスインジケーターの視認性は厳格に担保する。
-
-フォーカス表示は常に視認可能であり、たわみ変形の影響を受けない独立した輪郭を参照する。
-状態の変化を色のみに依存することはない。
-`disabled` 状態は点線、ローディング状態は縫い目のアニメーション、エラー状態は朱色の波線・注記テキスト・`aria-invalid` の3要素を併用して明示する。
-
-OS の `prefers-reduced-motion: reduce` 設定が有効な環境では、たわみ、気配、息、登場演出、キャレットの明滅などの動的エフェクトを即座に停止する。
-ただし、個体差、筆圧、地肌といった静的な造形表現は維持される。
-これらはアニメーションではなく、素材の静的な形状そのものであるためである。
-
-## パフォーマンス
-
-各個体が保持する輪郭の SVG パス文字列は1本のみである。
-7つの描画レイヤーが `<use>` 要素で同一パスを参照するため、メモリ上の重複を排除し、データ量を 716KB から 221KB へと大幅に削減している。
-変形時の DOM 書き換え回数も7回から1回へと削減される。
-
-毎フレーム再計算されるのは、現在ユーザーによって押下されている1つの個体のみである。
-カーソルの接近（気配）や呼吸（息）による変形は、`transform` と不透明度の変更のみで行われるため、ブラウザの合成レイヤーで効率的に処理される。
-
-ビューポート外にある要素は `IntersectionObserver` により呼吸アニメーションを一時停止する。
-タブが非アクティブ化して `requestAnimationFrame` が停止した場合に備え、解放から 900ms 後に強制的にニュートラル状態へ戻すタイマーと、`visibilitychange` イベントによる復帰処理を二重に備えている。
-
-初期レンダリング時に寸法が取得できない要素（`display: none` な親要素配下など）は描画をスキップする。
-その後 `ResizeObserver` が可視化を検知したタイミングで安全に初回描画が行われる。
-
-## 新しいコンポーネントを追加する際の手順
-
-1. クラス定義に造形トークンと動的トークンをすべて網羅して定義する（親要素の既定値継承に依存しない）。
-2. `--tz-form` で輪郭の形状種別を選択する（既存の3種で不足する場合は `paint()` に形状生成ロジックを追加する）。
-3. 各レイヤーの CSS は `> .tz-shell` のように直下のシェル要素に限定して記述する（子孫セレクタで書くと、ネストした子コンポーネントにスタイルが漏れてしまうため）。
-4. 描画エンジンに登録する。index.html では `paint()` が検知するセレクタ一覧に加え、React 版では `useSkin`（遅れて現れる要素）または `useTezawari` で登録する。
-5. ユーザーが操作可能なコンポーネントかどうかを判断する。非対話的な要素であれば `--tz-reach` を 0 に設定する。
-6. 面、印、罫のどれで描くかを決める。紙に書き込まれるもの（チェック、丸印、区切り）は、面ではなく印か罫で描く。
-
-上記3点目は過去の実装過程で実際に発生した不具合に基づく知見である。
-`.tz-card .tz-shade` と指定したことで、カード内に配置したボタンにまでカード用の大きな影が重なってしまう問題が発生した。
-
-## あえて採用しなかったこと（設計上の制約）
-
-- **色による安易な温かみの演出**：紙と墨の落ち着いた階調に留め、彩度のある朱色は訂正のサインにのみ限定する。
-- **毎フレームの過剰な輪郭の揺らぎ**：不揃いさは手仕事の味わいを生むが、常に揺れ動き続ける形状は単なる粗雑な表示に見えてしまうため採用しない。
-- **一般的な浮き上がりホバー**：カードやボタンが上方に浮き上がる動きは汎用 UI で多用されているが、Tezawari では墨が線に染み渡るような質感変化に置き換えている。
-- **矩形の単純なぼかし影**：画一的な矩形ブラーによるドロップシャドウは使わず、すべての影は個体固有の輪郭線に基づいて生成する。
+Feedback uses ordinary reviewed files outside the catalog: observation, scope,
+evidence, destination, proposal, decision/reviewer/reason, applied revision and
+fresh-task proof. Pending/rejected proposals remain maintainer history. The
+installer never modifies node_modules policy. A consumer proposes changes upstream.
+Registry publication, global MCP setup and full-library verification are outside
+this delivery's acceptance scope.

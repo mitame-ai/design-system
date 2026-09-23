@@ -1,0 +1,21 @@
+{
+  "name": "tezawari-harness-consumer",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 4173 --strictPort"
+  },
+  "dependencies": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.0",
+    "@types/react-dom": "19.1.0",
+    "typescript": "5.9.3",
+    "vite": "7.3.1",
+    "@tailwindcss/vite": "4.1.18",
+    "tailwindcss": "4.1.18"
+  }
+}
